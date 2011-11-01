@@ -1,0 +1,350 @@
+v0 : 13/ 09 /2010	12:28
+ 		from v7.6 of iralla
+ 		
+ 	first "release" not tested
+ 	
+v0.1 :02/10/2010 12:43
+		premier débuggage
+		renommer v1 en v0
+		
+v0.2 :26/10/2010
+		tester il y a 2 semaines
+		fonctionne seulement si une partie des circuits de bus est séléctionnée
+		tests réalisés avec 30 lignes, semble fonctionner pour toutes les lignes
+		il faut donc envoyer les résultats au fur et à mesure des calculs au serveur
+		
+v0.3 :28/10/2010
+		suppression de la création du tableau représentant le découpage de la carte
+		les données sont enregistrées uniquement pour chaque ligne de bus
+		i.e. : chaque ligne de bus contient un champs "fields" dans lequel est enregistré
+		toutes les cases par lesquelles passe la ligne de bus
+		suppression de l'affichage des cases pour chaque ligne de bus (mis en comentaires)
+		
+v0.4 28/10/2010
+		modif des valeurs de fields : sont maintenant enregistré les indes de x et y
+		creation de SendDatasToDataBase.js
+		et createDataBase.php (en mode de test)
+		
+v 0.4.1 28/10/2010
+		createDataBase.php complet
+		vérifier si la base de donnée est compléte
+		
+v 0.4.2 29/10/2010 9:36
+		ajout d une tempo ds SendDatasToDataBase
+		
+v 1.0	29/10/2010 14:05
+		la version précédente crée des données inaccessible via phpMyAdmin car trop de table
+		modification de createDataBAse.php pour le stockage dans une seule table sous la forme:
+		
+		id  |  xxx_yyy  |  xxx_yyy  |  xxx_yyy  |  xxx_yyy  | ... 
+		0	|	 1		|	1		|	1		|	1		| ...
+		1	|	 NULL	|	NULL	|	NULL	|	1		| ...
+		2	|	 1		|	NULL	|	NULL	|	1		| ...
+		3	|	 1		|	1		|	1		|	1		| ...
+		
+v 1.1 01/11/2010 9:58
+		rename of the project "dataBaseCreation" to PreTreatement
+		which will include all the preTreatment to be done
+
+v 1.2 01/11/2010 15:41
+		modification of arborescence of the project:
+		new folder "PreTreatement" in wich "dataBaseCreation" is moved
+		
+		main inside main.js from the folder "dataBaseCreation" is renamed:
+		mainDataBaseCreation
+		
+		button are created to choose which pretreatment to launch
+		
+		button "create red" not active
+
+v 1.3 01/11/2010 17:38
+		use of iralla v8.1
+		
+v 1.4 01/11/2010 iralla v8.2
+		preTreatment included in the project iralla
+		only the folder preTreatment will be saved for the record
+		
+v 1.5  06/11/2010 23:20
+		add the function this.CreateOrthogonalByThePoint() in Line.js
+		add the function this.distanceOf() in Point.js
+		add Circle.js
+		add Vector.js
+		
+		neither of the news functions have been tested
+		
+v 1.6	08/11/2010 10:04 -> v8.4 of iralla
+		change name of this file to "evolution pretreatment.txt"
+		change name of loadPreTreatment() to accessToPreTreatment()
+		and change name of loadPreTreatment.js to preTreatment.js
+		create folder "tools" to put the files:
+			Circle.js, Vector.js, Point.js, Segment.js, Line.js
+		in createDataBase.php this bug found and solved:
+			when creating a column if it already exist the program ends
+		createDataBase.php file moved to preTreatment/dataBaseCreation
+		
+v 1.7 10/11/2010 13:34
+		saved whitout tested the new function:
+		in Line.js:
+		- all the function added to Line as Line.function
+		- this.yIntercept, this.angle, this.angle2, this.BisectorWith and Line.LineFromSlopeAndPoint created
+		
+		in Segment.js
+		this.getLength added
+		
+		in Point.js
+		this.makeLatLng
+		this.addVector
+		this.subVector
+		
+		in Vector.js
+		change a lot
+		
+		areaSurroundedPolyline.js created
+		
+v 1.8 11/11/2010 12:52
+		preTreatment.js modified to add redCreation and to simply the way to add other preTreatment
+		moved function round(x) to round.js in preTreatment/tools
+		add round() in functions of Point.js and Vector.js
+		round() set to -10^8 was at -10^7
+		
+		areaSurroundedPolyline.js funcional
+
+v1.9 14/11/2010 09:01
+		code adding in mainRedCreation.js to find the vertex of the ALIMENTADORA inside the areaSurroundePolyline
+		but doesn't work where the same area is stacked to itself.
+		
+v 2.0 15/11/2010 23:33
+		adding this.positionOf in Line.js
+		this.IsIntersectWithSegment in Segment.js modified to get the possibility to get the coord of the intersection
+		areaSurroundedPolyline.mergedStackedPart does not work and abandonned, will be supress in next version
+		
+v2.1 05/12/2010 15:16
+		before cleaning areaSurroundedPolyline.mergedStackedPart
+		not funccional
+		
+v2.2 06/12/2010 16:18
+		indexOfPointsToremove in areaSurroundedPolyline.mergedStackedPart verified
+
+v2.3 07/12/2010 10:02
+		save before modification complete of areaSurroundedPolyline.mergedStackedPart
+		which will be treated with chain
+		
+v2.4 08/12/2010 16:02
+		areaSurroundedPolyline.mergedStackedPart functional
+		
+v2.5 10/12/2010 16:25
+		added the handling to link Bus Station To Troncales in preTreatment.js
+		creation of folder linkBusStationToTroncales in preTreatment folder
+		creation of mainLinkBusStationToTroncales.js and verified
+		preTreatment modified to supprime the condition of tool loaded to load the treatments
+		
+v2.6 13/12/2010 22:00
+		mainUpABusLineCreation.js		
+		add map.removeFunctionsToListeners(map.listenerIdWhenClickMap, 'click'); in accessToPreTreatment()
+		for the new bus stations : show the name of it
+		added possibility to change the name of the bus station
+		split of the file mainLinkBusStationToTroncalesCreation.js in :
+			Connection.js
+			gmap.Map_extended.js
+			gmap.Marker_extended.js
+			
+		and creation of Connection()
+		
+v2.7	15/12/2010 21:14
+		in connection.removeConnection adding the removing of the connection 
+		from busLine.arrayOfConnectionsMarkers
+		adding button to suppress the current bus station function modified:
+			mainLinkBusStationToTroncales()
+			gmap.Marker.prototype.setAddingConnections()
+			gmap.Marker.prototype.remove() (created)
+		save made befor adding round() in Segment
+		
+v2.8	16/12/2010 17:12
+		round Point.x and Point.y
+		
+		new functions:
+		BusStation.prototype.createAllConnections()
+		BusStation.prototype.polygonCircle()
+		polygonCircle.setRadius()
+		polygonCircle.increaseRadius()
+		polygonCircle.decreaseRadius()
+		increase and decrease button added when clicking on create link button
+		polygonCircle is movable
+		gmap.Marker.prototype.removeAllConnections
+		
+		in pretreatment.js: adding a circle to each busstation
+		
+		modification of remove selected busstation
+		
+v2.9	17/12/2010 11:44 -> iralla v8.7
+		deselect button
+		show all the connection when a busStation is selected
+		change color of the circle when selected/deselected
+		new file : gmap.Polyline_extended
+		gmap.Polyline.prototype.setAddingConnections in linkBusStationToTroncales
+		gmap.Polyline.prototype.setAddingConnections()
+		gmap.Polyline.prototype.isPolygonCircleCrossed()
+		new functions
+			gmap.Marker.prototype.createConnectionsWithAllBusLines()
+			gmap.Marker.prototype.createConnectionsWithOneBusLine()
+			Connection.createAll() rename in Connection.createAllOnTheMap()
+		gmap.Polyline.prototype.setNewNameToShow()
+		gmap.Polyline.prototype.createConnectionsWithAllBusStations()
+		gmap.Polyline.prototype.setConnectionsVisible()
+		gmap.Polyline.prototype.isPolygonCircleCrossed()
+		gmap.Marker.prototype.deselect()
+
+v3.0	29/12/2010 20:37
+		moved these two functions from Connection.js to gmap.Marker.js in linkFlowFolder
+			gmap.Marker.prototype.createConnectionsWithOneBusLine
+			gmap.Marker.prototype.setNewNameToShow
+		
+		creating folder : findFlowDirection
+		creation of files :
+            Arrow.js
+            gmap.polyline_extend.js
+            mainFindFlowDirectionCreation.
+        
+        in tools, creation of Polyline_extended.js
+        	adding gmap.Polyline.prototype.findNearestProyectionOrthogonal(latLng)
+        
+        in preTreatment.js : adding the condition: "|| (loaded.tools.length < 7)"
+        
+        in segment.js :
+        	adding this.proyectionOf(point) return point
+        	
+        creation of the functions : 
+        	to add arrows on the flow of vertex order
+        	to remove arrows between two boundaries
+        	to add a boundary
+        	
+v3.1	19/01/2011 15:07
+		in Segment.js
+			this.IsIntersectWithPolyline = this.IsIntersectWithPolygonCircle
+			adding exception of index in this.IsIntersectWithPolyline
+			
+		adding file:
+		preTreatment/findFlowDirection/arrayOfBusLines_extend.js
+		
+		adding functions:
+			to find flow from xml arrows (functions partially, must be debugged)
+			to reverse flow
+			to add bidireccional flow
+			to find automaticaly all the flow and return the busline for which it was not possible to get it automaticaly
+
+		new BUG: the creation of the area around the troncales does not work => infinite loop
+		         research of the orgine : in preTreatment 2.8, in point.js, the fact to round x and y
+		         the bug has to be understand completely to give a good solution
+		         for the moment I put a global variable to switch the round in the creation of the area around the troncales
+
+		gmap.Polyline.prototype.isPolygonCircleCrossed moved from gmap.Polyline-extended in linkBusStationToTroncales to Polyline_extended.js inside tools
+
+		get the limit of the alimentadoras inside the area around the troncales function in mainredCreation.js
+		
+v3.2	22/01/2011 18:23
+		modification of the button "create red" to "create areas around Troncales" 
+		creation of the button : "make virtual bus station" and first release of the function. 
+
+v3.3	23/01/2011 16:04
+		saving make virtual bus station before to make it in a new way in v3.4
+		
+v3.4	25/01/2011 12:18
+		new way of makeVirtualBusStation
+			missing :
+				take in consideration the bus stations already saved in the db
+				a list of the bus stations ordering for the current line
+				for each bus station, record the connections to the others bus stations
+
+v3.5	27/01/2011 14:55
+		findBusLinesAroundThisPoint : modification of the arguments and the form of the results
+		create :
+		saveVirtualsBusStations.php
+		modifyDb.php
+		saveToDb.php
+		
+v3.6	03/02/2011 12:57
+		modifyDb.php and saveToDb.php move to tools folder
+
+                create mySQL folder and initBdd.php
+		
+			saveVirtualsBusStations.php deleted
+			mainAddNewDatas.js created
+			
+v3.7	09/02/2011 19:21 iralla v8.8
+		creation of folder:
+			showBusLinesList
+			showBusStationsOnMap
+			showLinesOnMap
+		menu to show all the buttons of pretreatment
+		
+v3.8	28/02/2011 16:46    iralla v8.9
+
+		10/02/2011 	10:?? 	in tools/Polyline_extended : new function : gmap.Polyline.prototype.findNearestVertexOf(pointOrLatLng)
+					11:07	replace all "TRONCAL", "ALIMENTADORA" and "RUTA" respectivly by "mainLine", "feeder" and "other"
+					11:34 	in preTreatment.js : add if (typeof(loaded.**** ) == 'undefined') {loaded.****   =[];}
+					13:04	in mainAreaAroundTroncales.js L115 troncalAreas.length -1 => troncalAreas.length
+					13:26	in tools/Polyline_extended.js new function:  gmap.Polyline.prototype.isPolygonCrossed(polygon);
+					13:32	in areaSurroundedPolyline.js modif :
+							areaSurroundedPolyline.findIntersectionsWithBusLine = function(busline){
+								return busline.isPolygonCrossed(this); was .isPolygonCircleCrossed
+							};
+					14:01	in			new function: Segment.IsIntersectWithPolygon(polygon, indexException)
+							created from Segment.IsIntersectWithPolygonCircle
+					15:28	bug correction : L501  in areaAroundTroncales/AreaSurroundedPolyline.js
+							 distance = link.point.distanceOf(intersectionPoint1);  "1" was missing at en of intersectionPoint
+					15:49	in areaAroundTroncales/mainAreaAroundTroncales.js 
+							in areaAroundTroncales()
+							adding the parameter: busLine.vertexInsideMainLineArea
+					18:48	findFlowDirection/getArrowsToShow.php created
+							findFlowDirection/showArrowsOnMap.js created
+							
+		11/02/2011	16:54	in mySQL initBdd.php modified to add more columns
+					18:58	in addNewDatas upload_file.php modified to add more infos
+			
+			NOTE: BUG OF THE PHP DEBUGGER DURING THE DAY!!!!
+		
+		12/02/2011	12:50	in showLinesOnMap:
+									getLinesToShow.php: add the arrows to send and modifications of format sending
+									mainShowLinesOnMap: 
+										in mainShowLinesOnMap():
+											send JSON instead of string
+										in howLinesOnMap(answer)
+											modifications to receive arrows list from getLinesToShow.php
+			
+					13:11	in findFlowDirection/showArrowsOnMap 
+								in showArrowsOnMap(): 
+									to show the arrows from map.arrowsListFromBdd
+								in mainFindFlowDirectionCreation.js: 
+									change onclick of the button to show arrows
+								in gmap.Polyline_extend.js: 
+									arrayOfBusLines.loadArrowsFromDb deleted
+									arrayOfBusLines.showArrowsFromFile
+								getArrowsToShow.php deleted
+								
+					14:23	in findFlowDirection/showArrowsOnMap:
+								add hideArrowsOnMap()
+					14:35	in tools\Segment.js:
+								this.IsIntersectWithPolygon modified to accept polyline
+					
+					18:35	in linkBusStationToTroncales\gmap.Marker_extended.js
+								in gmap.Marker.prototype.createConnectionsWithOneBusLine
+									bug correction to detect end extremity inside the polygon
+								
+		17/02/2011	15:17	in makeVirtualBusStation/mainMakeVirtualBusStation.js
+								BUG in makeVirtualBusStation infinity loop
+								
+								
+								
+								
+v3.9	01/03/2011	22:11
+		makeVirtualsBusStation function but still testing
+
+v3.9	06/03/2011	2:43
+		makeVirtualsBusStation function but still testing -> new version
+								
+v 4.0 15/03/2011 16:34
+		save before to moify the area to find connection around a bus station. The area will be
+		convert from polgonCircle to a circle
+		
+v4.1
+		15/03/2011

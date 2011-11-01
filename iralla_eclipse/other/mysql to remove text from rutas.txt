@@ -1,0 +1,48 @@
+UPDATE bus_lines
+SET layerName=REPLACE(layerName,' P.O',''),
+layerName=REPLACE(layerName,' 2008',''),
+layerName=REPLACE(layerName,' 2009',''),
+layerName=REPLACE(layerName,' 2010',''),
+layerName=REPLACE(layerName,' 2011',''),
+layerName=REPLACE(layerName,' URBANA',''),
+layerName=REPLACE(layerName,'ALCANCE',''),
+layerName=REPLACE(layerName,'.',''),
+layerName=REPLACE(layerName,'2010',''),
+layerName=REPLACE(layerName,'VERG',''),
+layerName=REPLACE(layerName,'2009',''),
+layerName=REPLACE(layerName,'1009',''),
+layerName=REPLACE(layerName,'PO','')
+
+
+
+
+UPDATE bus_lines
+SET name=REPLACE(name,' P.O',''),
+name=REPLACE(name,' 2008',''),
+name=REPLACE(name,' 2009',''),
+name=REPLACE(name,' 2010',''),
+name=REPLACE(name,' 2011',''),
+name=REPLACE(name,' URBANA',''),
+name=REPLACE(name,'ALCANCE',''),
+name=REPLACE(name,'.',''),
+name=REPLACE(name,'2010',''),
+name=REPLACE(name,'VERG',''),
+name=REPLACE(name,'2009','')
+
+
+modif manuel de 63O en 63-O
+
+ruta 008-2 => 8-2
+ruta 008-1 => 8-1
+
+comoiralla.com
+comoiraya.com
+comollegaralla.com
+comollegaraya.com
+quebustomar.com
+kebustomar.com
+
+cortocamino.com
+http://www.queitinerario.com/
+http://www.querecorrido.com/
+http://www.kerecorrido.com/

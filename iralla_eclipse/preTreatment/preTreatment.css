@@ -1,0 +1,105 @@
+
+#iframeSendFile{
+	position: fixed;
+	left: 305px;
+	top: 90px;
+	background-color: #FFFFFF;
+    border: 1px solid black;
+	height:90px;
+	width:250px;
+	z-index:10;
+}
+
+#divListLinesBus {
+    background-color: #EEFFEE;
+    top: 90px;
+    left: 0;
+	width: 400px;
+	bottom:0px;
+	position: fixed;
+    overflow: scroll;
+	z-index:1;
+}
+
+#showLinesButton{
+    background-color: #AA2233;
+    top: 91px;
+    left: 0;
+	width: 7px;
+	height: 22px;
+	position: fixed;
+	z-index:5;
+}
+
+#headMenuPreTreatment{
+	left:0px;
+	position:fixed;
+	top: 40px;
+	border: 0px;
+	background-color: #FFFFFF;
+	width: 200px;
+	/*heigth:25px;*/
+	z-index: 10;
+	border:1px solid black;
+}
+
+#menuPreTreatment{
+	left:0px;
+	position:fixed;
+	top: 63px;
+	border: 0px;
+	background-color: #FFFFFF;
+	width:200px;
+	z-index: -1;
+}
+
+#tableHeaderPreTreatment{
+	border-collapse:collapse;
+}
+
+#tablePreTreatment{
+	border-collapse:collapse;
+}
+
+#tableListLineBus{
+	border-collapse:collapse;
+}
+
+th,td{
+	border:1px solid black;
+	text-align : left; 
+}
+
+.headerPreTreatment{
+	border:0px;
+}
+
+#div_set_name{
+	border:1px solid black;
+	/*position: fixed;
+	right:10px;
+	top: 40px;*/
+	background-color: #EEEEEE;
+}
+
+#infos{
+	position: fixed;
+	right:5px;
+	top: 10px;
+	background-color: #FFFFFF;
+	width: 600px;
+	height: 200px;
+	overflow: scroll;
+	z-index: 1000;
+}
+
+#hide_show_infos{
+	position: fixed;
+	right: 5px;
+	top: 0px;
+	background-color: #DDDDDD;
+	width: 600px;
+	height: 10px;
+	z-index: 1000;
+}
+

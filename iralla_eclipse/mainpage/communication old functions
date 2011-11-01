@@ -1,0 +1,101 @@
+
+function toDebugResponse(options) {
+	//TO DEBUG
+		//creation of title of the page:
+		var title = 'phpFileCalled: ' + options.phpFileCalled + '<br/>'+
+		'argumentsToPhpFile: ' + options.argumentsToPhpFile + '<br/>' +
+		'type: ' + options.type + '<br/>' +
+		//'callback: ' + options.callback + '<br/>' +
+		'THIS: ' + options.THIS + '<br/>' +
+		'argumentsCallback: ' + options.argumentsCallback + '<br/>';
+		
+		//create the div to show the answers menu:
+		if (document.getElementById('divForTableAnswer') == null) {
+			var divForTableAnswer = document.createElement('div');
+			divForTableAnswer.setAttribute('id', 'divForTableAnswer');
+			
+			//set the position of the div:
+			divForTableAnswer.style.bottom = '0px';
+			divForTableAnswer.style.right = '0px';
+			divForTableAnswer.style.weight = '200px';
+			divForTableAnswer.style.height = '100px';
+			divForTableAnswer.style.overflowY = 'scroll';
+			divForTableAnswer.style.position = 'fixed';
+			divForTableAnswer.style.zIndex = '5000';
+			divForTableAnswer.style.backgroundColor = '#FFFFFF';
+			divForTableAnswer.style.border = "2px solid black"
+			
+			//create the title:
+			var titleAnswers = document.createElement('strong');
+			titleAnswers.innerHTML = 'responses';
+			divForTableAnswer.appendChild(titleAnswers);
+			divForTableAnswer.appendChild(document.createElement('br'));
+			
+			//add it to the body:
+			document.body.appendChild(divForTableAnswer);
+		}
+		else{
+			divForTableAnswer = document.getElementById('divForTableAnswer');
+		}
+
+		//creation of the response to show:
+		if ((options.type == "xml") || (options.type == "XML")){
+			var responseToShow = title + xmlhttp.responseXML;
+		}
+		else{
+			var responseToShow = title + xmlhttp.responseText;
+		}
+		
+		/*var link = document.createElement('button');
+		link.onclick = "alert('coucou');";
+		link.innerHTML = 'response from ' + options.phpFileCalled;*/
+		var numberOfButton = divForTableAnswer.getElementsByTagName('button').length;
+		var button = "<button id='answerButton" + numberOfButton + "' index='"+ numberOfButton +"' onclick='showResponse("+numberOfButton+");'> response from " + options.phpFileCalled + "</button>";
+		
+		//add a line to the menu:
+		//divForTableAnswer.appendChild(link);
+		divForTableAnswer.innerHTML += button + "<br/>";
+		//add a return line:
+		//divForTableAnswer.appendChild(document.createElement('br'));
+				
+		//creation of the div where to show the response:
+		if (document.getElementById('responseDiv') == null) {
+			var responseDiv = document.createElement('div');
+			responseDiv.setAttribute('id', 'responseDiv');
+			responseDiv.style.top = '0px';
+			responseDiv.style.bottom = '0px';
+			responseDiv.style.left = '0px';
+			responseDiv.style.right = '0px';
+			responseDiv.style.overflow = 'scroll';
+			responseDiv.style.position = 'fixed';
+			responseDiv.style.zIndex = '-100';
+			responseDiv.style.backgroundColor = '#FFFFFF';
+			responseDiv.responseToShow = [];
+			document.body.appendChild(responseDiv);
+		}
+		else{
+			responseDiv = document.getElementById('responseDiv');
+		}
+		
+		//add the info to show when click the link:
+		responseDiv.responseToShow.push(responseToShow);
+
+//END TO DEBUG
+	
+}
+
+
+/*
+loadXMLDoc = function(path, callbackFunction, thisCallBack, argumentsCallback){
+	
+	return request({
+		phpFileCalled: '1Ac2oGhS26J/' + path, 
+		//phpFileCalled: 'getXml.php', 
+		argumentsToPhpFile: 'q=' + path,
+		type: 'xml',
+		callback: callbackFunction,
+		THIS: thisCallBack,
+		argumentsCallback: argumentsCallback,
+		asynchrone: false
+	});
+};*/

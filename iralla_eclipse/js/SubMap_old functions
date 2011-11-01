@@ -1,0 +1,170 @@
+ subMap.addPolyinesAndBusStationFromFile = function(xmlDoc){
+		var defaultOptions = {
+			map: this,
+			strokeOpacity: 0.5,
+			strokeWeight: 3
+		};
+		createBusLines(xmlDoc, defaultOptions);
+		
+		defaultOptions = {
+			map: this,
+			visible: true
+		};
+		createBusStation(xmlDoc, defaultOptions);
+
+		subMap.setSizeOfBusLinesDependingOnZoomLevel({
+			11:3,
+			12:4,
+			13:5,
+			14:6,
+			15:7,
+			16:10,
+			17:12
+		});
+
+		subMap.enableSizeDependingOnZoom(true);
+		
+				
+		if (SubMap._busStationArray.length >0){
+			subMap.setSizeOfBusStationsDependingOnZoomLevel({
+				11:5,
+				12:8,
+				13:12,
+				14:17,
+				15:23,
+				16:30,
+				17:38
+			});		
+			
+			subMap.enableBusStationsSizeDependingOnZoom(true);
+		}
+	};
+	
+	
+		//TODO OPTIMISATION  possible en rassemblant createBusLines et createBusStation
+	createBusLines = function(documentXml, defaultOptions){
+	
+		var latO = documentXml.getElementsByTagName('O')[0].getAttribute('lat');
+		var lngO = documentXml.getElementsByTagName('O')[0].getAttribute('lng');
+		
+		latO = latO.replace(",",".");
+		lngO = lngO.replace(",",".");
+		latO = parseFloat(latO);
+		lngO = parseFloat(lngO);
+		
+		var layersTag = documentXml.getElementsByTagName('L');
+		var layerTag;
+		var layerName;
+		
+		for (var i = 0; i < layersTag.length; i++) {
+			layerTag = layersTag[i];
+			layerName = layerTag.getAttribute('name');
+			var vertexList = [];
+			
+			//create the BusLines:
+			var busLineXmlList = layerTag.getElementsByTagName("P");
+			var color;
+			
+			for (var j = 0; j < busLineXmlList.length; j++) {
+				//excract the id of the polyline:
+				id = busLineXmlList[j].getAttribute("id");
+				
+				//extract the list of vertex:
+				vertexList = busLineXmlList[j].getElementsByTagName("V");
+				var pointsTab = extractPointsOfVertexList(vertexList, latO, lngO);
+				
+				//extract the color of the BusLine:
+				color = busLineXmlList[j].getElementsByTagName("C")[0].getAttribute("value");
+				color = "#" + color;
+				
+				//extract the type of the BusLine:
+				//type = busLineXmlList[j].getElementsByTagName("T")[0].getAttribute("value");
+				if (layerName.charAt(0) == 'T'){
+					type = "mainLine";
+				}
+				else if (layerName.charAt(0) == 'A'){
+					type = "feeder";
+				}
+				else if (layerName.charAt(0) == 'R'){
+					type = "other";
+				}
+				
+				//create the BusLine:
+				var busLineBuffer = new BusLine(layerName + "_" + j, layerName, type, defaultOptions, {id: id});
+				busLineBuffer.setOptions({
+					strokeColor: color,
+					path: pointsTab
+					});
+				busLineBuffer.addListenerOnBusLine();
+				
+				//save reference to SubMap._busLinesArray
+ 				if (SubMap._busLinesArray[0] == "" )
+					SubMap._busLinesArray[0] = busLineBuffer;
+				else
+					SubMap._busLinesArray.push(busLineBuffer);
+				
+				//pathsList.push(pointsTab);								what for? ?????
+			}
+		}
+	};
+	
+	createBusStation = function(documentXml, defaultOptions){
+		
+		var latO = documentXml.getElementsByTagName('O')[0].getAttribute('lat');
+		var lngO = documentXml.getElementsByTagName('O')[0].getAttribute('lng');
+		
+		latO = latO.replace(",",".");
+		lngO = lngO.replace(",",".");
+		latO = parseFloat(latO);
+		lngO = parseFloat(lngO);
+		
+		//the marker image:
+		var iconStation = new gmap.MarkerImage("data/busStop.png",
+			null,
+			null,
+			null,
+			new gmap.Size(15, 15)
+		);
+		
+		//extract all the station nodes: 
+		var busStationName;
+		
+		var layersTag = documentXml.getElementsByTagName('L');
+		var layerTag;
+		var layerName;
+		
+		for (var i = 0; i < layersTag.length; i++) {
+		layerTag = layersTag[i];
+		layerName = layerTag.getAttribute('name');
+		var vertexList = [];
+		var busStationXmlList = layerTag.getElementsByTagName("S");
+				
+			//for all the station
+			for (var j = 0; j < busStationXmlList.length; j++) {
+				//extract all the vertex:
+				var vertexList = busStationXmlList[0].getElementsByTagName("V");
+				var pointsTab = extractPointsOfVertexList(vertexList, latO, lngO);
+				
+				//for each vertex:
+				for (var k = 0; k < pointsTab.length; k++) {
+					busStationName = layerName + "<br/>parada " + vertexList[k].getAttribute("n");
+					var busStation = new BusStation(busStationName, layerName, defaultOptions);
+					busStation.setIcon(iconStation);
+					busStation.setPosition(pointsTab[k]);
+					
+					//save reference to SubMap._busLinesArray
+ 					if (SubMap._busStationArray[0] == "") {
+						SubMap._busStationArray[0] = busStation;
+					}
+					else {
+						SubMap._busStationArray.push(busStation);
+					}
+					
+					// create event to show the station on mouseover the marker
+					busStation.addListenerOnBusStation();
+				}
+			}
+		}
+		
+	};
+	

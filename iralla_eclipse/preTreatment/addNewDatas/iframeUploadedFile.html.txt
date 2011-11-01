@@ -1,0 +1,2 @@
+
+iframeUploadedFile.html is in the main folder to get it called by the web page.

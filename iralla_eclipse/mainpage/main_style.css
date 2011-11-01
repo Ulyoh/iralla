@@ -1,0 +1,224 @@
+body, div, form, fieldset, ul, ol, table { 
+	margin: 0;
+	padding: 0;
+}
+
+html { 
+	height: 100%;
+}
+
+body {
+	width:100%;
+	height:100%;
+	margin: 0px;
+	padding: 0px;
+	min-height:400px;
+	min-width:600px
+}
+
+#map_canvas {
+	top:0px;
+	left:0px;
+	width: 100%;
+	height: 100%;
+}
+
+#myInfo{
+	position:absolute;
+	display:none;
+	padding: 5px;
+	border: 2px solid #0060DA;
+	background-color:#0090DA;
+	color: white;
+	z-index:1000;
+}
+
+#buscar{
+	position:fixed;
+	top:0px;
+	left:0px;
+	height: 20px;
+	padding:2px;
+	background-color: #FFFFFF;
+	z-index:1;
+}
+
+#look_for_menu{
+	position:fixed;
+	display:none;
+	top:25px;
+	left:0px;
+	background-color: #FFFFFF;
+	z-index:1;
+}
+
+.look_for_menu_button{
+	left:0px;
+	background-color: #FFFFFF;
+	width: 150px;
+	text-align:left;
+	z-index:1;
+}
+
+.cross_button{
+	position: absolute;
+	top: 0px;
+	right: 0px;
+	background-color: #AA2222;
+	z-index: 6;
+}
+
+#direction{
+	position:fixed;
+	display:none;
+	top:0px;
+	left:0px;
+	width: 180px;
+	background-color: #FFFFFF;
+	z-index:5;
+}
+
+#address{
+	width:65px;
+}
+/*
+#calculate{
+	position:absolute;
+	display:none;
+	z-index:5;
+	border: 2px solid #3333CC;
+	padding: 5px;
+	background-color:#006699;
+	color: white;
+}
+*/
+#suggestionListNode{
+	position:absolute;
+	display:none;
+	top:25px;
+	left:100px;
+	padding: 0px;
+	margin: 0px;
+	z-index:6;
+}
+
+.line_choice{
+	border: 2px solid #0060DA;
+	background-color:#0090DA;
+	color: white;
+	z-index:5;
+}
+
+#button_clean_lines{
+	position:absolute;
+	display:none;
+	top:22px;
+	left:2px;
+	width:90px;
+	border: 2px solid #0060DA;
+	background-color:#0090DA;
+	padding: 0px;
+	color: white;
+	z-index:5;
+}
+
+#itinerario{
+	position:fixed;
+	display:none;
+	top:0px;
+	left:0px;
+	width: 300px;
+	max-height: 100%;
+	background-color:#FFFFFF;
+	z-index: 5;
+}
+
+.found_roads{
+	width: 280px;
+}
+
+.suggestionListNode2{
+	top:80px;
+	left:0px;
+	background-color: white;
+	padding: 0px;
+	margin: 0px;
+	z-index:6;
+}
+
+.road_choice{
+	width: 298px;
+	text-align:left;
+	background-color: white;
+	z-index:5;
+}
+
+#valid_roads{
+	left:0px;
+	width: 70px;
+	height: 20px;
+	background-color: #00FF66;
+	z-index:5;
+}
+
+ul{
+	margin: 0;
+	
+}
+
+tr, td{
+	margin:0;
+	border:0;
+}
+
+td{
+	width: 100%;
+}
+
+table{
+	border-collapse: collapse;
+}
+
+.modify_button{
+	display:none;
+	width: 70px;
+	height: 20px;
+	float: right;
+	background-color: #00FF66;
+}
+
+#itinerario td{
+	width: 300px;
+}
+
+span {
+	display: inline;
+}
+
+#show_infos{
+	display: none;
+	position: fixed;
+	top: 0px;
+	right: 0px;
+	width: 250px;
+	min-height: 50px;
+	background-color: #EEEEEE;
+	z-index:1;
+}
+
+.name_of{
+	font-size:15px;
+}
+
+.results_infos:hover{
+	background-color: #AAAAAA;
+}
+/*
+#look_for_menu{
+	position:fixed;
+	display:none;
+	top:25px;
+	left:0px;
+	background-color: #FFFFFF;
+	z-index:1;
+}*/

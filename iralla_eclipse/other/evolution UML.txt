@@ -1,0 +1,23 @@
+v0.1 07/09/2010 6:08
+first version of the UML
+
+v0.2 07/09/2010 10:26
+to fit the program and corrections v7.0
+
+v0.3 07/09/2010 17:16
+	update to fit to v7.1
+	"function for" rename in "commonsFunctions"
+	modify : 
+		Busline
+		MyXmlDocument
+		BusStation
+		SubMap
+		
+v0.4 08/09/2010 6:12
+	update to fit v7.1.1
+
+v0.5 08/09/2010 8:32
+	update to fit v7.2
+	
+v0.6 29/10/2010
+	creation of Circle and modification of SubMarker to add a Circle
