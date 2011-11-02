@@ -40,8 +40,9 @@ function addFunctionsToListener(event, newFunction, itsArgs){
 				}
 				for (var j = 0; j < args.length; j++){
 					if (typeof(args[j]) == "string"){
-						if (args[j].slice(0,6) == "eVeNt:")
+						if (args[j].slice(0,6) == "eVeNt:"){
 							args[j]  = eval( args[j].slice(6));
+						}
 					}
 				}
 
@@ -211,9 +212,9 @@ function addLineWithOneCellInTable(table, more, functionToExec){
 }
 
 function newButton(more){
-	var newButton = document.createElement("button");
-	newButton.setAttribute("type", "button");
-	newButton.setAttribute('id', more.id);
-	newButton.setAttribute('class', more.myClass);
-	return newButton;
+	var newButtonVar = document.createElement("button");
+	newButtonVar.setAttribute("type", "button");
+	newButtonVar.setAttribute('id', more.id);
+	newButtonVar.setAttribute('class', more.myClass);
+	return newButtonVar;
 }

@@ -15,11 +15,12 @@ var address ={
 	language: "spanich"
 };
 
-var listOfMarker = new Array();
+var listOfMarker = [];
 
 function onChangeAddress(event){
 	var suggestionListNode = document.getElementById('suggestionListNode');
 	suggestionListNode.style.display = 'none';
+	var i;
 	
 	//removed all the markers:
 	/*while(listOfMarker.length != 0)	{
@@ -31,21 +32,22 @@ function onChangeAddress(event){
 	//if the enter key have been pressed:
 	//if (event.keyCode == 13) {
 		var seizureTxt = document.getElementById('address').value;
-		if (seizureTxt != "") {
+		if (seizureTxt !== "") {
 			seizureTxt += ", Guayaquil, Guayas, Ecuador";
 			var newNode;
 			address.address = seizureTxt;
 			
 			//remove all the childs of suggestionNode
-			while (suggestionListNode.firstChild) 
+			while (suggestionListNode.firstChild){
 				suggestionListNode.removeChild(suggestionListNode.firstChild);
+			}
 			
 			//call the geocoder
 			geocoder.geocode(address, function(results, status){
 				var numberOfMarkerCreated = 0;
 				if (status == gmap.GeocoderStatus.OK) {
 					//for each result:
-					typeFind : for (var i = 0; i < results.length; i++) {
+					typeFind : for (i = 0; i < results.length; i++) {
 						var route = "";
 						for (var j = 0; j < results[i].address_components.length; j++) {	
 						//for each type of the address_component:
@@ -90,9 +92,10 @@ function onChangeAddress(event){
 
 
 											//hide the others markers:
-											for(var i = 0; i < listOfMarker.length; i++){
-												if (this.innerHTML != listOfMarker[i].nameToShow)
+											for(i = 0; i < listOfMarker.length; i++){
+												if (this.innerHTML != listOfMarker[i].nameToShow){
 													listOfMarker[i].setVisible(false);
+												}
 											}
 											//set the value of input
 											document.getElementById('address').value = this.innerHTML;
@@ -106,15 +109,18 @@ function onChangeAddress(event){
 
 					}
 				}
-				for(var i = numberOfMarkerCreated; i < listOfMarker.length; i++)
+				for(i = numberOfMarkerCreated; i < listOfMarker.length; i++){
 					listOfMarker[i].setVisible(false);
-				if (numberOfMarkerCreated > 0) 
+				}
+				if (numberOfMarkerCreated > 0){
 					suggestionListNode.style.display = 'block';
+				}
 			});
 		}
 		
-		for(var i = 0; i < listOfMarker.length; i++)
+		for(i = 0; i < listOfMarker.length; i++){
 			listOfMarker[i].setVisible(false);
+		}
 	//}
 }
 

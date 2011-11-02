@@ -64,7 +64,7 @@ function GetXmlHttpObject()
 	});
  */
 function request(options){
-	xmlhttp = new GetXmlHttpObject();
+	var xmlhttp = new GetXmlHttpObject();
 	
 	if (typeof(options.xdebug) == 'undefined'){
 		options.xdebug = true;

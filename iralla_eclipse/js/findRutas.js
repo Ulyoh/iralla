@@ -8,7 +8,7 @@ function findRutas(event){
 		}*/
 	}
 	else {
-		if (address.value != '') {
+		if (address.value !== '') {
 			request({
 				phpFileCalled: 'found_ruta_s_name.php',
 				argumentsToPhpFile: 'q=' + address.value,
@@ -30,7 +30,7 @@ function findRutas(event){
 
 
 function showRutasName(rutasList){
-	if ((typeof(rutasList) != 'undefined') && (rutasList != '')){
+	if ((typeof(rutasList) != 'undefined') && (rutasList !== '')){
 		rutasList = JSON.parse(rutasList);
 		
 		var suggestionListNode = document.getElementById('suggestionListNode');
@@ -58,43 +58,43 @@ function showRutasName(rutasList){
 			newNode.setAttribute('onclick', 'this.showChoosenRuta();');
 		}
 					
-		if (suggestionListNode.firstChild != null) {
+		if (suggestionListNode.firstChild !== null) {
 			suggestionListNode.style.display = 'block';
 		}
 	}
 }
 
  function showChoosenRuta(){
- 	var busLine = arrayOfBusLines.getItemById(this.rutasInfos.id);
- 	if (busLine == false) {
- 		var array = [];
- 		array.push(this.rutasInfos);
- 		map.addBusLinesFromDb(array);
- 		busLine = arrayOfBusLines.getItemById(this.rutasInfos.id);
- 	}
- 	else {
- 		busLine.setMap(map);
- 	}
- 	arrayOfBusLines.setOptionsToAll({
- 		strokeColor: 'default'
- 	});
- 	
- 	//TODO: DOES NOT WORK 17/04/2011
-		busLine.setOptions({
-			strokeColor: '#0060FA'
-		});
+	var busLine = arrayOfBusLines.getItemById(this.rutasInfos.id);
+	if (busLine === false) {
+		var array = [];
+		array.push(this.rutasInfos);
+		map.addBusLinesFromDb(array);
+		busLine = arrayOfBusLines.getItemById(this.rutasInfos.id);
+	}
+	else {
+		busLine.setMap(map);
+	}
+	arrayOfBusLines.setOptionsToAll({
+		strokeColor: 'default'
+	});
+	
+	//TODO: DOES NOT WORK 17/04/2011
+	busLine.setOptions({
+		strokeColor: '#0060FA'
+	});
 	///////////////////
 	
-		cleanLinesNode = document.getElementById('button_clean_lines');
-		cleanLinesNode.style.display = 'inline';
-		cleanLinesNode.linesIdAdded.push(busLine.id);
-		this.parentNode.style.display = 'none';
-		if (this.parentNode.parentNode.childNodes.length <= 1) {
-			this.parentNode.parentNode.style.display = 'none';
-		}
-		this.parentNode.parentNode.removeChild(this.parentNode);
-		document.getElementById('address').value = "";
+	var cleanLinesNode = document.getElementById('button_clean_lines');
+	cleanLinesNode.style.display = 'inline';
+	cleanLinesNode.linesIdAdded.push(busLine.id);
+	this.parentNode.style.display = 'none';
+	if (this.parentNode.parentNode.childNodes.length <= 1) {
+		this.parentNode.parentNode.style.display = 'none';
 	}
+	this.parentNode.parentNode.removeChild(this.parentNode);
+	document.getElementById('address').value = "";
+}
 
 
 function setupCleanLines(){
@@ -111,7 +111,7 @@ function setupCleanLines(){
 
 /*
  * 
- * 			//remove all the roads already shown:
+ *			//remove all the roads already shown:
 			var id = suggestionListNode.firstChild.rutasInfos.id;
 			arrayOfBusLines.removeOnePolylineFromId(id);
  * 

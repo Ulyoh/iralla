@@ -4,7 +4,7 @@
 
  /**
   * Cross
-  * 	handle the show of a cross
+  *		handle the show of a cross
   */
  
  //static properties:
@@ -53,7 +53,7 @@ function Cross(objectAttachFrom){
 	};
 	
 	this.showLatLng = function(theMap, latLng){
-		coord = theMap.convertLatLngToPixelCoord(latLng);
+		var coord = theMap.convertLatLngToPixelCoord(latLng);
 		this.show(coord);
 	};
 	
@@ -66,10 +66,12 @@ function Cross(objectAttachFrom){
 	// // itsArgs[0] = this of newFunction
 	this.addFunctionsToListener = function(event, newFunction, itsArgs){
 		var self = this;
-		if (!(this.listeners)) 
-			this.listeners = new Object();
-		if ((this.listeners._id == null)) 
+		if (!(this.listeners)){
+			this.listeners = {};
+		}
+		if ((this.listeners._id === null)){
 			this.listeners._id = 0;
+		}
 		
 		//if there is no listeners created for this event:
 		if (!(this.listeners[event])) {
@@ -88,14 +90,15 @@ function Cross(objectAttachFrom){
 					var myFunction = _functions[i];
 					
 					//copy the arguments corresponding to the function
-					var args = new Array();
+					var args = [];
 					for (var k = 0; k < _args[i].length; k++) {
 						args[k] = _args[i][k];
 					}
 					for (var j = 0; j < args.length; j++) {
 						if (typeof(args[j]) == "string") {
-							if (args[j].slice(0, 6) == "eVeNt:") 
+							if (args[j].slice(0, 6) == "eVeNt:"){
 								args[j] = eval(args[j].slice(6));
+							}
 						}
 					}
 					
@@ -103,9 +106,9 @@ function Cross(objectAttachFrom){
 				}
 			//end fo listener
 			});
-			this.listeners[event]._functions = new Array();
-			this.listeners[event]._args = new Array();
-			this.listeners[event]._id = new Array();
+			this.listeners[event]._functions = [];
+			this.listeners[event]._args = [];
+			this.listeners[event]._id = [];
 		}
 		
 		this.listeners[event]._functions.push(newFunction);
@@ -117,7 +120,7 @@ function Cross(objectAttachFrom){
 	
 	this.destructor = function(){
 		_imgNode.parentNode.removeChild(_imgNode);
-	 	_divNode.parentNode.removeChild(_divNode);
+		_divNode.parentNode.removeChild(_divNode);
 		this._objectAttachFrom._cross = null;
 	};
 }

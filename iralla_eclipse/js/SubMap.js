@@ -15,11 +15,11 @@ function SubMap(canvas, opts){
 	subMap.zoomMax;
 	subMap.zoomLimitation;
 	//subMap.subMarkersArray = new Array();
-	//subMap.sizeDependingOnZoom  				can be created if passed by opts
+	//subMap.sizeDependingOnZoom				can be created if passed by opts
 	//subMap.sizeForAZoomValue			can be created if passed by opts
 	//subMap.defaultCenter
 	//"protected":
-	_nbrDeListener = 0;
+	//_nbrDeListener = 0;
 	
 	//private:
 	var _boundLimitationOn = false;
@@ -73,19 +73,21 @@ function SubMap(canvas, opts){
 	
 	subMap.enableZoomLimitation = function(bool){
 	
-		if ((bool == true) && (_idListenerOfZoomLimitation == -1)) {
+		if ((bool === true) && (_idListenerOfZoomLimitation == -1)) {
 			function limitZoom(){
-				if (this.getZoom() < this.zoomMin) 
+				if (this.getZoom() < this.zoomMin){
 					this.setZoom(this.zoomMin);
-				else if (this.getZoom() > this.zoomMax) 
+				}
+				else if (this.getZoom() > this.zoomMax){
 					this.setZoom(this.zoomMax);
+				}
 			}
 			_idListenerOfZoomLimitation = subMap.addFunctionsToListener('zoom_changed', limitZoom, [subMap]);
 			
 			subMap.zoomLimitation = "on";
 			_zoomLimitation = "on";
 		}
-		else if ((bool == false) && (_idListenerOfZoomLimitation >= 0)) {
+		else if ((bool === false) && (_idListenerOfZoomLimitation >= 0)) {
 			subMap.removeFunctionsToListeners(_idListenerOfZoomLimitation, 'zoom_changed');
 			subMap.zoomLimitation = "off";
 			_zoomLimitation = "off";
@@ -102,12 +104,12 @@ function SubMap(canvas, opts){
 	 };*/
 	subMap.removeAllBusLines = function(){	
 		//remove all previous bus lines:
-		if ((typeof(SubMap._busLinesArray) != 'undefined') && (SubMap._busLinesArray[0] != "")) {
+		if ((typeof(SubMap._busLinesArray) != 'undefined') && (SubMap._busLinesArray[0] !== "")) {
 			while (SubMap._busLinesArray.length > 0) {
 				SubMap._busLinesArray.shift().setMap(null);
 			}
 		}
-	}
+	};
 	
 	subMap.addBusLinesFromDb = function(DbList){
 
@@ -132,9 +134,10 @@ function SubMap(canvas, opts){
 			
 			var path = [];
 			
-			for (var j = 0; j < DbList[i].path.length; j++) {
-				if((typeof(DbList[i].path[j].lat) != 'undefined') && (typeof(DbList[i].path[j].lng) != 'undefined'))
-				path.push(new gmap.LatLng(DbList[i].path[j].lat, DbList[i].path[j].lng));
+			for (j = 0; j < DbList[i].path.length; j++) {
+				if((typeof(DbList[i].path[j].lat) != 'undefined') && (typeof(DbList[i].path[j].lng) != 'undefined')){
+					path.push(new gmap.LatLng(DbList[i].path[j].lat, DbList[i].path[j].lng));
+				}
 			}
 			
 			
@@ -177,11 +180,12 @@ function SubMap(canvas, opts){
 			}
 			
 			//save reference to SubMap._busLinesArray
-			if (SubMap._busLinesArray[0] == "") 
+			if (SubMap._busLinesArray[0] === ""){
 				SubMap._busLinesArray[0] = busLineBuffer;
-			else 
+			}
+			else{
 				SubMap._busLinesArray.push(busLineBuffer);
-			
+			}
 		}
 		
 		subMap.setSizeOfBusLinesDependingOnZoomLevel({
@@ -207,7 +211,7 @@ function SubMap(canvas, opts){
 			//define the icon:
 			iconPath = null;
 			
-			if ((DbList[i].type == '') || (DbList[i].type == 'normal')) {
+			if ((DbList[i].type === '') || (DbList[i].type == 'normal')) {
 				iconPath = "data/busStop.png";
 			}
 			else if (DbList[i].type == 'virtual') {
@@ -234,7 +238,7 @@ function SubMap(canvas, opts){
 			busStation.iconPath = iconPath;
 			
 			//save reference to SubMap._busLinesArray
-			if (SubMap._busStationArray[0] == "") {
+			if (SubMap._busStationArray[0] === "") {
 				SubMap._busStationArray[0] = busStation;
 			}
 			else {
@@ -274,11 +278,12 @@ function SubMap(canvas, opts){
 	};
 	
 	subMap.enableSizeDependingOnZoom = function(bool){
-		if (bool == true) 
+		if (bool === true){
 			subMap.sizeDependingOnZoom = "on";
-		else 
+		}
+		else{
 			subMap.sizeDependingOnZoom = "off";
-		
+		}
 		SubMap._busLinesArray.enableSizeDependingOnZoom(bool);
 	};
 	
@@ -289,11 +294,12 @@ function SubMap(canvas, opts){
 	};
 	
 	subMap.enableBusStationsSizeDependingOnZoom = function(bool){
-		if (bool == true) 
+		if (bool === true){
 			subMap.busStationsSizeDependingOnZoom = "on";
-		else 
+		}
+		else{
 			subMap.busStationsSizeDependingOnZoom = "off";
-		
+		}
 		SubMap._busStationArray.enableSizeDependingOnZoom(bool);
 	};
 	
@@ -322,7 +328,7 @@ function SubMap(canvas, opts){
 	subMap.showBusStationsOnMap = function(busStationListFromDb){
 		this.addBusStationsFromDb(JSON.parse(busStationListFromDb));
 		arrayOfBusStations.busStationsSizingDependingOnZoom();
-	}
+	};
 	
 	subMap.showBusLinesOnMap = function(busLinesListFromDb){
 		var linesListFromBdd = JSON.parse(busLinesListFromDb);
@@ -341,7 +347,7 @@ function SubMap(canvas, opts){
 		}
 		
 		map.addBusLinesFromDb(linesListFromBdd);
-	}
+	};
 	//private:
 	
 	//constructor:
@@ -359,24 +365,8 @@ function SubMap(canvas, opts){
 	if (subMap.sizeDependingOnZoom == 'on') 
 		subMap.enableSizeDependingOnZoom(true);
 	
-	return subMap;
-
-	
-	
+	return subMap;	
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

@@ -20,10 +20,10 @@
 	 }*/
 
 	
- 	martkerShape = {
+	var martkerShape = {
 		coord: [1,1,50,50], //[-15,-30,50,0],
 		type: 'rect'
-	}
+	};
 	opts.shape = martkerShape;
 	
 	var busStation = new gmap.Marker(opts);
@@ -50,7 +50,7 @@
 
 	//add listener to show the name of the station when the mouse is over a marker of bus station
 	busStation.addListenerOnBusStation = function(){
-  	google.maps.event.addListener(this, 'click', function(){
+	gmap.event.addListener(this, 'click', function(){
 		var position = new gmap.Point();
 		position = this.map.convertLatLngToPixelCoord(this.getPosition());
 		var myInfo = document.getElementById('myInfo');
@@ -61,22 +61,22 @@
 		myInfo.style.left = x + "px";
 		myInfo.style.top = y + "px";
 		if (typeof(myInfo.listener) != 'undefined') {
-			google.maps.event.removeListener(myInfo.listener);
+			gmap.event.removeListener(myInfo.listener);
 		}
 		//set unable to show my info for the polyilnes:
 		map.myInfoUnableForPolyline = false;
 		
-		myInfo.listener =  google.maps.event.addListener(this, 'mouseout', function(){
+		myInfo.listener =  gmap.event.addListener(this, 'mouseout', function(){
 				map.myInfoUnableForPolyline = true;
 				var myInfo = document.getElementById("myInfo");
 				clearTimeout(myInfo.idTimeOutMyInfo);
 				myInfo.idTimeOutMyInfo = setTimeout(function(){document.getElementById("myInfo").style.display = "none";},1000);
 			});
-  	});
+	});
 
 };
     //private:
-    	//none
+		//none
        
     return busStation;
 }

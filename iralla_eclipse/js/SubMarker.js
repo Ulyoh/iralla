@@ -86,7 +86,7 @@ function SubMarker(opts){
 		idListenerShowCrossWhenDragMapEnd = subMarker.map.addFunctionsToListener('dragend', subMarker._showCross, [subMarker] );   //this will be the map
 		
 		//set the listener to hide the cross tag when the map is zoomed:
-		listenerDropMarker = function(){
+		var listenerDropMarker = function(){
 			this._cross.hide();
 			var self = this;
 			try {
@@ -105,7 +105,7 @@ function SubMarker(opts){
 		idListenerWhenMarkerEndToDrag = subMarker.addFunctionsToListener('dragend', subMarker._showCross, [subMarker] );
 		
 		//set the listener when the cross is click to hide the subMarker
-		setCrossListener = function(){
+		var setCrossListener = function(){
 			this.hide();
 			theMap = this.map;
 			//document.getElementById('calculate').style.display = "none";

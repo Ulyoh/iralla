@@ -6,7 +6,7 @@ gmap.Polyline.prototype.addFunctionsToListener = addFunctionsToListener;		//see 
 gmap.Polyline.prototype.removeFunctionsToListeners = removeFunctionsToListeners;		//see commonsFunctions.js
 
 gmap.Polyline.prototype.setSizeOfPolylineDependingOnZoomLevel = function(sizesDependingOnZoomsLevels){
-	sizesDependingOnZoomsLevelsArray = new Array(30);
+	sizesDependingOnZoomsLevelsArray = [30];
 	var key;
 	for (key in sizesDependingOnZoomsLevels)
 		sizesDependingOnZoomsLevelsArray[key] = sizesDependingOnZoomsLevels[key];

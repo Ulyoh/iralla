@@ -24,7 +24,7 @@ gmap.Map.prototype.convertLatLngToPixelCoord = function(latLng){
 	lat = NE.lat() - lat;
 	lng = lng - SW.lng();
 	
-	divNode = this.getDiv();
+	var divNode = this.getDiv();
 	
 	var x = lng * divNode.offsetWidth /( NE.lng() - SW.lng() ) + divNode.offsetLeft;
 	var y = lat * divNode.offsetHeight / ( NE.lat() - SW.lat() ) + divNode.offsetTop;

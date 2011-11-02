@@ -35,7 +35,7 @@ function calculateRoad(){
 
 
 function showRoad(datas){
-	if(datas == ""){
+	if(datas === ""){
 		
 		//TODO show a no result found window
 		
@@ -106,10 +106,11 @@ function showRoad(datas){
 	var center;
 	var previousPath;
 	var nextPath;
+	var newCircle;
 	//for each bus station of the road:
 	for (i = 1; i < busStations.length-1; i++){
 		//make a circle around:
-		if (busStations[i] != null){
+		if (busStations[i] !== null){
 			center = new gmap.LatLng(parseFloat(busStations[i].lat), parseFloat(busStations[i].lng));
 			
 			newCircle = new gmap.Circle({
@@ -212,11 +213,10 @@ function show_details(datas){
 	var infos = getEltById("infos");
 	infos.innerHTML = "";
 	
- 	var tableParts = createTableInElt(infos);
+	var tableParts = createTableInElt(infos);
 	var tbody = tableParts.tbody;
 	
-	var text;
-	text = {
+	var text = {
 		itinerary:"itinerario:",
 		fromTheBusStation:"a la estacion de bus:",
 		takeNextBus:"cambiar de bus",
@@ -227,15 +227,15 @@ function show_details(datas){
 		goToTheNextBusStation:"caminar hasta la estacion de bus siguiente:",
 		goToTheFinal:"caminar hasta su punto de lleguada",
 		lineTitle: 'clic para zoomear'
-	}
+	};
 	
 	tableParts.thead.innerHTML = text.itinerary;
 	
 	var textToShow;
 	
 	//if otras:
-	if (busStations[1] != null) {
-		textToShow = text.goToTheFirstBusStation + '<br/> <span class=name_of>' + busStations[i].name + " </span><br/>";
+	if (busStations[1] !== null) {
+		textToShow = text.goToTheFirstBusStation + '<br/> <span class=name_of>' + busStations[1].name + " </span><br/>";
 	}
 	//else if troncal or alimentadora
 	else {
@@ -255,10 +255,10 @@ function show_details(datas){
 		
 		//show for the bus stations
 		if (i > 1) {
-			if (busStations[i] != null) {
+			if (busStations[i] !== null) {
 				textToShow = text.fromTheBusStation + '<br/> <span class=name_of>' + busStations[i].name + " </span><br/>";
 			}
-			else if (bs2Bss[i].path.length != 0) {
+			else if (bs2Bss[i].path.length !== 0) {
 				textToShow = text.takeNextBus + '<br/>';
 				addLineWithOneCellInTable(tbody, {
 					lineTitle: text.lineTitle,
@@ -272,15 +272,15 @@ function show_details(datas){
 
 		//show for the bus lines:
 		if (i < busStations.length - 2) {
-			if (bs2Bss[i].name != null) {
-				if ((i == 1) && (busStations[1] == null)) {
+			if (bs2Bss[i].name !== null) {
+				if ((i == 1) && (busStations[1] === null)) {
 					textToShow = '<span class=name_of>' + bs2Bss[i].name + ' </span><br/>';
 				}
 				else {
 					textToShow += text.takeTheLine + '<br/><span class=name_of>' + bs2Bss[i].name + ' </span><br/>';
 				}
 			}
-			else if (busStations[i + 1] == null) {
+			else if (busStations[i + 1] === null) {
 				textToShow += text.goToTheNextLine + '<br/>';
 			}
 			else {
@@ -288,7 +288,7 @@ function show_details(datas){
 			}
 			
 			//preparation of the map to show the alrededro of the bus station:
-			if (textToShow != '') {
+			if (textToShow !== '') {
 				addLineWithOneCellInTable(tbody, {
 					lineTitle: text.lineTitle,
 					lineId: 'info' + i,
@@ -301,7 +301,7 @@ function show_details(datas){
 	
 	textToShow = '';
 	
-	if (busStations[i] != null) {
+	if (busStations[i] !== null) {
 		textToShow = text.fromTheBusStation + '<br/> <span class=name_of>' + busStations[i].name + " </span><br/>";
 		textToShow += text.goToTheFinal + '<br/>';
 	}

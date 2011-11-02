@@ -11,8 +11,8 @@ if (aa == true){
 vArray
 */
 ArrayOf = function(){
- 	//private:
- 	var typeObjectPrivate = arguments[0];
+	//private:
+	var typeObjectPrivate = arguments[0];
 	
 	
 	for(var i = 1 ; i < arguments.length; i++){
@@ -21,7 +21,7 @@ ArrayOf = function(){
 	delete arguments[i];
 	arguments.length--;
 	
- 	var arrayOf = new Array(passArgumentsAgain(arguments));
+	var arrayOf = [passArgumentsAgain(arguments)];
 // non-static variables
 	//public:
 		//none
@@ -36,7 +36,7 @@ ArrayOf = function(){
 			}
 		}
 		return false;
-	}
+	};
 	
 	//constructor:
 
@@ -78,13 +78,14 @@ ArrayOfPolylines = function(){
 //Methods:
 	//Public:		
 	arrayOfPolylines.setSizeOfPolylinesDependingOnZoomLevel = function(sizesDependingOnZoomsLevels){
-		var sizesDependingOnZoomsLevelsArray = new Array(30);
+		var sizesDependingOnZoomsLevelsArray = [30];
 		var key;
 		for (key in sizesDependingOnZoomsLevels){
 			sizesDependingOnZoomsLevelsArray[key] = sizesDependingOnZoomsLevels[key];
 		}
 		
 		//complete the array with the size set in the smaller value:
+		var previousSize;
 		for (var i = 0; i < sizesDependingOnZoomsLevelsArray.length; i++){
 			var size = sizesDependingOnZoomsLevelsArray[i];
 			if (i === 0){
@@ -96,7 +97,7 @@ ArrayOfPolylines = function(){
 				size = previousSize;
 			}
 			sizesDependingOnZoomsLevelsArray[i] = size;
-			var previousSize = size; 
+			previousSize = size; 
 		}
 		this.sizeForAZoomValue = sizesDependingOnZoomsLevelsArray;
 	};
@@ -115,9 +116,6 @@ ArrayOfPolylines = function(){
 							});
 						}
 					}
-					
-					
-					
 				}
 		        this._idListenerSizeDependingOnZoom = this[0].map.addFunctionsToListener('zoom_changed', sizingDependingOnZoom, [this]);
 	
@@ -140,8 +138,7 @@ ArrayOfPolylines = function(){
 				break;
 			}
 		}
-		
-	}
+	};
 	
 	arrayOfPolylines.removePolylinesFromIds = function(idsArray){
 		mainLoop: for(var i = 0; i < arrayOfPolylines.length; i++){
@@ -156,7 +153,7 @@ ArrayOfPolylines = function(){
 				}
 			}
 		}
-	}
+	};
 
 	//Private:
 		//none
@@ -167,7 +164,7 @@ ArrayOfPolylines = function(){
  
  
 ArrayOfBusLines = function(){
-	arrayOfBusLines = new ArrayOfPolylines(passArgumentsAgain(arguments));
+	var arrayOfBusLines = new ArrayOfPolylines(passArgumentsAgain(arguments));
 
 // non-static variables
 	//public:
@@ -175,7 +172,7 @@ ArrayOfBusLines = function(){
 	//"protected":
 		//none
 	//private:
- 	typeObjectPrivate = "BusLine";
+	typeObjectPrivate = "BusLine";
 	
 	//constructor:
 
@@ -186,11 +183,11 @@ ArrayOfBusLines = function(){
  
  
 ArrayOfBusStation = function(){
- 	arrayOfBusStations = new ArrayOf(passArgumentsAgain(arguments));
+	var arrayOfBusStations = new ArrayOf(passArgumentsAgain(arguments));
 	if ((arrayOfBusStations[0] === "")  && (arrayOfBusStations.length)){
 		arrayOfBusStations.shift();	
 	}
- 	// non-static variables
+	// non-static variables
 		//public:
 		//none
 		//"protected":
@@ -204,13 +201,14 @@ ArrayOfBusStation = function(){
 	//Methods:
 		//Public:		
 		arrayOfBusStations.setSizeOfBusStationsDependingOnZoomLevel = function(sizesDependingOnZoomsLevels){
-			var sizesDependingOnZoomsLevelsArray = new Array(30);
+			var sizesDependingOnZoomsLevelsArray = [30];
 			var key;
 			for (key in sizesDependingOnZoomsLevels){
 				sizesDependingOnZoomsLevelsArray[key] = sizesDependingOnZoomsLevels[key];
 			}
 			
 			//complete the array with the size set in the smaller value:
+			var previousSize;
 			for (var i = 0; i < sizesDependingOnZoomsLevelsArray.length; i++) {
 				var size = sizesDependingOnZoomsLevelsArray[i];
 				if (i === 0) {
@@ -224,14 +222,14 @@ ArrayOfBusStation = function(){
 					}
 				
 				sizesDependingOnZoomsLevelsArray[i] = size;
-				var previousSize = size;		//TODO : see it
+				previousSize = size;		//TODO : see it
 			}
 			this.sizeForAZoomValue = sizesDependingOnZoomsLevelsArray;
 		};
 		
 		arrayOfBusStations.enableSizeDependingOnZoom = function(bool){
 		
-			if ((bool == true) && ((this._idListenerBusStationsSizeDependingOnZoom == -1) || (this._idListenerBusStationsSizeDependingOnZoom == undefined)) && (this.sizeForAZoomValue.length == 30)) {
+			if ((bool === true) && ((this._idListenerBusStationsSizeDependingOnZoom == -1) || (this._idListenerBusStationsSizeDependingOnZoom === undefined)) && (this.sizeForAZoomValue.length == 30)) {
 			
 				this._idListenerBusStationsSizeDependingOnZoom = this[0].map.addFunctionsToListener('zoom_changed', this.busStationsSizingDependingOnZoom, [this]);
 				this.busStationsSizeDependingOnZoom = "on";
@@ -253,9 +251,6 @@ ArrayOfBusStation = function(){
 						var iconPath = this[i].iconPath;
 						var iconStation = new gmap.MarkerImage(iconPath, null,  null, null, new gmap.Size(size, size));	
 						this[i].setIcon(iconStation);
-
-
-
 					}
 				};
 		

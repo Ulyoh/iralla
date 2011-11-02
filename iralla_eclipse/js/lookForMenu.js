@@ -53,7 +53,7 @@ function cross_button_click(id_to_remove){
 	}
 	//if in second cross road selection
 	else if (map.stepLookForMenu == "arrival"){
-		map.stepLookForMenu = "departure"
+		map.stepLookForMenu = "departure";
 		showFindRouteMenu();
 	}
 }

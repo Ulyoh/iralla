@@ -17,11 +17,11 @@ function showFindRouteMenu(){
 	var roads_list_selected_1 = getEltById("roads_list_selected_1");
 	var roads_list_selected_2 = getEltById("roads_list_selected_2");
 	
-	if (roads_list_selected_1 != null){
+	if (roads_list_selected_1 !== null){
 		removeNodeById("roads_list_selected_1");
 	}
 	
-	if (roads_list_selected_2 != null){
+	if (roads_list_selected_2 !== null){
 		removeNodeById("roads_list_selected_2");
 	}
 	
@@ -139,13 +139,13 @@ function showRoadsNames(roadsList){
 	var suggestionListNode = this.parentNode.parentNode.parentNode.getElementsByTagName("table")[0];
 	
 	//remove all the childs of tbody of suggestionNode
-	if(suggestionListNode.firstChild != null){
+	if(suggestionListNode.firstChild !== null){
 		while (suggestionListNode.firstChild) {
 			removeNode(suggestionListNode.firstChild);
 		}
 	}
 	
-	if ((typeof(roadsList) != 'undefined') && (roadsList != '') && (roadsList != '[]') && (roadsList.length > 0)){
+	if ((typeof(roadsList) != 'undefined') && (roadsList !== '') && (roadsList != '[]') && (roadsList.length > 0)){
 		roadsList = JSON.parse(roadsList);
 		//suggestionListNode.parentNode.parentNode.style.display = 'none';
 
@@ -189,7 +189,7 @@ function showRoadsNames(roadsList){
 			//newNode.onclick = "selectUnselectRoad(this)";
 		}
 					
-		if (suggestionListNode.firstChild != null) {
+		if (suggestionListNode.firstChild !== null) {
 			suggestionListNode.parentNode.parentNode.style.display = 'block';
 		}
 		else{
@@ -206,7 +206,7 @@ function showRoadsNames(roadsList){
 
 function selectUnselectRoad(that){
 
-	if((typeof(that.selected) == 'undefined') || that.selected == false){
+	if((typeof(that.selected) == 'undefined') || that.selected === false){
 		that.style.backgroundColor="#00FF66";
 		that.selected = true;
 		that.title = 'clic para deseleccionnar';
@@ -237,6 +237,12 @@ function validar(that){
 	hideNodeById("valid_roads_button_1");
 	hideNodeById("valid_roads_button_2");
 	
+	var roadsListSelected;
+	var newLine;
+	var table;
+	var rows;
+	var i;
+	
 	if(that == getEltById('valid_roads_button_1')){
 		//hide the current text input:
 		hideNodeById('row_input_road_1');
@@ -244,13 +250,12 @@ function validar(that){
 		hideNodeById('row_suggestion_list_road_1');
 		
 		//show a list of the roads selected for the first road:
-		var roadsListSelected = document.createElement('ul');
+		roadsListSelected = document.createElement('ul');
 		roadsListSelected.setAttribute("id", "roads_list_selected_1");
-		var newLine;
-		var table = that.parentNode.parentNode.parentNode.getElementsByTagName("table")[0];
-		var rows = table.getElementsByTagName("tr");
-		for( var i = 0; i < rows.length; i++){
-			if(rows[i].firstChild.firstChild.selected == true){
+		table = that.parentNode.parentNode.parentNode.getElementsByTagName("table")[0];
+		rows = table.getElementsByTagName("tr");
+		for( i = 0; i < rows.length; i++){
+			if(rows[i].firstChild.firstChild.selected === true){
 				newLine = document.createElement('li');
 				newLine.innerHTML = rows[i].firstChild.firstChild.innerHTML;
 				newLine.roadsInfos = rows[i].firstChild.firstChild.roadsInfos;
@@ -290,13 +295,12 @@ function validar(that){
 		hideNodeById('row_suggestion_list_road_2');
 		
 		//show a list of the roads selected for the second road:
-		var roadsListSelected = document.createElement('ul');
+		roadsListSelected = document.createElement('ul');
 		roadsListSelected.setAttribute("id", "roads_list_selected_2");
-		var newLine;
-		var table = that.parentNode.parentNode.parentNode.getElementsByTagName("table")[0];
-		var rows = table.getElementsByTagName("tr");
-		for( var i = 0; i < rows.length; i++){
-			if(rows[i].firstChild.firstChild.selected == true){
+		table = that.parentNode.parentNode.parentNode.getElementsByTagName("table")[0];
+		rows = table.getElementsByTagName("tr");
+		for( i = 0; i < rows.length; i++){
+			if(rows[i].firstChild.firstChild.selected === true){
 				newLine = document.createElement('li');
 				newLine.innerHTML = rows[i].firstChild.firstChild.innerHTML;
 				newLine.roadsInfos = rows[i].firstChild.firstChild.roadsInfos;
@@ -346,7 +350,7 @@ function validar(that){
 		var selectedRoads = {
 			roads1: roads1,
 			roads2: roads2
-		}
+		};
 		
 		//show the two fields to find the roads:
 		showBlockById("table_to_find_road_1");
@@ -518,7 +522,7 @@ gmap.Marker.prototype.select_cross_road_marker = function(){
 	
 	//hide the instructions_to_select_marker
 	hideNodeById("instructions_to_select_marker");
-}
+};
 
 function initToPlaceTheMarker(){
 	map.currentMarker = null;
