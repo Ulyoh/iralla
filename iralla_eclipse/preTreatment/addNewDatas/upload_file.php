@@ -202,7 +202,7 @@ require_once 'access_to_db.php';
 		saveToDb($bus_stations_list, 'bus_stations');
 	}
 	
-	header('Location: /iralla_eclipse/preTreatment/addNewDatas/responseAddNewDatas.html');
+	header('Location: http://www.cortocamino.com/guayaquil/preTreatment/addNewDatas/responseAddNewDatas.html');
 ?>
 
 

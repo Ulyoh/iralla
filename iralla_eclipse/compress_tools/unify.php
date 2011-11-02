@@ -1,7 +1,9 @@
 <?php
+
+$mysite = 'http://www.cortocamino.com/guayaquil/';
+
 //create a folder if not exists to save the "acumulate" site:
 $folder_to_create = "/xampp/htdocs/unify";
-
 $site_folder = "/xampp/htdocs/iralla_eclipse/";
 
 if(is_dir($folder_to_create)){
@@ -10,7 +12,7 @@ if(is_dir($folder_to_create)){
    mkdir($folder_to_create);
 }
 
-$index_html = file_get_contents("http://localhost/iralla_eclipse/index.php");
+$index_html = file_get_contents($mysite + "index.php");
 
 //open index.php:
 $doc = new DOMDocument();

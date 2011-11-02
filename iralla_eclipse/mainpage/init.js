@@ -2,10 +2,7 @@
  * @author yoh
  */
 
-//var mysite = 'http://localhost:85/iralla/';
-//var mysite = 'iralla/';
-//var mysite = '/localhost/iralla/'
-var mysite = '';
+var mysite = 'http://www.cortocamino.com/guayaquil/';
 var xDebugOn = true;
 
 var gmap = google.maps;
@@ -15,7 +12,7 @@ var gmap = google.maps;
 function initialize() {
 	rutasLoaded = false;
 	var defaultCenter = new google.maps.LatLng(-2.17,-79.9);
-	
+
     var myOptions = {
 			zoom: 12,
 			defaultCenter: defaultCenter,

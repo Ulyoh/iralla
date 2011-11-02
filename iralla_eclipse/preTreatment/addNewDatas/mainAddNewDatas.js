@@ -9,7 +9,7 @@ function mainAddNewDatas(){
 	
 	var iframeSendFile = document.createElement('iframe');
 	iframeSendFile.setAttribute('id', 'iframeSendFile');
-	iframeSendFile.setAttribute('src','http://127.0.0.1/iralla_eclipse/iframeUploadFile.html');
+	iframeSendFile.setAttribute('src', monsite + '/iframeUploadFile.html');
 	divIframeSendFile.appendChild(iframeSendFile);
 }
 
