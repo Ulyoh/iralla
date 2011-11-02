@@ -93,13 +93,24 @@ th,td{
 	z-index: 1000;
 }
 
-#hide_show_infos{
+#hide_show_infosPre{
 	position: fixed;
 	right: 5px;
 	top: 0px;
 	background-color: #DDDDDD;
 	width: 600px;
 	height: 10px;
+	z-index: 1000;
+}
+
+#infosPre{
+	position: fixed;
+	right:5px;
+	top: 10px;
+	background-color: #FFFFFF;
+	width: 600px;
+	height: 200px;
+	overflow: scroll;
 	z-index: 1000;
 }
 

@@ -82,7 +82,7 @@ function mainSavingModifications(which){
 							lat: out.lat(),
 							lng: out.lng()
 						}
-					})
+					});
 				}
 			}
 			
@@ -136,7 +136,7 @@ function mainSavingModifications(which){
 				circleRadius: arrayOfBusStations[i].circle.getRadius(),
 				idFromJavascript: arrayOfBusStations[i].javascriptId,
 				type: arrayOfBusStations[i].type
-			}
+			};
 			allBusStationsDatas.push(busStationDatas);
 			
 			//links:
@@ -189,7 +189,7 @@ function mainSavingModifications(which){
 						distanceToPrevIndex: distanceToPrevIndex,
 						lat: position.lat(),
 						lng: position.lng()
-					}
+					};
 					allLinksDatas.push(linkDatas);
 				}
 				
@@ -206,14 +206,14 @@ function mainSavingModifications(which){
 		busLinesList: allBusLinesDatas,
 		buStationsList: allBusStationsDatas,
 		busLinksList: allLinksDatas
-	}
-
+	};
+	
 	dataToSend = JSON.stringify(dataToSend);
 
 	request({
 		phpFileCalled: mysite + 'preTreatment/savingModifications/saveAllModifications.php',
 		argumentsToPhpFile: 'q=' + dataToSend,
-		callback: showResultInInfosBox
+		callback: showResultInInfosPreBox
 	});
 
 }
@@ -231,7 +231,7 @@ function pathToArray(path){
 		pathArray.push({
 			lat:round(latLng.lat(), 8),
 			lng: round(latLng.lng(), 8)
-		}) 
+		});
 	}
 	return pathArray;
 }

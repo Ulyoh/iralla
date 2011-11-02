@@ -3,43 +3,40 @@
  * and open the template in the editor.
  */
 
-function createInfosBox(){
-
+function createinfosPreBox(){
 	//make a div to show informations:
-	if(document.getElementById('infos') === null){
-		var infos = document.createElement('div');
-		infos.setAttribute('id', 'infos');
-		document.body.appendChild(infos);
-		infos.style.display = 'none';
+	if(document.getElementById('infosPre') === null){
+		var infosPre = document.createElement('div');
+		infosPre.setAttribute('id', 'infosPre');
+		document.body.appendChild(infosPre);
+		infosPre.style.display = 'none';
 	}
 
-	//make a div to hide show the infos box:
-	if(document.getElementById('hide_show_infos') === null){
-		var hide_show_infos = document.createElement('div');
-		hide_show_infos.setAttribute('id', 'hide_show_infos');
-		document.body.appendChild(hide_show_infos);
-
-		hide_show_infos.onclick = showHideInfosBox;
+	//make a div to hide show the infosPre box:
+	if(document.getElementById('hide_show_infosPre') === null){
+		var hide_show_infosPre = document.createElement('div');
+		hide_show_infosPre.setAttribute('id', 'hide_show_infosPre');
+		hide_show_infosPre.setAttribute('onclick', 'showHideInfosPreBox();');
+		document.body.appendChild(hide_show_infosPre);
 	}
-
 }
 
-function getInfosBoxNode(){
-	if(document.getElementById('infos') === null){
-		createInfosBox();
+function getInfosPreBoxNode(){
+	if(document.getElementById('infosPre') === null){
+		createinfosPreBox();
 	}
-	return document.getElementById('infos');
+	return document.getElementById('infosPre');
 }
 
-function showHideInfosBox(){
-	var infos = document.getElementById('infos');
-	if( infos !== null){
-		var displayValue = infos.style.display;
+function showHideInfosPreBox(){
+	var infosPre = getInfosPreBoxNode();
+	if( infosPre !== null){
+		var displayValue = infosPre.style.display;
 		if (displayValue == 'none'){
-			infos.style.display = 'block';
+			infosPre.style.display = 'block';
 		}
 		else{
-			infos.style.display = 'none';
+			infosPre.style.display = 'none';
 		}
 	}
 }
@@ -52,16 +49,16 @@ function addInfoInNewDiv(){
 	}
 	add_info = document.createElement('div');
 	add_info.setAttribute('id', 'add_info');
-	getInfosBoxNode().appendChild(add_info);
+	getInfosPreBoxNode().appendChild(add_info);
 	return add_info;
 }
 
 function getAddInfoDiv(){
 	return document.getElementById('add_info');
 }
-createInfosBox();
+createinfosPreBox();
 
-function showResultInInfosBox(returnFromServor){
+function showResultIninfosPreBox(returnFromServor){
 	addInfoInNewDiv().innerHTML = returnFromServor;
 
 }

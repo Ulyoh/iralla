@@ -57,7 +57,7 @@
 	if (!document.getElementById('div_set_name')){
 		var busLineName = document.createElement('div');
 		busLineName.setAttribute('id', 'div_set_name');
-		getInfosBoxNode().appendChild(busLineName);
+		getInfosPreBoxNode().appendChild(busLineName);
 	}
 	document.getElementById('div_set_name').innerHTML = "name of the selected bus line :<br/> <textarea rows='2' cols='40' id='busLineName'  onKeyUp=arrayOfBusLines[" + i + "].setNewNameToShow() />" + 
 	this.name + "</textarea>";
@@ -76,7 +76,7 @@
 		div_connections = document.getElementById('div_connections');
 		div_connections.setAttribute('id', 'div_connections');
 		div_connections.innerHTML = texte;
-		getInfosBoxNode().appendChild(div_connections);
+		getInfosPreBoxNode().appendChild(div_connections);
 	}
 		
  };

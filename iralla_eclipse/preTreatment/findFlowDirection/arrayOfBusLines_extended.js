@@ -242,7 +242,7 @@ arrayOfBusLines.findFlowOfAllBusLines = function(index){
 		map.allArrowsFromFileShown = true;
 	}
 
-	var infos = getInfosBoxNode();
+	var infos = getInfosPreBoxNode();
 	
 	//show the progression:
 	if (document.getElementById('progression') === null) {

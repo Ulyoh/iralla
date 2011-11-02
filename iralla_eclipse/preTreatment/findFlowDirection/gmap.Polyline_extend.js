@@ -425,7 +425,7 @@ gmap.Polyline.prototype.findFlowAuto = function(showMessages){
 		var newInfo = document.createElement('div');
 		newInfo.innerHTML = 'the bus line ' + this.name + ' has at least one boundary <br/>' +
 							'the flow can not be found automaticaly';
-		getInfosBoxNode().appendChild(newInfo);
+		getInfosPreBoxNode().appendChild(newInfo);
 		return false;
 	}
 	var crossRight = 0;

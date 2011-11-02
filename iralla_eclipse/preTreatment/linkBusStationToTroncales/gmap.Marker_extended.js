@@ -136,7 +136,7 @@ gmap.Marker.prototype.setAddingConnections = function(){
 	if (!document.getElementById('div_set_name')){
 		var busStationName = document.createElement('div');
 		busStationName.setAttribute('id', 'div_set_name');
-		getInfosBoxNode().appendChild(busStationName);
+		getInfosPreBoxNode().appendChild(busStationName);
 	}
 	document.getElementById('div_set_name').innerHTML = "name of the selected bus station :<br/> <textarea rows='2' cols='40' id='busStationName'  onKeyUp=arrayOfBusStations[" + i + "].setNewNameToShow() /> " + 
 	this.name + "</textarea>";
@@ -157,7 +157,7 @@ gmap.Marker.prototype.setAddingConnections = function(){
 		div_connections = document.getElementById('div_connections');
 		div_connections.setAttribute('id', 'div_connections');
 		div_connections.innerHTML = texte;
-		getInfosBoxNode().appendChild(div_connections);
+		getInfosPreBoxNode().appendChild(div_connections);
 	}
 		
 };
