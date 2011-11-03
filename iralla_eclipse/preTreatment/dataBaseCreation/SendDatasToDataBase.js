@@ -5,9 +5,9 @@ SendDatasToDataBase = function(nothing, iterationNbr){
 	
 	currentIteration = iterationNbr;
 	if (iterationNbr >= 0){
-	var parametersToSend = arrayOfBusLines[iterationNbr].id;
-		for( var i=0; i < arrayOfBusLines[iterationNbr].fields.length; i++){
-			parametersToSend += '-' + arrayOfBusLines[iterationNbr].fields[i];
+	var parametersToSend = SubMap._busLinesArray[iterationNbr].id;
+		for( var i=0; i < SubMap._busLinesArray[iterationNbr].fields.length; i++){
+			parametersToSend += '-' + SubMap._busLinesArray[iterationNbr].fields[i];
 		}
 		
 		request({

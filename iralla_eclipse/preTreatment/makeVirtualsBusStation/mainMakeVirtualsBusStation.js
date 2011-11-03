@@ -57,7 +57,7 @@ function mainMakeVirtualsBusStation(){
 			button_create_areas.innerHTML = 'create areas';
 			newField.appendChild(button_create_areas);
 		}
-		document.getElementById('button_create_areas').setAttribute('onclick', 'arrayOfBusLines.createAreasAroundBusLines()');
+		document.getElementById('button_create_areas').setAttribute('onclick', 'SubMap._busLinesArray.createAreasAroundBusLines()');
 		
 		//add a button to look for the links
 		if (document.getElementById('button_look_for_links') === null) {
@@ -67,7 +67,7 @@ function mainMakeVirtualsBusStation(){
 			button_look_for_links.innerHTML = 'look for links';
 			newField.appendChild(button_look_for_links);
 		}
-		document.getElementById('button_look_for_links').setAttribute('onclick', 'arrayOfBusLines.lookForLinks()');
+		document.getElementById('button_look_for_links').setAttribute('onclick', 'SubMap._busLinesArray.lookForLinks()');
 		
 		
 		//add a button to groupe the links
@@ -78,21 +78,21 @@ function mainMakeVirtualsBusStation(){
 			button_grouping_links.innerHTML = 'grouping links';
 			newField.appendChild(button_grouping_links);
 		}
-		document.getElementById('button_grouping_links').setAttribute('onclick', 'arrayOfBusLines.groupingLinks()');
+		document.getElementById('button_grouping_links').setAttribute('onclick', 'SubMap._busLinesArray.groupingLinks()');
 		
 		
 		//listener to select a virtual bus Station
-		for (i = 0; i < arrayOfBusStations.length; i++) {
-			if(arrayOfBusStations[i].type == "virtual"){
-				arrayOfBusStations[i].listenerId = arrayOfBusStations[i].addFunctionsToListener('click', arrayOfBusStations[i].setAddingConnections, [arrayOfBusStations[i]]);
+		for (i = 0; i < SubMap._busStationArrays.length; i++) {
+			if(SubMap._busStationArrays[i].type == "virtual"){
+				SubMap._busStationArrays[i].listenerId = SubMap._busStationArrays[i].addFunctionsToListener('click', SubMap._busStationArrays[i].setAddingConnections, [SubMap._busStationArrays[i]]);
 			}
 		}
 		
 		//listener to select a bus line:
-		if ((arrayOfBusLines.length > 0) && (arrayOfBusLines[0] != "")){
-			for (i = 0; i < arrayOfBusLines.length; i++) {
-				if ((arrayOfBusLines[i].type == "other") || (arrayOfBusLines[i].type == "feeder")) {
-					arrayOfBusLines[i].listenerId = arrayOfBusLines[i].addFunctionsToListener('click', arrayOfBusLines[i].setAddingConnections, [arrayOfBusLines[i]]);
+		if ((SubMap._busLinesArray.length > 0) && (SubMap._busLinesArray[0] != "")){
+			for (i = 0; i < SubMap._busLinesArray.length; i++) {
+				if ((SubMap._busLinesArray[i].type == "other") || (SubMap._busLinesArray[i].type == "feeder")) {
+					SubMap._busLinesArray[i].listenerId = SubMap._busLinesArray[i].addFunctionsToListener('click', SubMap._busLinesArray[i].setAddingConnections, [SubMap._busLinesArray[i]]);
 				}
 			}
 		}
@@ -150,34 +150,34 @@ function mainMakeVirtualsBusStation(){
 		
 ////////////////////FOR VIRUTAL BUS STATION/////////////////////////
 
-		for (i = 0; i < arrayOfBusStations.length; i++) {
-			if (arrayOfBusStations[i].type == "virtual"){
-				arrayOfBusStations[i].removeFunctionsToListeners(arrayOfBusStations[i].listenerId, 'click');
+		for (i = 0; i < SubMap._busStationArrays.length; i++) {
+			if (SubMap._busStationArrays[i].type == "virtual"){
+				SubMap._busStationArrays[i].removeFunctionsToListeners(SubMap._busStationArrays[i].listenerId, 'click');
 			}
 		}
 		
-		if ((typeof(arrayOfBusLines) != "undefined") && (arrayOfBusLines[0] != "")) {
-			for (i = 0; i < arrayOfBusLines.length; i++) {
-				if ((arrayOfBusLines[i].type == "other") || (arrayOfBusLines[i].type == "feeder")){
-					arrayOfBusLines[i].removeFunctionsToListeners(arrayOfBusLines[i].listenerId, 'click');
+		if ((typeof(SubMap._busLinesArray) != "undefined") && (SubMap._busLinesArray[0] != "")) {
+			for (i = 0; i < SubMap._busLinesArray.length; i++) {
+				if ((SubMap._busLinesArray[i].type == "other") || (SubMap._busLinesArray[i].type == "feeder")){
+					SubMap._busLinesArray[i].removeFunctionsToListeners(SubMap._busLinesArray[i].listenerId, 'click');
 				}
 			}
 		}
 		
 		if (typeof(BusStation.previousModified) != 'undefined') {
 			
-			for(i = 0; i < arrayOfBusLines.length; i++){
+			for(i = 0; i < SubMap._busLinesArray.length; i++){
 				//remove the listeners to addConnection from an other busStation:
-				if (typeof(arrayOfBusLines[i].idOfListenerOfAddConnection) != 'undefined'){
-					arrayOfBusLines[i].removeFunctionsToListeners(arrayOfBusLines[i].idOfListenerOfAddConnection,'click');
-					arrayOfBusLines[i].idOfListenerOfAddConnection = undefined;
+				if (typeof(SubMap._busLinesArray[i].idOfListenerOfAddConnection) != 'undefined'){
+					SubMap._busLinesArray[i].removeFunctionsToListeners(SubMap._busLinesArray[i].idOfListenerOfAddConnection,'click');
+					SubMap._busLinesArray[i].idOfListenerOfAddConnection = undefined;
 				}
 			}
 			
 			BusStation.previousModified.setDraggable(false);
 			
 			//set the size of the icon to the good value:
-			var size = arrayOfBusStations.sizeForAZoomValue[map.getZoom() - 1];
+			var size = SubMap._busStationArrays.sizeForAZoomValue[map.getZoom() - 1];
 			var iconPath = BusStation.previousModified.iconPath;
 			var iconStation = new gmap.MarkerImage(iconPath, null, null, null, new gmap.Size(size, size));
 			BusStation.previousModified.setIcon(iconStation);

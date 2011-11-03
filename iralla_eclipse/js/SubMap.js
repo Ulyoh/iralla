@@ -327,7 +327,7 @@ function SubMap(canvas, opts){
 	
 	subMap.showBusStationsOnMap = function(busStationListFromDb){
 		this.addBusStationsFromDb(JSON.parse(busStationListFromDb));
-		arrayOfBusStations.busStationsSizingDependingOnZoom();
+		SubMap._busStationArrays.busStationsSizingDependingOnZoom();
 	};
 	
 	subMap.showBusLinesOnMap = function(busLinesListFromDb){
