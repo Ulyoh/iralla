@@ -14,7 +14,7 @@ mainDataBaseCreation = function(){
 	Database(map, bounds, 840, 600);
 	
 	//send datas to the server:
-	SendDatasToDataBase(0, SubMap._busStationArray.length - 1);
+	SendDatasToDataBase(0, arrayOfBusLines.length - 1);
 };
 
 loaded.dataBaseCreation.push('mainDataBaseCreation');

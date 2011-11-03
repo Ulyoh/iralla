@@ -6,25 +6,25 @@
 
 function mainShowHideArrows(){
 	var toShow;
-	if ((typeof(SubMap._busStationArray.arrowVisible) == 'undefined') || (SubMap._busStationArray.arrowVisible == false)){
+	if ((typeof(arrayOfBusLines.arrowVisible) == 'undefined') || (arrayOfBusLines.arrowVisible == false)){
 		toShow = true;
-		SubMap._busStationArray.arrowVisible = true;
+		arrayOfBusLines.arrowVisible = true;
 	}
 	else{
 		toShow = false;
-		SubMap._busStationArray.arrowVisible = false;
+		arrayOfBusLines.arrowVisible = false;
 	}
 
-	for (var i =0; i < SubMap._busStationArray.length; i++){
-		if (typeof(SubMap._busStationArray[i].sections) != 'undefined'){
-			for(var j =0; j < SubMap._busStationArray[i].sections.length; j++){
-				if (typeof(SubMap._busStationArray[i].sections[j].arrayOfArrows) != 'undefined'){
-					for(var k =0; k < SubMap._busStationArray[i].sections[j].arrayOfArrows.length; k++){
+	for (var i =0; i < arrayOfBusLines.length; i++){
+		if (typeof(arrayOfBusLines[i].sections) != 'undefined'){
+			for(var j =0; j < arrayOfBusLines[i].sections.length; j++){
+				if (typeof(arrayOfBusLines[i].sections[j].arrayOfArrows) != 'undefined'){
+					for(var k =0; k < arrayOfBusLines[i].sections[j].arrayOfArrows.length; k++){
 						if ( toShow == true ){
-							SubMap._busStationArray[i].sections[j].arrayOfArrows[k].setMap(map);
+							arrayOfBusLines[i].sections[j].arrayOfArrows[k].setMap(map);
 						}
 						else{
-							SubMap._busStationArray[i].sections[j].arrayOfArrows[k].setMap(null);
+							arrayOfBusLines[i].sections[j].arrayOfArrows[k].setMap(null);
 						}
 
 					}

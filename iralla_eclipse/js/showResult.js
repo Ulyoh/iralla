@@ -42,7 +42,7 @@ function showRoad(datas){
 		return;
 	}
 	if(typeof(map.ids_list_of_bus_lines) != 'undefined'){
-		SubMap._busStationArray.removePolylinesFromIds(map.ids_list_of_bus_lines); 
+		arrayOfBusLines.removePolylinesFromIds(map.ids_list_of_bus_lines); 
 	}
 	
 	datas = JSON.parse(datas);

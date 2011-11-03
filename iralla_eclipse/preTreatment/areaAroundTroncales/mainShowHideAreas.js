@@ -12,8 +12,8 @@ function mainShowHideAreas(){
 	
 	/*
 	//show the part of the busline inside the main area:
-	for (i = 0; i < SubMap._busStationArray.length; i++){
-		SubMap._busStationArray[i]
+	for (i = 0; i < arrayOfBusLines.length; i++){
+		arrayOfBusLines[i]
 		
 		
 	}
