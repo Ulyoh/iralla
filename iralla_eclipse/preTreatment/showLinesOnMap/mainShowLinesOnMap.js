@@ -58,9 +58,9 @@ function showLinesOnMap(answer){
 
 function preTreatmentBusLines(DbList, busLine){
 	
-	for (var h = 0; h < SubMap._busStationArray.length; h++) {
+	for (var h = 0; h < SubMap._busLinesArray.length; h++) {
 	
-		busLine = SubMap._busStationArray[h];
+		busLine = SubMap._busLinesArray[h];
 	
 		busLine.id = DbList[h].id;
 		busLine.layerId = DbList[h].layerId;
