@@ -132,7 +132,6 @@ function findRoads(input_node, event){
 	}
 }
 
-
 function showRoadsNames(roadsList){
 	
 	//getEltById('')
@@ -465,7 +464,6 @@ function showIntersectionList(received, which){
 	}
 }
 
-
 gmap.Marker.prototype.select_cross_road_marker = function(){
 	
 	//reset roads fields texts:
@@ -672,8 +670,6 @@ function cancelMarker(){
 	//show the cross road look for menu:
 	showFindRouteMenu();
 }
-
-
 
 function removeCurrentsMarkers(except){
 	var removeSuggestedMarkers = true;

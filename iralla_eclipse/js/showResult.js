@@ -33,7 +33,6 @@ function calculateRoad(){
 	});
 }
 
-
 function showRoad(datas){
 	if(datas === ""){
 		

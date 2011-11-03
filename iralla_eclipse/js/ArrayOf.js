@@ -56,8 +56,6 @@ ArrayOf = function(){
 	return arrayOf;
  };
 
- 
- 
 ArrayOfPolylines = function(){
 	for(var i = arguments.length; i > 0; i--){
 		arguments[i] = arguments[i-1];
@@ -162,7 +160,6 @@ ArrayOfPolylines = function(){
 	return arrayOfPolylines;
 };
  
- 
 ArrayOfBusLines = function(){
 	var arrayOfBusLines = new ArrayOfPolylines(passArgumentsAgain(arguments));
 
@@ -179,8 +176,6 @@ ArrayOfBusLines = function(){
 	
 	return arrayOfBusLines;
  };
- 
- 
  
 ArrayOfBusStation = function(){
 	var arrayOfBusStations = new ArrayOf(passArgumentsAgain(arguments));

@@ -146,7 +146,6 @@ function request(options){
 //////////////////////////////////////////////////////////////////////////
 
 
-
 function showResponse(index){
 	var responseDiv = document.getElementById('responseDiv');
 	responseDiv.innerHTML = responseDiv.responseToShow[index];

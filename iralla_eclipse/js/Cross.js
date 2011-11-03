@@ -125,5 +125,4 @@ function Cross(objectAttachFrom){
 	};
 }
 
-
 Cross.prototype.removeFunctionsToListeners = gmap.Map.prototype.removeFunctionsToListeners;

@@ -64,7 +64,7 @@ function showRutasName(rutasList){
 	}
 }
 
- function showChoosenRuta(){
+function showChoosenRuta(){
 	var busLine = arrayOfBusLines.getItemById(this.rutasInfos.id);
 	if (busLine === false) {
 		var array = [];
@@ -95,7 +95,6 @@ function showRutasName(rutasList){
 	this.parentNode.parentNode.removeChild(this.parentNode);
 	document.getElementById('address').value = "";
 }
-
 
 function setupCleanLines(){
 
