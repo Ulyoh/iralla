@@ -250,7 +250,7 @@ gmap.Polyline.prototype.addNewVertex = function(latLng){
 			alert('error 6953');
 		}
 	}
- }
+ };
  
 gmap.Polyline.prototype.extractBoundariesAroundThisPoint = function(vertex, distanceFromVertex, amplitude){
 	//determinate where to find the proyections on the busline tested:
@@ -330,7 +330,7 @@ gmap.Polyline.prototype.extractBoundariesAroundThisPoint = function(vertex, dist
 		endVertex: endVertex,
 		distanceBeforeEndVertex: distanceBeforeEndVertex
 	};
-}
+};
 //symetricBoundariesOfBusLine is optional. In case of the polyline is going and returning near "from" and
 //"from" is on the other side of the polyline
 gmap.Polyline.prototype.moveOn = function(step, symetricBoundariesOfBusLine, originalVertex, distanceFromOriginalVertex){
@@ -446,14 +446,14 @@ gmap.Polyline.prototype.isIndexInsideMainLineArea = function(index){
 				return {
 					isInside: false,
 					nextBoundary: this.vertexIndexInsideMainLineArea[k].enter
-				}
+				};
 			}
 			//if it is inside:
 			else if ((this.vertexIndexInsideMainLineArea[k].enter <= index) && (index <= this.vertexIndexInsideMainLineArea[k].out)) {
 				return {
 					isInside: true,
 					nextBoundary: this.vertexIndexInsideMainLineArea[k].out + 1
-				}
+				};
 			}
 			previousOut = this.vertexIndexInsideMainLineArea[k].out;
 		}
@@ -463,8 +463,8 @@ gmap.Polyline.prototype.isIndexInsideMainLineArea = function(index){
 	return {
 		isInside: false,
 		nextBoundary: this.getPath().length - 1
-	}
-}
+	};
+};
 
  //to verify the file is loaded
 loaded.tools.push('Polyline_extended.js');

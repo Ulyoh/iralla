@@ -340,7 +340,7 @@ function scanSegmentRecursif(args){
 					lastBusStationPosition = {
 						i: i,
 						distanceFromI: j*step
-					}
+					};
 
 		/*			symetricBoundariesOfBusLine = currentBusLine.extractBoundariesAroundThisPoint(i, j * step, 3 * radius);
 					//determinate the list of others bus lines just after the virtual bus station:

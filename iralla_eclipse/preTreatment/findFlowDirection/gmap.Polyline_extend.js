@@ -101,7 +101,7 @@ gmap.Polyline.prototype.extractCorrespondingVertexListFromMarkerList =  function
 		}
 	}
 	return arrayOfBoundariesIndex;
-}
+};
 
 gmap.Polyline.prototype.betweenWhichBoundariesIs = function(latLng){
 	var path = this.getPath();
@@ -214,7 +214,6 @@ gmap.Polyline.prototype.disableAddBoundary = function(){
     this.removeFunctionsToListeners(this.idOfListenerOfAddBoundary, 'click');
 	this.idOfListenerOfAddBoundary = -1;
 };
-
 
 gmap.Polyline.prototype.addBoundary = function(latLng, loading, busStation){
 	var boundaryCoord;
@@ -352,7 +351,7 @@ gmap.Polyline.prototype.removeBoundary = function(busStation){
 		}
 	}
 	
-}
+};
 
 gmap.Polyline.prototype.removeAllBoundaries = function(){
 	if ((typeof(this.arrayOfBoundaries) != 'undefined') && (this.arrayOfBoundaries.length > 0)) {
@@ -596,7 +595,6 @@ gmap.Polyline.prototype.disableFindFlowFromXmlArrows = function(){
 	this.idOfListenerOfFindFlowFromXmlArrows = -1;
 };
 
-
 //TODO : to debug!!!
 gmap.Polyline.prototype.findFlowFromXmlArrows = function(showMessages){
 	var pathBusLine = this.getPath();
@@ -781,7 +779,7 @@ gmap.Polyline.prototype.showFlow = function(){
 		}
 		
 	}
-}
+};
 
 gmap.Polyline.prototype.hideFlow = function(){
 	for( var i = 0; i < this.sections.length  ; i++){
@@ -790,7 +788,7 @@ gmap.Polyline.prototype.hideFlow = function(){
 		}
 		
 	}
-}
+};
 
 if (typeof(loaded.findFlowDirection) != 'undefined'){
 	loaded.findFlowDirection.push('gmap.Polyline_extend.js');

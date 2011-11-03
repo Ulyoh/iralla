@@ -349,25 +349,22 @@ SubMap._busStationArray.saveFlowsInDatabase = function(){
 			datasToSend.push(oneBusLineFlow);
 		}
 	}
-
-
 	//send datas:
 	
 
-
-}
+};
 
 SubMap._busStationArray.showFlows = function(){
 	for(var i = 0; i < SubMap._busStationArray.length; i++){
 		SubMap._busStationArray[i].showFlow();
 	}
-}
+};
 
 SubMap._busStationArray.hideFlows = function(){
 	for(var i = 0; i < SubMap._busStationArray.length; i++){
 		SubMap._busStationArray[i].hideFlow();
 	}
-}
+};
 
 loaded.findFlowDirection.push('SubMap._busStationArray_extended.js');
 

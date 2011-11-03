@@ -283,7 +283,7 @@ gmap.Marker.prototype.createConnectionsWithOneBusLine = function(busLine){
 	
 	//create connections:
 	for( i = 0; i < listOfConnectionsToCreate.length; i++){
-		Connection(this, busLine, listOfConnectionsToCreate[i].coord.convertToLatLng(),listOfConnectionsToCreate[i].indexOfPreviousVertex , listOfConnectionsToCreate[i].distanceToThePreviousVertex )
+		Connection(this, busLine, listOfConnectionsToCreate[i].coord.convertToLatLng(),listOfConnectionsToCreate[i].indexOfPreviousVertex , listOfConnectionsToCreate[i].distanceToThePreviousVertex);
 	}
 
 };

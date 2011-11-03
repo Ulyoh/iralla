@@ -12,19 +12,19 @@ SubMap._busStationArray.createAreasAroundBusLines = function(index){
 		setTimeout(function(){SubMap._busStationArray[" + index + "].areaSurrounded.setOptions({map:null})}, 2000);
 	}
 	
-}
+};
 
 SubMap._busStationArray.lookForLinks = function(){
 	for( var i = 0; i < this.length; i++){
 		this[i].lookForLinks();
 	}
-}
+};
 
 SubMap._busStationArray.groupingLinks = function(){
 	for( var i = 0; i < this.length; i++){
 		this[i].groupingLinks();
 	}
-}
+};
 
 
 loaded.makeVirtualsBusStation.push('gmap.ArrayOfBusStation_extended.js');
