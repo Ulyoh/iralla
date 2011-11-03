@@ -11,7 +11,7 @@ gmap.Marker.prototype.setAddingConnections = function(){
 		BusStation.previousModified.setDraggable(false);
 		
 		//set the size of the icon to the good value:
-		var size = arrayOfBusStations.sizeForAZoomValue[map.getZoom()-1];
+		var size = SubMap._busStationArray.sizeForAZoomValue[map.getZoom()-1];
 		/*var iconStation = new gmap.MarkerImage(
 							"data/busStop.png", 
 							null, 
@@ -53,29 +53,29 @@ gmap.Marker.prototype.setAddingConnections = function(){
 	this.circle.setOptions({strokeColor: '#33EE11'});
 	
 
-	if ((typeof(arrayOfBusLines) != 'undefined') && (arrayOfBusLines[0] != "")) {
+	if ((typeof(SubMap._busStationArray) != 'undefined') && (SubMap._busStationArray[0] != "")) {
 		//make all the polylines clickable
 		//remove the listeners to select a polyline
-		for (var i = 0; i < arrayOfBusLines.length; i++) {
-			if((typeof(arrayOfBusLines[i].listeners)!= 'undefined') && (typeof(arrayOfBusLines[i].listeners['click'])!= 'undefined')){
-				arrayOfBusLines[i].removeFunctionsToListeners(arrayOfBusLines[i].listenerId, 'click');
+		for (var i = 0; i < SubMap._busStationArray.length; i++) {
+			if((typeof(SubMap._busStationArray[i].listeners)!= 'undefined') && (typeof(SubMap._busStationArray[i].listeners['click'])!= 'undefined')){
+				SubMap._busStationArray[i].removeFunctionsToListeners(SubMap._busStationArray[i].listenerId, 'click');
 			}
 		}
 		
 		
 		//add a connection when click a polyline
-		for (i = 0; i < arrayOfBusLines.length; i++) {
+		for (i = 0; i < SubMap._busStationArray.length; i++) {
 			//remove the listeners to addConnection from an other busStation:
-			if (typeof(arrayOfBusLines[i].idOfListenerOfAddConnection) != 'undefined') {
-				arrayOfBusLines[i].removeFunctionsToListeners(arrayOfBusLines[i].idOfListenerOfAddConnection, 'click');
-				arrayOfBusLines[i].idOfListenerOfAddConnection = undefined;
+			if (typeof(SubMap._busStationArray[i].idOfListenerOfAddConnection) != 'undefined') {
+				SubMap._busStationArray[i].removeFunctionsToListeners(SubMap._busStationArray[i].idOfListenerOfAddConnection, 'click');
+				SubMap._busStationArray[i].idOfListenerOfAddConnection = undefined;
 			}
-			arrayOfBusLines[i].idOfListenerOfAddConnection = arrayOfBusLines[i].addFunctionsToListener('click', Connection, ["", this, arrayOfBusLines[i], "eVeNt:MouseEvent.latLng"]);
+			SubMap._busStationArray[i].idOfListenerOfAddConnection = SubMap._busStationArray[i].addFunctionsToListener('click', Connection, ["", this, SubMap._busStationArray[i], "eVeNt:MouseEvent.latLng"]);
 		}
 	}
 	//found the index of the bus station in arrayofbusstation
-	for( i = 0; i < arrayOfBusStations.length; i++){
-		if (arrayOfBusStations[i] == this)
+	for( i = 0; i < SubMap._busStationArray.length; i++){
+		if (SubMap._busStationArray[i] == this)
 			break;
 	}
 	
@@ -88,7 +88,7 @@ gmap.Marker.prototype.setAddingConnections = function(){
 		newField.appendChild(button_remove_BusStation);
 		
 	}
-	document.getElementById('button_remove_BusStation').setAttribute('onclick', 'arrayOfBusStations[' + i + "].remove('linkBusStationToTroncales');");
+	document.getElementById('button_remove_BusStation').setAttribute('onclick', 'SubMap._busStationArray[' + i + "].remove('linkBusStationToTroncales');");
 	
 	//add a button to increase the radius of the polygonCircle
 	if (document.getElementById('button_increase_polygonCircle') === null) {
@@ -98,8 +98,8 @@ gmap.Marker.prototype.setAddingConnections = function(){
 		button_increase_polygonCircle.innerHTML = 'increase radius';
 		newField.appendChild(button_increase_polygonCircle);
 	}
-	//document.getElementById('button_increase_polygonCircle').setAttribute('onclick', 'arrayOfBusStations[' + i + '].polygonCircle.increaseRadius();');
-	document.getElementById('button_increase_polygonCircle').setAttribute('onclick', 'arrayOfBusStations[' + i + '].circle.increaseRadius();');
+	//document.getElementById('button_increase_polygonCircle').setAttribute('onclick', 'SubMap._busStationArray[' + i + '].polygonCircle.increaseRadius();');
+	document.getElementById('button_increase_polygonCircle').setAttribute('onclick', 'SubMap._busStationArray[' + i + '].circle.increaseRadius();');
 	
 	//add a button to decrease the radius of the polygonCircle
 	if (document.getElementById('button_decrease_polygonCircle') === null) {
@@ -109,8 +109,8 @@ gmap.Marker.prototype.setAddingConnections = function(){
 		button_decrease_polygonCircle.innerHTML = 'decrease radius';
 		newField.appendChild(button_decrease_polygonCircle);
 	}
-	//document.getElementById('button_decrease_polygonCircle').setAttribute('onclick', 'arrayOfBusStations[' + i + '].polygonCircle.decreaseRadius();');
-	document.getElementById('button_decrease_polygonCircle').setAttribute('onclick', 'arrayOfBusStations[' + i + '].circle.decreaseRadius();');
+	//document.getElementById('button_decrease_polygonCircle').setAttribute('onclick', 'SubMap._busStationArray[' + i + '].polygonCircle.decreaseRadius();');
+	document.getElementById('button_decrease_polygonCircle').setAttribute('onclick', 'SubMap._busStationArray[' + i + '].circle.decreaseRadius();');
 	
 	//add a button to reset all the connections of the busStation selected:
 	if (document.getElementById('button_reset_connections') === null) {
@@ -120,7 +120,7 @@ gmap.Marker.prototype.setAddingConnections = function(){
 		button_reset_connections.innerHTML = 'reset connections';
 		newField.appendChild(button_reset_connections);
 	}
-	document.getElementById('button_reset_connections').setAttribute('onclick', 'arrayOfBusStations[' + i + '].createConnectionsWithAllBusLines();');
+	document.getElementById('button_reset_connections').setAttribute('onclick', 'SubMap._busStationArray[' + i + '].createConnectionsWithAllBusLines();');
 	
 	//add a button to unselect the selected busStation:
 	if (document.getElementById('button_deselect') === null) {
@@ -130,7 +130,7 @@ gmap.Marker.prototype.setAddingConnections = function(){
 		button_deselect.innerHTML = 'deselect';
 		newField.appendChild(button_deselect);
 	}
-	document.getElementById('button_deselect').setAttribute('onclick', 'arrayOfBusStations[' + i + '].deselect();');
+	document.getElementById('button_deselect').setAttribute('onclick', 'SubMap._busStationArray[' + i + '].deselect();');
 
 	//make the name of the station changeable
 	if (!document.getElementById('div_set_name')){
@@ -138,7 +138,7 @@ gmap.Marker.prototype.setAddingConnections = function(){
 		busStationName.setAttribute('id', 'div_set_name');
 		getInfosPreBoxNode().appendChild(busStationName);
 	}
-	document.getElementById('div_set_name').innerHTML = "name of the selected bus station :<br/> <textarea rows='2' cols='40' id='busStationName'  onKeyUp=arrayOfBusStations[" + i + "].setNewNameToShow() /> " + 
+	document.getElementById('div_set_name').innerHTML = "name of the selected bus station :<br/> <textarea rows='2' cols='40' id='busStationName'  onKeyUp=SubMap._busStationArray[" + i + "].setNewNameToShow() /> " + 
 	this.name + "</textarea>";
 
 
@@ -167,31 +167,31 @@ gmap.Marker.prototype.createConnectionsWithAllBusLines = function(){
 	//remove all old connections:
 	this.removeAllConnections();
 	
-	for(var j = 0; j < arrayOfBusLines.length; j++){
+	for(var j = 0; j < SubMap._busStationArray.length; j++){
 		//if making connections with mainLines and feeder:
 		if((preTreatment.current == 'linkBusStationToTroncales') &&
 		((this.type == 'normal') || (this.type == 'boundary')) &&
-		((arrayOfBusLines[j].type == "mainLine") || (arrayOfBusLines[j].type == "feeder"))){
+		((SubMap._busStationArray[j].type == "mainLine") || (SubMap._busStationArray[j].type == "feeder"))){
 			
-			this.createConnectionsWithOneBusLine(arrayOfBusLines[j]);
+			this.createConnectionsWithOneBusLine(SubMap._busStationArray[j]);
 			
 		}
 		//if making connections with feeders and others:
 		else if((preTreatment.current == 'makeVirtualsBusStation') && 
 		(this.type == 'virtual') &&
-		((arrayOfBusLines[j].type == "feeder") || (arrayOfBusLines[j].type == "other"))){
-			this.createConnectionsWithOneBusLine(arrayOfBusLines[j]);
+		((SubMap._busStationArray[j].type == "feeder") || (SubMap._busStationArray[j].type == "other"))){
+			this.createConnectionsWithOneBusLine(SubMap._busStationArray[j]);
 		}
 		
 		/*
 		//for each troncal and alimentadora:
 		if(((typeof(option) == 'undefined') || (typeof(options.type) == 'undefined') || (options.type == "normal")) &&
-		((arrayOfBusLines[j].type == "mainLine") || (arrayOfBusLines[j].type == "feeder"))){
-			this.createConnectionsWithOneBusLine(arrayOfBusLines[j]);
+		((SubMap._busStationArray[j].type == "mainLine") || (SubMap._busStationArray[j].type == "feeder"))){
+			this.createConnectionsWithOneBusLine(SubMap._busStationArray[j]);
 		}
 		//for each rutas:
 		if(((typeof(option) == 'undefined') || (typeof(options.type) == 'undefined') || (options.type == "other")) &&
-		(arrayOfBusLines[j].type == "virtual")){
+		(SubMap._busStationArray[j].type == "virtual")){
 			
 		}*/
 	}
@@ -230,15 +230,15 @@ gmap.Marker.prototype.createConnectionsWithAllBusLines = function(busStationInde
 gmap.Marker.prototype.createConnectionsWithAllBusLines_OneStep = function(index, busStationIndex){
 
 	//for each troncal and alimentadora (recursivly):
-	if((arrayOfBusLines[index].type == "mainLine") || (arrayOfBusLines[index].type == "feeder")){
-		this.createConnectionsWithOneBusLine(arrayOfBusLines[index]);
+	if((SubMap._busStationArray[index].type == "mainLine") || (SubMap._busStationArray[index].type == "feeder")){
+		this.createConnectionsWithOneBusLine(SubMap._busStationArray[index]);
 	}
 
 	index++;
-	getAddInfoDiv().innerHTML = index + '/' + arrayOfBusLines.length + 'bus lines checked';
+	getAddInfoDiv().innerHTML = index + '/' + SubMap._busStationArray.length + 'bus lines checked';
 
-	if ( index < arrayOfBusLines.length ){
-		setTimeout(function(){arrayOfBusStations[' + busStationIndex + '].createConnectionsWithAllBusLines_OneStep(' + index + ',' + busStationIndex + ')}, 100);
+	if ( index < SubMap._busStationArray.length ){
+		setTimeout(function(){SubMap._busStationArray[' + busStationIndex + '].createConnectionsWithAllBusLines_OneStep(' + index + ',' + busStationIndex + ')}, 100);
 	}
 
 }
@@ -267,8 +267,8 @@ gmap.Marker.prototype.createConnectionsWithOneBusLine = function(busLine){
 	
 	//list of the index of all bus lines except the one 
 	var othersLinesIndex = [];
-	for(var i = 0; i < arrayOfBusLines.length; i++){
-		if( arrayOfBusLines[i] != busLine){
+	for(var i = 0; i < SubMap._busStationArray.length; i++){
+		if( SubMap._busStationArray[i] != busLine){
 			othersLinesIndex.push(i);
 		}
 	}
@@ -315,9 +315,9 @@ gmap.Marker.prototype.remove = function(whichMenuOpen){
 	this.removeAllConnections({
 		whichMenuOpen: whichMenuOpen
 	});
-	for( var i = 0; i < arrayOfBusStations.length; i++){	//TODO hide arrayofbusstations make it accessible only in map
-		if(arrayOfBusStations[i] == this ){
-			arrayOfBusStations.splice(i, 1);
+	for( var i = 0; i < SubMap._busStationArray.length; i++){	//TODO hide arrayofbusstations make it accessible only in map
+		if(SubMap._busStationArray[i] == this ){
+			SubMap._busStationArray.splice(i, 1);
 			break;
 		}
 	}

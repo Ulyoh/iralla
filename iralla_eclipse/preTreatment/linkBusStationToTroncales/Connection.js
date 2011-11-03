@@ -4,11 +4,11 @@
 Connection.infos = {
 	whichMenuOpen: null,
 	index: 0
-}
+};
 
 Connection.setAllConnectionsVisible = function(bool){
-	for(var i = 0; i < arrayOfBusStations.length; i++) {
-		arrayOfBusStations[i].setConnectionsVisible(bool);
+	for(var i = 0; i < SubMap._busStationArray.length; i++) {
+		SubMap._busStationArray[i].setConnectionsVisible(bool);
 	}
 };
 
@@ -148,7 +148,7 @@ Connection.createAllOnTheMapInit =  function(){
 	Connection.infos.index = 0;
 	//end todo
 	Connection.createAllOnTheMap();
-}
+};
 
 
 Connection.createAllOnTheMap = function(){
@@ -159,19 +159,19 @@ Connection.createAllOnTheMap = function(){
 
 	var qty = index + 1;
 
-	getAddInfoDiv().innerHTML = 'looking for connections: <br />' + qty  + '/' + arrayOfBusStations.length + ' bus stations done <br />';
+	getAddInfoDiv().innerHTML = 'looking for connections: <br />' + qty  + '/' + SubMap._busStationArray.length + ' bus stations done <br />';
 
 	var divInfos = getEltById('infos');
 	divInfos.scrollTop = divInfos.scrollHeight;
 
 	//for each bus station (recursively)
-	arrayOfBusStations[index].createConnectionsWithAllBusLines();
+	SubMap._busStationArray[index].createConnectionsWithAllBusLines();
 
 	index++;
 	
 	Connection.infos.index = index;
 	
-	if (index < arrayOfBusStations.length ){
+	if (index < SubMap._busStationArray.length ){
 		setTimeout(function(){Connection.createAllOnTheMap()}, 500);
 	}
 	else{

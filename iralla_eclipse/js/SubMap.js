@@ -1,6 +1,7 @@
 /**
  * @author Yoh
  */
+
 SubMap._busLinesArray = new ArrayOfBusLines();
 SubMap._busStationArray = new  ArrayOfBusStation();
 
@@ -327,7 +328,7 @@ function SubMap(canvas, opts){
 	
 	subMap.showBusStationsOnMap = function(busStationListFromDb){
 		this.addBusStationsFromDb(JSON.parse(busStationListFromDb));
-		arrayOfBusStations.busStationsSizingDependingOnZoom();
+		SubMap._busStationArray.busStationsSizingDependingOnZoom();
 	};
 	
 	subMap.showBusLinesOnMap = function(busLinesListFromDb){

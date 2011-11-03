@@ -67,7 +67,7 @@ function BusLineOverlay(busLine){
 		map: busLine.getMap(),
 		strokeColor: '#FFFFFF',
 		strokeOpacity: 0.5,
-		strokeWeight: arrayOfBusLines.sizeForAZoomValue[map.getZoom()] + 5,
+		strokeWeight: SubMap._busStationArray.sizeForAZoomValue[map.getZoom()] + 5,
 		zIndex: 2000
 	};
 	

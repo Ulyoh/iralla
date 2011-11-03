@@ -13,11 +13,11 @@ function mainShowBusStationsOnMap(){
 
 function showBusBusStationsOnMap(answer){
 	//remove bus stations if there are:
-	if ((typeof(arrayOfBusStations) != 'undefined')
-	&& (arrayOfBusStations.length>0)
-	&& (arrayOfBusStations[0]!= '')){
-		while(arrayOfBusStations.length > 0){
-			arrayOfBusStations.shift().setMap(null);
+	if ((typeof(SubMap._busStationArray) != 'undefined')
+	&& (SubMap._busStationArray.length>0)
+	&& (SubMap._busStationArray[0]!= '')){
+		while(SubMap._busStationArray.length > 0){
+			SubMap._busStationArray.shift().setMap(null);
 		}
 	}
 	var parseAnswer = JSON.parse(answer);
@@ -25,24 +25,23 @@ function showBusBusStationsOnMap(answer){
 	if (parseAnswer.length > 0) {
 		map.addBusStationsFromDb(parseAnswer);
 		preTreatmentBusStation(parseAnswer);
-		arrayOfBusStations.busStationsSizingDependingOnZoom();
+		SubMap._busStationArray.busStationsSizingDependingOnZoom();
 	}
 }
 
 function preTreatmentBusStation(busStationFromDbList){
 	var busStation;
-	
-	for (var h = 0; h < arrayOfBusStations.length; h++) {
+	for (var h = 0; h < SubMap._busStationArray.length; h++) {
 	
 		//look for in the busStationFromDbList, the busStationFromDb which correspond:
 		for (var n = 0; n < busStationFromDbList.length; n++){
-			if(busStationFromDbList[n].id == arrayOfBusStations[h].id){
+			if(busStationFromDbList[n].id == SubMap._busStationArray[h].id){
 				busStationFromDb = busStationFromDbList[n];
 				break;
 			}	
 		}
 	
-		busStation = arrayOfBusStations[h];
+		busStation = SubMap._busStationArray[h];
 		
 		busStation.layerId = busStationFromDb.layerId;
 		

@@ -5,7 +5,7 @@
  
 gmap.Map.prototype.addNewBusStation = function(latLng, type){
 	//the marker image:
-	var size =  arrayOfBusStations.sizeForAZoomValue[map.getZoom()-1];
+	var size =  SubMap._busStationArray.sizeForAZoomValue[map.getZoom()-1];
 	var iconStation;
 	
 	if ((typeof(type) == 'undefined') || (type == 'normal')){
@@ -42,7 +42,7 @@ gmap.Map.prototype.addNewBusStation = function(latLng, type){
 	
 	map.newIdForBusStation++;
 	
-	arrayOfBusStations.push(newBusStation);
+	SubMap._busStationArray.push(newBusStation);
 	
 	if (type != 'boundary'){
 		newBusStation.listenerId = newBusStation.addFunctionsToListener('click', newBusStation.setAddingConnections, [newBusStation]);

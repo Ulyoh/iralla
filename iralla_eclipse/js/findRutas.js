@@ -65,17 +65,17 @@ function showRutasName(rutasList){
 }
 
 function showChoosenRuta(){
-	var busLine = arrayOfBusLines.getItemById(this.rutasInfos.id);
+	var busLine = SubMap._busStationArray.getItemById(this.rutasInfos.id);
 	if (busLine === false) {
 		var array = [];
 		array.push(this.rutasInfos);
 		map.addBusLinesFromDb(array);
-		busLine = arrayOfBusLines.getItemById(this.rutasInfos.id);
+		busLine = SubMap._busStationArray.getItemById(this.rutasInfos.id);
 	}
 	else {
 		busLine.setMap(map);
 	}
-	arrayOfBusLines.setOptionsToAll({
+	SubMap._busStationArray.setOptionsToAll({
 		strokeColor: 'default'
 	});
 	
@@ -102,7 +102,7 @@ function setupCleanLines(){
 	var cleanLinesNode = document.createElement('button');
 	cleanLinesNode.setAttribute('id', 'button_clean_lines');
 	cleanLinesNode.innerHTML = 'borrar rutas';
-	cleanLinesNode.setAttribute('onclick', 'arrayOfBusLines.removePolylinesFromIds(this.linesIdAdded); this.linesIdAdded = []; this.style.display = "none"');
+	cleanLinesNode.setAttribute('onclick', 'SubMap._busStationArray.removePolylinesFromIds(this.linesIdAdded); this.linesIdAdded = []; this.style.display = "none"');
 	document.getElementById('direction').appendChild(cleanLinesNode);
 	cleanLinesNode.linesIdAdded =[];
 }
@@ -112,7 +112,7 @@ function setupCleanLines(){
  * 
  *			//remove all the roads already shown:
 			var id = suggestionListNode.firstChild.rutasInfos.id;
-			arrayOfBusLines.removeOnePolylineFromId(id);
+			SubMap._busStationArray.removeOnePolylineFromId(id);
  * 
  * 
  * 

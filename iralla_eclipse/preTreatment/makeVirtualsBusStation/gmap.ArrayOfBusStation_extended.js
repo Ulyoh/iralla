@@ -1,5 +1,5 @@
 
-arrayOfBusLines.createAreasAroundBusLines = function(index){
+SubMap._busStationArray.createAreasAroundBusLines = function(index){
 
 	if(typeof(index)== 'undefined'){
 		index = 0;
@@ -9,18 +9,18 @@ arrayOfBusLines.createAreasAroundBusLines = function(index){
 		this[index].areaSurrounded.mergedStackedPart();
 	
 		//affichage du résultat
-		setTimeout(function(){arrayOfBusLines[" + index + "].areaSurrounded.setOptions({map:null})}, 2000);
+		setTimeout(function(){SubMap._busStationArray[" + index + "].areaSurrounded.setOptions({map:null})}, 2000);
 	}
 	
 }
 
-arrayOfBusLines.lookForLinks = function(){
+SubMap._busStationArray.lookForLinks = function(){
 	for( var i = 0; i < this.length; i++){
 		this[i].lookForLinks();
 	}
 }
 
-arrayOfBusLines.groupingLinks = function(){
+SubMap._busStationArray.groupingLinks = function(){
 	for( var i = 0; i < this.length; i++){
 		this[i].groupingLinks();
 	}

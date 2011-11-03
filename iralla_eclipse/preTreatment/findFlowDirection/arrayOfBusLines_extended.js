@@ -1,7 +1,7 @@
 /**
  * @author Yoh
  */
-arrayOfBusLines.enableAddArrow = function(){
+SubMap._busStationArray.enableAddArrow = function(){
 	//deselect the previous function:
 	//virtual press the deselect button:
 	if (document.getElementById('button_deselect') !== null)
@@ -20,21 +20,21 @@ arrayOfBusLines.enableAddArrow = function(){
 		newField.appendChild(button_deselect);
 	}
 	document.getElementById('button_deselect').setAttribute('onclick', 
-			"{arrayOfBusLines.disableAddArrow(); " +
+			"{SubMap._busStationArray.disableAddArrow(); " +
 			"removeNodeById('button_deselect');}" +
 			"removeEmptyLinesOfTable(document.getElementById('tablePreTreatment'));"
 			);
 	
 };
 
-arrayOfBusLines.disableAddArrow = function(){
+SubMap._busStationArray.disableAddArrow = function(){
 	for(var i = 0; i < this.length; i++){
 		if ((typeof(this[i].idOfListenerOfAddArrow) != 'undefined') && (this[i].idOfListenerOfAddArrow >= 0 ))
 			this[i].disableAddArrow();
 	}
 };
 
-arrayOfBusLines.enableAddBoundary = function(){
+SubMap._busStationArray.enableAddBoundary = function(){
 	//deselect the previous function:
 	//virtual press the deselect button:
 	if (document.getElementById('button_deselect') !== null)
@@ -53,21 +53,21 @@ arrayOfBusLines.enableAddBoundary = function(){
 		newField.appendChild(button_deselect);
 	}
 	document.getElementById('button_deselect').setAttribute('onclick', 
-			"{arrayOfBusLines.disableAddBoundary(); " +
+			"{SubMap._busStationArray.disableAddBoundary(); " +
 			"removeNodeById('button_deselect');}" +
 			"removeEmptyLinesOfTable(document.getElementById('tablePreTreatment'));"
 			);
 		
 };
 
-arrayOfBusLines.disableAddBoundary = function(){
+SubMap._busStationArray.disableAddBoundary = function(){
 	for(var i = 0; i < this.length; i++){
 		if ((typeof(this[i].idOfListenerOfAddBoundary) != 'undefined') && (this[i].idOfListenerOfAddBoundary >= 0 ))
 			this[i].disableAddBoundary();
 	}
 };
 
-arrayOfBusLines.enableRemoveArrows = function(){
+SubMap._busStationArray.enableRemoveArrows = function(){
 	//deselect the previous function:
 	//virtual press the deselect button:
 	if (document.getElementById('button_deselect') !== null)
@@ -86,21 +86,21 @@ arrayOfBusLines.enableRemoveArrows = function(){
 		newField.appendChild(button_deselect);
 	}
 	document.getElementById('button_deselect').setAttribute('onclick', 
-			"{arrayOfBusLines.disableRemoveArrows(); " +
+			"{SubMap._busStationArray.disableRemoveArrows(); " +
 			"removeNodeById('button_deselect');}" +
 			"removeEmptyLinesOfTable(document.getElementById('tablePreTreatment'));"
 			);
 	
 };
 
-arrayOfBusLines.disableRemoveArrows = function(){
+SubMap._busStationArray.disableRemoveArrows = function(){
 	for(var i = 0; i < this.length; i++){
 		if ((typeof(this[i].idOfListenerOfRemoveArrows) != 'undefined') && (this[i].idOfListenerOfRemoveArrows >= 0 ))
 			this[i].disableRemoveArrows();
 	}
 };
 
-arrayOfBusLines.enableFindFlowAuto = function(){
+SubMap._busStationArray.enableFindFlowAuto = function(){
 	//deselect the previous function:
 	//virtual press the deselect button:
 	if (document.getElementById('button_deselect') !== null)
@@ -119,13 +119,13 @@ arrayOfBusLines.enableFindFlowAuto = function(){
 		newField.appendChild(button_deselect);
 	}
 	document.getElementById('button_deselect').setAttribute('onclick',
-			"{arrayOfBusLines.disableFindFlowAuto(); " +
+			"{SubMap._busStationArray.disableFindFlowAuto(); " +
 			"removeNodeById('button_deselect');}" +
 			"removeEmptyLinesOfTable(document.getElementById('tablePreTreatment'));"
 			);
 };
 
-arrayOfBusLines.disableFindFlowAuto = function(){
+SubMap._busStationArray.disableFindFlowAuto = function(){
 	for(var i = 0; i < this.length; i++){
 		if ((typeof(this[i].idOfListenerOfFindFlowAuto) != 'undefined') && (this[i].idOfListenerOfFindFlowAuto >= 0 )){
 			this[i].disableFindFlowAuto();
@@ -134,7 +134,7 @@ arrayOfBusLines.disableFindFlowAuto = function(){
 };
 
 
-arrayOfBusLines.enableFindFlowFromXmlArrows = function(){
+SubMap._busStationArray.enableFindFlowFromXmlArrows = function(){
 	//deselect the previous function:
 	//virtual press the deselect button:
 	if (document.getElementById('button_deselect') !== null){
@@ -154,13 +154,13 @@ arrayOfBusLines.enableFindFlowFromXmlArrows = function(){
 		newField.appendChild(button_deselect);
 	}
 	document.getElementById('button_deselect').setAttribute('onclick', 
-			"{arrayOfBusLines.disableFindFlowFromXmlArrows();" +
+			"{SubMap._busStationArray.disableFindFlowFromXmlArrows();" +
 			"removeNodeById('button_deselect');}" +
 			"removeEmptyLinesOfTable(document.getElementById('tablePreTreatment'));"
 			);
 };
 
-arrayOfBusLines.disableFindFlowFromXmlArrows = function(){
+SubMap._busStationArray.disableFindFlowFromXmlArrows = function(){
 	for(var i = 0; i < this.length; i++){
 		if ((typeof(this[i].idOfListenerOfFindFlowFromXmlArrows) != 'undefined') && (this[i].idOfListenerOfFindFlowFromXmlArrows >= 0 )){
 			this[i].disableFindFlowFromXmlArrows();
@@ -168,7 +168,7 @@ arrayOfBusLines.disableFindFlowFromXmlArrows = function(){
 	}
 };
 
-arrayOfBusLines.enableReverseFlow = function(){
+SubMap._busStationArray.enableReverseFlow = function(){
 	//deselect the previous function:
 	//virtual press the deselect button:
 	if (document.getElementById('button_deselect') !== null){
@@ -188,13 +188,13 @@ arrayOfBusLines.enableReverseFlow = function(){
 		newField.appendChild(button_deselect);
 	}
 	document.getElementById('button_deselect').setAttribute('onclick', 
-			"{arrayOfBusLines.disableReverseFlow();" +
+			"{SubMap._busStationArray.disableReverseFlow();" +
 			"removeNodeById('button_deselect');}" +
 			"removeEmptyLinesOfTable(document.getElementById('tablePreTreatment'));"
 			);
 };
 
-arrayOfBusLines.disableReverseFlow = function(){
+SubMap._busStationArray.disableReverseFlow = function(){
 	for(var i = 0; i < this.length; i++){
 		if ((typeof(this[i].idOfListenerOfReverseFlow) != 'undefined') && (this[i].idOfListenerOfReverseFlow >= 0 )){
 			this[i].disableReverseFlow();
@@ -202,7 +202,7 @@ arrayOfBusLines.disableReverseFlow = function(){
 	}
 };
 
-arrayOfBusLines.enableAddBidirectionalArrows = function(){
+SubMap._busStationArray.enableAddBidirectionalArrows = function(){
 	//deselect the previous function:
 	//virtual press the deselect button:
 	if (document.getElementById('button_deselect') !== null){
@@ -222,13 +222,13 @@ arrayOfBusLines.enableAddBidirectionalArrows = function(){
 		newField.appendChild(button_deselect);
 	}
 	document.getElementById('button_deselect').setAttribute('onclick', "{" +
-			"arrayOfBusLines.disableAddBidirectionalArrows(); " +
+			"SubMap._busStationArray.disableAddBidirectionalArrows(); " +
 			"removeNodeById('button_deselect');}" +
 			"removeEmptyLinesOfTable(document.getElementById('tablePreTreatment'));"
 			);
 };
 
-arrayOfBusLines.disableAddBidirectionalArrows = function(){
+SubMap._busStationArray.disableAddBidirectionalArrows = function(){
 	for(var i = 0; i < this.length; i++){
 		if ((typeof(this[i].idOfListenerOfAddBidirectionalArrows) != 'undefined') && (this[i].idOfListenerOfAddBidirectionalArrows >= 0 )){
 			this[i].disableAddBidirectionalArrows();
@@ -236,7 +236,7 @@ arrayOfBusLines.disableAddBidirectionalArrows = function(){
 	}
 };
 
-arrayOfBusLines.findFlowOfAllBusLines = function(index){
+SubMap._busStationArray.findFlowOfAllBusLines = function(index){
 	if (( typeof(map.allArrowsFromFileShown) == 'undefined' ) || ( map.allArrowsFromFileShown === false )){
 		showArrowsOnMap();
 		map.allArrowsFromFileShown = true;
@@ -261,19 +261,19 @@ arrayOfBusLines.findFlowOfAllBusLines = function(index){
 		newLine.innerHTML = index + ') ' + this[index].name + 'click here to see the bus line';
 		document.getElementById('infos').appendChild(newLine);
 		//make it clikcable to show only this bus line in the map:
-		newLine.setAttribute('onclick', 'arrayOfBusLines.showOnlyOneBusLine(' + index + ');');
-		//give the possibility to remove it from the arrayOfBusLines:
+		newLine.setAttribute('onclick', 'SubMap._busStationArray.showOnlyOneBusLine(' + index + ');');
+		//give the possibility to remove it from the SubMap._busStationArray:
 		
 	}
 	
 	index++;
 	if(index < this.length){
-		setTimeout(function(){arrayOfBusLines.findFlowOfAllBusLines( ' + index + ' )},100);
+		setTimeout(function(){SubMap._busStationArray.findFlowOfAllBusLines( ' + index + ' )},100);
 	}
 };
 
 
-arrayOfBusLines.showOnlyOneBusLine = function(index){
+SubMap._busStationArray.showOnlyOneBusLine = function(index){
 	for ( var i = 0; i <  this.length; i++){
 		if ( i != index){
 			this[i].setMap(null);
@@ -294,7 +294,7 @@ arrayOfBusLines.showOnlyOneBusLine = function(index){
 		button_show_all_bus_lines.innerHTML = 'showAllBusLines';
 		newField.appendChild(button_show_all_bus_lines);
 		button_show_all_bus_lines.setAttribute('onclick',
-				"arrayOfBusLines.showAllBusLine();" +
+				"SubMap._busStationArray.showAllBusLine();" +
 				"removeNodeById(this);" +
 				"removeEmptyLinesOfTable(document.getElementById('tablePreTreatment'));"
 				);
@@ -302,7 +302,7 @@ arrayOfBusLines.showOnlyOneBusLine = function(index){
 	
 };
 
-arrayOfBusLines.showAllBusLine = function(index){
+SubMap._busStationArray.showAllBusLine = function(index){
 	for (var i = 0; i < this.length; i++) {
 		this[i].setOptions({
 			map: map,
@@ -311,38 +311,38 @@ arrayOfBusLines.showAllBusLine = function(index){
 	}
 };
 
-arrayOfBusLines.saveFlowsInDatabase = function(){
+SubMap._busStationArray.saveFlowsInDatabase = function(){
 
 	//create a JSON object to send to the database:
 	var datasToSend = [];
 	var oneBusLineFlow;
 
 	//for each bus line:
-	for (var i = 0; i < arrayOfBusLines.length; i++){
+	for (var i = 0; i < SubMap._busStationArray.length; i++){
 
 		//if sections, ie: flows have been determinated
-		if (typeof(arrayOfBusLines[i].sections) != 'undefined'){
+		if (typeof(SubMap._busStationArray[i].sections) != 'undefined'){
 			//record the id:
-			oneBusLineFlow.id = arrayOfBusLines[i].id;
+			oneBusLineFlow.id = SubMap._busStationArray[i].id;
 			//init to record the flows:
 			oneBusLineFlow.flows = '';
 
 			//for each section:
-			for(var j = 0; j < arrayOfBusLines[i].sections.length; j++){
+			for(var j = 0; j < SubMap._busStationArray[i].sections.length; j++){
 				//if arrows in the section:
-				if (typeof(arrayOfBusLines[i].sections[j].arrayOfArrows) != 'undefined'){
+				if (typeof(SubMap._busStationArray[i].sections[j].arrayOfArrows) != 'undefined'){
 					//record the flow:
-					oneBusLineFlow.flows += ' ' + arrayOfBusLines[i].sections[j].arrayOfArrows[0].flow;
+					oneBusLineFlow.flows += ' ' + SubMap._busStationArray[i].sections[j].arrayOfArrows[0].flow;
 				}
 			}
 
 			oneBusLineFlow.boundaries = '';
 
 			if (typeof(arrayOfBoundaries) != 'undefined'){
-				for( j = 0; j < arrayOfBusLines[i].arrayOfBoundaries.length; j++){
+				for( j = 0; j < SubMap._busStationArray[i].arrayOfBoundaries.length; j++){
 
-					oneBusLineFlow.boundaries += ',' + arrayOfBusLines[i].arrayOfBoundaries[j].center.lat() + ' ' +
-						arrayOfBusLines[i].arrayOfBoundaries[j].center.lng();
+					oneBusLineFlow.boundaries += ',' + SubMap._busStationArray[i].arrayOfBoundaries[j].center.lat() + ' ' +
+						SubMap._busStationArray[i].arrayOfBoundaries[j].center.lng();
 				}
 				oneBusLineFlow.boundaries = oneBusLineFlow.boundaries.removeFirstLetter();
 			}
@@ -357,17 +357,17 @@ arrayOfBusLines.saveFlowsInDatabase = function(){
 
 }
 
-arrayOfBusLines.showFlows = function(){
-	for(var i = 0; i < arrayOfBusLines.length; i++){
-		arrayOfBusLines[i].showFlow();
+SubMap._busStationArray.showFlows = function(){
+	for(var i = 0; i < SubMap._busStationArray.length; i++){
+		SubMap._busStationArray[i].showFlow();
 	}
 }
 
-arrayOfBusLines.hideFlows = function(){
-	for(var i = 0; i < arrayOfBusLines.length; i++){
-		arrayOfBusLines[i].hideFlow();
+SubMap._busStationArray.hideFlows = function(){
+	for(var i = 0; i < SubMap._busStationArray.length; i++){
+		SubMap._busStationArray[i].hideFlow();
 	}
 }
 
-loaded.findFlowDirection.push('arrayOfBusLines_extended.js');
+loaded.findFlowDirection.push('SubMap._busStationArray_extended.js');
 

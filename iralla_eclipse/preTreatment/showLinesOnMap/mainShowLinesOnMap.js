@@ -58,9 +58,9 @@ function showLinesOnMap(answer){
 
 function preTreatmentBusLines(DbList, busLine){
 	
-	for (var h = 0; h < arrayOfBusLines.length; h++) {
+	for (var h = 0; h < SubMap._busStationArray.length; h++) {
 	
-		busLine = arrayOfBusLines[h];
+		busLine = SubMap._busStationArray[h];
 	
 		busLine.id = DbList[h].id;
 		busLine.layerId = DbList[h].layerId;
@@ -82,10 +82,10 @@ function preTreatmentBusLines(DbList, busLine){
 				
 				if (boundariesListId.length > 0) {
 					for (i = 0; i < boundariesListId.length; i++) {
-						for (j = 0; j < arrayOfBusStations.length; j++) {
-							if (boundariesListId[i] == arrayOfBusStations[j].id) {
+						for (j = 0; j < SubMap._busStationArray.length; j++) {
+							if (boundariesListId[i] == SubMap._busStationArray[j].id) {
 								//busLine.showBoundary()
-								busLine.addBoundary(arrayOfBusStations[j].getPosition(), true, arrayOfBusStations[j]);
+								busLine.addBoundary(SubMap._busStationArray[j].getPosition(), true, SubMap._busStationArray[j]);
 								break;
 							}
 						}
@@ -140,7 +140,7 @@ function preTreatmentBusLines(DbList, busLine){
 		//load the area if exists
 		if (DbList[h].pathsAreaOfBusStations != null) {
 			if (busLine.type == 'mainLine') {
-				var pathsString = JSON.parse(DbList[h].pathsAreaOfBusStations)
+				var pathsString = JSON.parse(DbList[h].pathsAreaOfBusStations);
 				var paths = [];
 				for( var p = 0; p < pathsString.length; p++ ){
 					var path = [];

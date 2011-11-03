@@ -26,7 +26,7 @@ function mainFindFlowDirection(){
 			button_add_arrow.innerHTML = 'add arrow';
 			newField.appendChild(button_add_arrow);
 		}
-		document.getElementById('button_add_arrow').setAttribute('onclick', 'arrayOfBusLines.enableAddArrow()');
+		document.getElementById('button_add_arrow').setAttribute('onclick', 'SubMap._busStationArray.enableAddArrow()');
 		
 		//add a button to remove arrows between two boundaries
 		if (document.getElementById('button_remove_arrow') === null) {
@@ -36,7 +36,7 @@ function mainFindFlowDirection(){
 			button_remove_arrow.innerHTML = 'remove arrow';
 			newField.appendChild(button_remove_arrow);
 		}
-		document.getElementById('button_remove_arrow').setAttribute('onclick', 'arrayOfBusLines.enableRemoveArrows(MouseEvent.latLng)');
+		document.getElementById('button_remove_arrow').setAttribute('onclick', 'SubMap._busStationArray.enableRemoveArrows(MouseEvent.latLng)');
 	
 		//add a button to add a boundary
 		if (document.getElementById('button_add_boundary') === null) {
@@ -46,7 +46,7 @@ function mainFindFlowDirection(){
 			button_add_boundary.innerHTML = 'add boundary';
 			newField.appendChild(button_add_boundary);
 		}
-		document.getElementById('button_add_boundary').setAttribute('onclick', 'arrayOfBusLines.enableAddBoundary()');	
+		document.getElementById('button_add_boundary').setAttribute('onclick', 'SubMap._busStationArray.enableAddBoundary()');	
 	
 		//add a button to automaticaly find the flow and put the arrows 
 		if (document.getElementById('button_find_flow_auto') === null) {
@@ -56,7 +56,7 @@ function mainFindFlowDirection(){
 			button_find_flow_auto.innerHTML = 'find flow automaticaly';
 			newField.appendChild(button_find_flow_auto);
 		}
-		document.getElementById('button_find_flow_auto').setAttribute('onclick', 'arrayOfBusLines.enableFindFlowAuto()');
+		document.getElementById('button_find_flow_auto').setAttribute('onclick', 'SubMap._busStationArray.enableFindFlowAuto()');
 		
 		//add a button to find the flow from the arrows of the xml file
 		
@@ -88,7 +88,7 @@ function mainFindFlowDirection(){
 			button_find_flow_from_xml_arrows.innerHTML = 'find flow from xml arrows';
 			newField.appendChild(button_find_flow_from_xml_arrows);
 		}
-		document.getElementById('button_find_flow_from_xml_arrows').setAttribute('onclick', 'arrayOfBusLines.enableFindFlowFromXmlArrows()');
+		document.getElementById('button_find_flow_from_xml_arrows').setAttribute('onclick', 'SubMap._busStationArray.enableFindFlowFromXmlArrows()');
 		
 		//add a button to reverse the flow
 		if (document.getElementById('button_reverse_flow') === null) {
@@ -98,7 +98,7 @@ function mainFindFlowDirection(){
 			button_reverse_flow.innerHTML = 'reverse the flow';
 			newField.appendChild(button_reverse_flow);
 		}
-		document.getElementById('button_reverse_flow').setAttribute('onclick', 'arrayOfBusLines.enableReverseFlow()');
+		document.getElementById('button_reverse_flow').setAttribute('onclick', 'SubMap._busStationArray.enableReverseFlow()');
 		
 		//add a button to make a bidirectional flow
 		if (document.getElementById('button_bidirectional_flow') === null) {
@@ -108,7 +108,7 @@ function mainFindFlowDirection(){
 			button_bidirectional_flow.innerHTML = 'bidirectional the flow';
 			newField.appendChild(button_bidirectional_flow);
 		}
-		document.getElementById('button_bidirectional_flow').setAttribute('onclick', 'arrayOfBusLines.enableAddBidirectionalArrows()');
+		document.getElementById('button_bidirectional_flow').setAttribute('onclick', 'SubMap._busStationArray.enableAddBidirectionalArrows()');
 		
 		//add a button to make a bidirectional flow
 		if (document.getElementById('button_find_flow_of_all_bus_lines') === null) {
@@ -118,7 +118,7 @@ function mainFindFlowDirection(){
 			button_find_flow_of_all_bus_lines.innerHTML = 'find flow for all bus lines';
 			newField.appendChild(button_find_flow_of_all_bus_lines);
 		}
-		document.getElementById('button_find_flow_of_all_bus_lines').setAttribute('onclick', 'arrayOfBusLines.findFlowOfAllBusLines(0)');
+		document.getElementById('button_find_flow_of_all_bus_lines').setAttribute('onclick', 'SubMap._busStationArray.findFlowOfAllBusLines(0)');
 
 		//add a button to show the flows
 		if (document.getElementById('button_show_flows') === null) {
@@ -128,7 +128,7 @@ function mainFindFlowDirection(){
 			button_show_flows.innerHTML = 'show flows';
 			newField.appendChild(button_show_flows);
 		}
-		document.getElementById('button_show_flows').setAttribute('onclick', 'arrayOfBusLines.showFlows()');
+		document.getElementById('button_show_flows').setAttribute('onclick', 'SubMap._busStationArray.showFlows()');
 		
 		//add a button to hide the flows
 		if (document.getElementById('button_hide_flows') === null) {
@@ -138,7 +138,7 @@ function mainFindFlowDirection(){
 			button_hide_flows.innerHTML = 'hide flows';
 			newField.appendChild(button_hide_flows);
 		}
-		document.getElementById('button_hide_flows').setAttribute('onclick', 'arrayOfBusLines.hideFlows()');
+		document.getElementById('button_hide_flows').setAttribute('onclick', 'SubMap._busStationArray.hideFlows()');
 		
 		//add a button to save the flows in the database
 		if (document.getElementById('button_save_flows_in_database') === null) {
@@ -148,7 +148,7 @@ function mainFindFlowDirection(){
 			button_save_flows_in_database.innerHTML = 'save flows in database';
 			newField.appendChild(button_save_flows_in_database);
 		}
-		document.getElementById('button_save_flows_in_database').setAttribute('onclick', 'arrayOfBusLines.hideFlows()');
+		document.getElementById('button_save_flows_in_database').setAttribute('onclick', 'SubMap._busStationArray.hideFlows()');
 		
 	}
 	else {

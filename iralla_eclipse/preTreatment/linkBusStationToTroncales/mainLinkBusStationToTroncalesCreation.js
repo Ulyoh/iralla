@@ -23,17 +23,17 @@ function mainLinkBusStationToTroncales(){
 		}
 		
 		//listener to select a bus Station
-		for (i = 0; i < arrayOfBusStations.length; i++) {
-			if ((arrayOfBusStations[i].type == "normal") || (arrayOfBusStations[i].type == "boundary")){
-				arrayOfBusStations[i].listenerId = arrayOfBusStations[i].addFunctionsToListener('click', arrayOfBusStations[i].setAddingConnections, [arrayOfBusStations[i]]);
+		for (i = 0; i < SubMap._busStationArray.length; i++) {
+			if ((SubMap._busStationArray[i].type == "normal") || (SubMap._busStationArray[i].type == "boundary")){
+				SubMap._busStationArray[i].listenerId = SubMap._busStationArray[i].addFunctionsToListener('click', SubMap._busStationArray[i].setAddingConnections, [SubMap._busStationArray[i]]);
 			}
 		}
 		
 		//listener to select a bus line:
-		if ((arrayOfBusLines.length > 0) && (arrayOfBusLines[0] != "")){
-			for (i = 0; i < arrayOfBusLines.length; i++) {
-				if ((arrayOfBusLines[i].type == "mainLine") || (arrayOfBusLines[i].type == "feeder")) {
-					arrayOfBusLines[i].listenerId = arrayOfBusLines[i].addFunctionsToListener('click', arrayOfBusLines[i].setAddingConnections, [arrayOfBusLines[i]]);
+		if ((SubMap._busStationArray.length > 0) && (SubMap._busStationArray[0] != "")){
+			for (i = 0; i < SubMap._busStationArray.length; i++) {
+				if ((SubMap._busStationArray[i].type == "mainLine") || (SubMap._busStationArray[i].type == "feeder")) {
+					SubMap._busStationArray[i].listenerId = SubMap._busStationArray[i].addFunctionsToListener('click', SubMap._busStationArray[i].setAddingConnections, [SubMap._busStationArray[i]]);
 				}
 			}
 		}
@@ -63,34 +63,34 @@ function mainLinkBusStationToTroncales(){
 	else {
 		node.innerHTML = "create link: bus lines / troncales";
 		
-		for (i = 0; i < arrayOfBusStations.length; i++) {
-			if ((arrayOfBusStations[i].type == "normal") || (arrayOfBusStations[i].type == "boundary")){
-				arrayOfBusStations[i].removeFunctionsToListeners(arrayOfBusStations[i].listenerId, 'click');
+		for (i = 0; i < SubMap._busStationArray.length; i++) {
+			if ((SubMap._busStationArray[i].type == "normal") || (SubMap._busStationArray[i].type == "boundary")){
+				SubMap._busStationArray[i].removeFunctionsToListeners(SubMap._busStationArray[i].listenerId, 'click');
 			}
 		}
 		
-		if ((typeof(arrayOfBusLines) != "undefined") && (arrayOfBusLines[0] != "")) {
-			for (i = 0; i < arrayOfBusLines.length; i++) {
-				if ((arrayOfBusLines[i].type == "mainLine") || (arrayOfBusLines[i].type == "feeder")) {
-					arrayOfBusLines[i].removeFunctionsToListeners(arrayOfBusLines[i].listenerId, 'click');
+		if ((typeof(SubMap._busStationArray) != "undefined") && (SubMap._busStationArray[0] != "")) {
+			for (i = 0; i < SubMap._busStationArray.length; i++) {
+				if ((SubMap._busStationArray[i].type == "mainLine") || (SubMap._busStationArray[i].type == "feeder")) {
+					SubMap._busStationArray[i].removeFunctionsToListeners(SubMap._busStationArray[i].listenerId, 'click');
 				}
 			}
 		}
 		
 		if (typeof(BusStation.previousModified) != 'undefined') {
 			
-			for(i = 0; i < arrayOfBusLines.length; i++){
+			for(i = 0; i < SubMap._busStationArray.length; i++){
 				//remove the listeners to addConnection from an other busStation:
-				if (typeof(arrayOfBusLines[i].idOfListenerOfAddConnection) != 'undefined'){
-					arrayOfBusLines[i].removeFunctionsToListeners(arrayOfBusLines[i].idOfListenerOfAddConnection,'click');
-					arrayOfBusLines[i].idOfListenerOfAddConnection = undefined;
+				if (typeof(SubMap._busStationArray[i].idOfListenerOfAddConnection) != 'undefined'){
+					SubMap._busStationArray[i].removeFunctionsToListeners(SubMap._busStationArray[i].idOfListenerOfAddConnection,'click');
+					SubMap._busStationArray[i].idOfListenerOfAddConnection = undefined;
 				}
 			}
 			
 			BusStation.previousModified.setDraggable(false);
 			
 			//set the size of the icon to the good value:
-			var size = arrayOfBusStations.sizeForAZoomValue[map.getZoom() - 1];
+			var size = SubMap._busStationArray.sizeForAZoomValue[map.getZoom() - 1];
 			var iconPath = BusStation.previousModified.iconPath;
 			var iconStation = new gmap.MarkerImage(iconPath, null, null, null, new gmap.Size(size, size));
 			BusStation.previousModified.setIcon(iconStation);

@@ -65,11 +65,11 @@ function makeVirtualsBusStations(argsFromServor, args){
 			nextConnectionId = args.nextConnectionId;
 		}
 		
-		if (index >= arrayOfBusLines.length) {
+		if (index >= SubMap._busStationArray.length) {
 			return;
 		}
 		
-		while ((arrayOfBusLines[index].type != 'feeder') && (arrayOfBusLines[index].type != 'other')) {
+		while ((SubMap._busStationArray[index].type != 'feeder') && (SubMap._busStationArray[index].type != 'other')) {
 			index++;
 		}
 		
@@ -78,9 +78,9 @@ function makeVirtualsBusStations(argsFromServor, args){
 		
 		
 		//END DEBUG
-		arrayOfBusLines[index].setOptions({strokeColor: '#FF0000',  strokeOpacity: 1});
+		SubMap._busStationArray[index].setOptions({strokeColor: '#FF0000',  strokeOpacity: 1});
 		
-		if ((index < arrayOfBusLines.length) && ((arrayOfBusLines[index].type == 'feeder') || (arrayOfBusLines[index].type == 'other')) && (state == 'step 1')) {
+		if ((index < SubMap._busStationArray.length) && ((SubMap._busStationArray[index].type == 'feeder') || (SubMap._busStationArray[index].type == 'other')) && (state == 'step 1')) {
 			
 			//INIT
 			//list of virtual bus lines:
@@ -93,16 +93,16 @@ function makeVirtualsBusStations(argsFromServor, args){
 			var previousListOfBusLinks = [];
 
 			//path of the ruta/alimentadora considerated:
-			var path = arrayOfBusLines[index].getPath();
+			var path = SubMap._busStationArray[index].getPath();
 
 			//list of circles to show busStation created:
-			if (typeof(arrayOfBusLines.busStationCircle) == 'undefined'){
-				arrayOfBusLines.busStationCircle = [];
+			if (typeof(SubMap._busStationArray.busStationCircle) == 'undefined'){
+				SubMap._busStationArray.busStationCircle = [];
 			}
 			else{
-				for (i = 0; i < arrayOfBusLines.busStationCircle.length; i++ ){
-					arrayOfBusLines.busStationCircle[i].setMap(null);
-					arrayOfBusLines.lastIndexOfBusStationCircle = -1;
+				for (i = 0; i < SubMap._busStationArray.busStationCircle.length; i++ ){
+					SubMap._busStationArray.busStationCircle[i].setMap(null);
+					SubMap._busStationArray.lastIndexOfBusStationCircle = -1;
 				}
 			}
 
@@ -144,8 +144,8 @@ function makeVirtualsBusStations(argsFromServor, args){
 			//DEBUG
 			//i = 200;
 			
-			arrayOfBusLines.argumentsScan = new Object();
-			arrayOfBusLines.argumentsScan = {
+			SubMap._busStationArray.argumentsScan = new Object();
+			SubMap._busStationArray.argumentsScan = {
 				searchOfBusStationCenter: false,
 				i: i,
 				path: path,
@@ -165,7 +165,7 @@ function makeVirtualsBusStations(argsFromServor, args){
 					}
 			};
 			//for each segment of the ruta/alimentadora:
-			scanSegmentRecursif(arrayOfBusLines.argumentsScan);
+			scanSegmentRecursif(SubMap._busStationArray.argumentsScan);
 		}
 	}
 }
@@ -218,7 +218,7 @@ function scanSegmentRecursif(args){
 	var symetricBoundariesOfBusLine;
 	var centerOfBusStation;
 
-	var currentBusLine = arrayOfBusLines[index];
+	var currentBusLine = SubMap._busStationArray[index];
 	var identical;
 	//show index on the map:
 	//showCircles(path.getAt(i));
@@ -235,7 +235,7 @@ function scanSegmentRecursif(args){
 		}
 
 		if (i < path.getLength){
-			arrayOfBusLines.argumentsScan = {
+			SubMap._busStationArray.argumentsScan = {
 				i: i,
 				path: path,
 				step: step,
@@ -249,7 +249,7 @@ function scanSegmentRecursif(args){
 				orderedListOfVirtualBusStationsId: orderedListOfVirtualBusStationsId,
 				nextConnectionId:nextConnectionId
 			};
-			scanSegmentRecursif(arrayOfBusLines.argumentsScan);
+			scanSegmentRecursif(SubMap._busStationArray.argumentsScan);
 		}
 		else{
 			return;
@@ -389,7 +389,7 @@ function scanSegmentRecursif(args){
 			while ( (i < path.getLength() - 1) && (path.getAt(i) == path.getAt(i + 1)) ) {
 				i++;
 			}
-			arrayOfBusLines.argumentsScan = {
+			SubMap._busStationArray.argumentsScan = {
 				searchOfBusStationCenter:searchOfBusStationCenter,
 				iBeginningSearchOfBusStationCenter:iBeginningSearchOfBusStationCenter,
 				initialDistanceFromIBeginningSearchOfBusStationCenter:initialDistanceFromIBeginningSearchOfBusStationCenter,
@@ -410,7 +410,7 @@ function scanSegmentRecursif(args){
 				lastBusStationPosition: lastBusStationPosition
 			};
 			showState();
-			setTimeout(function(){scanSegmentRecursif(arrayOfBusLines.argumentsScan)},100);
+			setTimeout(function(){scanSegmentRecursif(SubMap._busStationArray.argumentsScan)},100);
 		}
 		else{
 
@@ -464,7 +464,7 @@ function scanSegmentRecursif(args){
 			nextConnectionId: nextConnectionId
 		};
 
-		document.getElementById('direction').innerHTML = index + "/" + arrayOfBusLines.length + " done.";
+		document.getElementById('direction').innerHTML = index + "/" + SubMap._busStationArray.length + " done.";
 		showState();
 		//removed to debug
 		request({phpFileCalled: mysite + 'preTreatment/makeVirtualsBusStation/saveVirtualsBusStations.php',
@@ -505,7 +505,7 @@ function findBusLinksAroundThisPoint(args){
 	var segmentToCompare;
 	
 	//foreach other ruta/alimentadora:
-	label_1: for (var i = 0; i < arrayOfBusLines.length; i++) {
+	label_1: for (var i = 0; i < SubMap._busStationArray.length; i++) {
 		//if the index of the considerated ruta/alimentadora is in the exception list:
 		for (var g = 0; g < exception.length; g++) {
 			if (i == exception[g]) {
@@ -515,7 +515,7 @@ function findBusLinksAroundThisPoint(args){
 		}
 		
 		//path of the busline to compare with the bus station tested:
-		var pathToCompare = arrayOfBusLines[i].getPath();
+		var pathToCompare = SubMap._busStationArray[i].getPath();
 		
 		var j = 0;
 		
@@ -529,8 +529,8 @@ function findBusLinksAroundThisPoint(args){
 			intersectionsList.push({
 				//connectionId: connectionId++,
 				busLineIndex: i,
-				busLineId: parseInt(arrayOfBusLines[i].id),
-				busLineName: arrayOfBusLines[i].lineName,
+				busLineId: parseInt(SubMap._busStationArray[i].id),
+				busLineName: SubMap._busStationArray[i].lineName,
 				indexOfPreviousVertex: 0,
 				distanceToThePreviousVertex: 0,
 				coord: Point.latLngToPoint(pathToCompare.getAt(0))
@@ -554,10 +554,10 @@ function findBusLinksAroundThisPoint(args){
 		//for each segment:
 		while (j < end) {
 			//case of a feeder:
-			if (arrayOfBusLines[i].type == 'feeder') {
+			if (SubMap._busStationArray[i].type == 'feeder') {
 				
 				//if there are vertex inside main line area:
-				isIndexInArea = arrayOfBusLines[i].isIndexInsideMainLineArea(j);
+				isIndexInArea = SubMap._busStationArray[i].isIndexInsideMainLineArea(j);
 				
 				if ((preTreatment.current == 'makeVirtualsBusStation') && (isIndexInArea.isInside == true))  {
 					j = isIndexInArea.nextBoundary;
@@ -571,9 +571,9 @@ function findBusLinksAroundThisPoint(args){
 			/*
 			if ((typeof(args.mode)) && (args.mode == 'makeVirtualsBusStation')) {
 				//in case of an alimentadora, if the vertex considerated is inside the area of the troncales:
-				if ((typeof(arrayOfBusLines[i].vertexNearTroncal) != 'undefined') &&
-				(arrayOfBusLines[j].vertexNearTroncal[j] === true) &&
-				(arrayOfBusLines[j].vertexNearTroncal[j + 1] === true)) {
+				if ((typeof(SubMap._busStationArray[i].vertexNearTroncal) != 'undefined') &&
+				(SubMap._busStationArray[j].vertexNearTroncal[j] === true) &&
+				(SubMap._busStationArray[j].vertexNearTroncal[j + 1] === true)) {
 					//go to the next vertex
 					continue;
 				}
@@ -592,8 +592,8 @@ function findBusLinksAroundThisPoint(args){
 						if (distance < shortestDistance) {
 							nearestIntersection = {
 								busLineIndex: i,
-								busLineId: parseInt(arrayOfBusLines[i].id),
-								busLineName: arrayOfBusLines[i].lineName,
+								busLineId: parseInt(SubMap._busStationArray[i].id),
+								busLineName: SubMap._busStationArray[i].lineName,
 								indexOfPreviousVertex: j,
 								distanceToThePreviousVertex: 0,
 								coord: Point.latLngToPoint(pathToCompare.getAt(j))
@@ -606,8 +606,8 @@ function findBusLinksAroundThisPoint(args){
 						if (distance < shortestDistance) {
 							nearestIntersection = {
 								busLineIndex: i,
-								busLineId: parseInt(arrayOfBusLines[i].id),
-								busLineName: arrayOfBusLines[i].lineName,
+								busLineId: parseInt(SubMap._busStationArray[i].id),
+								busLineName: SubMap._busStationArray[i].lineName,
 								indexOfPreviousVertex: j + 1,
 								distanceToThePreviousVertex: 0,
 								coord: Point.latLngToPoint(pathToCompare.getAt(j + 1))
@@ -620,8 +620,8 @@ function findBusLinksAroundThisPoint(args){
 						if (distance < shortestDistance) {
 							nearestIntersection = {
 								busLineIndex: i,
-								busLineId: parseInt(arrayOfBusLines[i].id),
-								busLineName: arrayOfBusLines[i].lineName,
+								busLineId: parseInt(SubMap._busStationArray[i].id),
+								busLineName: SubMap._busStationArray[i].lineName,
 								indexOfPreviousVertex: j,
 								distanceToThePreviousVertex: google.maps.geometry.spherical.computeDistanceBetween(pathToCompare.getAt(j), intersection.convertToLatLng()),
 								coord: intersection
@@ -653,8 +653,8 @@ function findBusLinksAroundThisPoint(args){
 			intersectionsList.push({
 				//connectionId: connectionId++,
 				busLineIndex: i,
-				busLineId: parseInt(arrayOfBusLines[i].id),
-				busLineName: arrayOfBusLines[i].lineName,
+				busLineId: parseInt(SubMap._busStationArray[i].id),
+				busLineName: SubMap._busStationArray[i].lineName,
 				indexOfPreviousVertex: lengthOfPathToCompare - 1,
 				distanceToThePreviousVertex: 0,
 				coord: Point.latLngToPoint(pathToCompare.getAt(lengthOfPathToCompare-1))
@@ -669,8 +669,8 @@ function findBusLinksAroundThisPoint(args){
 		listOfConnections.push({
 			//connectionId: connectionId++,
 			busLineIndex: args.exception[0],
-			busLineId: parseInt(arrayOfBusLines[args.exception].id),
-			busLineName: arrayOfBusLines[args.exception].lineName,
+			busLineId: parseInt(SubMap._busStationArray[args.exception].id),
+			busLineName: SubMap._busStationArray[args.exception].lineName,
 			indexOfPreviousVertex: args.indexOfPreviousVertex,
 			distanceToThePreviousVertex: args.distanceToThePreviousVertex,
 			coord: args.point
@@ -689,12 +689,12 @@ function areTheyIdenticals(list1, list2, radius){
 				if (list1[l].busLineIndex == list2[m].busLineIndex) {
 					//calculate the distance between the two connections:
 			/*		if (list2[l].indexOfPreviousVertex > list1[l].indexOfPreviousVertex){
-						distance = arrayOfBusLines[list1[l].busLineIndex].distanceBetweenTwoVertex(list1[l].indexOfPreviousVertex, list2[l].indexOfPreviousVertex);
+						distance = SubMap._busStationArray[list1[l].busLineIndex].distanceBetweenTwoVertex(list1[l].indexOfPreviousVertex, list2[l].indexOfPreviousVertex);
 						distance += list2[l].distanceToThePreviousVertex;
 						distance -= list1[l].distanceToThePreviousVertex;
 					}
 					else if (list2[l].indexOfPreviousVertex < list1[l].indexOfPreviousVertex){
-						distance = arrayOfBusLines[list1[l].busLineIndex].distanceBetweenTwoVertex(list2[l].indexOfPreviousVertex, list1[l].indexOfPreviousVertex);
+						distance = SubMap._busStationArray[list1[l].busLineIndex].distanceBetweenTwoVertex(list2[l].indexOfPreviousVertex, list1[l].indexOfPreviousVertex);
 						distance += list1[l].distanceToThePreviousVertex;
 						distance -= list2[l].distanceToThePreviousVertex;
 					}
@@ -820,8 +820,8 @@ function showState(){
 		showBusStationIdAndVertexIndex = document.getElementById("showBusStationIdAndVertexIndex");
 	}
 
-	showBusStationIdAndVertexIndex.innerHTML = 'current bus station index: ' + arrayOfBusLines.argumentsScan.index + '<br/>' +
-		'current vertex index: ' + arrayOfBusLines.argumentsScan.i;
+	showBusStationIdAndVertexIndex.innerHTML = 'current bus station index: ' + SubMap._busStationArray.argumentsScan.index + '<br/>' +
+		'current vertex index: ' + SubMap._busStationArray.argumentsScan.i;
 
 	document.body.appendChild(showBusStationIdAndVertexIndex);
 

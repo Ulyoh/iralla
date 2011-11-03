@@ -19,9 +19,9 @@ function mainAreaAroundTroncales(){
 	}
 	troncalAreas = [];
 	
-	for (i = 0; i < arrayOfBusLines.length; i++){
-		if (arrayOfBusLines[i].type == 'mainLine'){
-			troncalAreas.push(AreaSurroundedPolyline(arrayOfBusLines[i],distance));
+	for (i = 0; i < SubMap._busStationArray.length; i++){
+		if (SubMap._busStationArray[i].type == 'mainLine'){
+			troncalAreas.push(AreaSurroundedPolyline(SubMap._busStationArray[i],distance));
 			troncalAreas[troncalAreas.length - 1].mergedStackedPart();
 		}
 	}
@@ -32,8 +32,8 @@ function mainAreaAroundTroncales(){
 	//for each bus line
 	var k;
 	var intersections = [];
-	for (i = 0; i < arrayOfBusLines.length; i++) {
-		var busLine = arrayOfBusLines[i];
+	for (i = 0; i < SubMap._busStationArray.length; i++) {
+		var busLine = SubMap._busStationArray[i];
 		//if it s an Alimentadora
 		if (busLine.type == 'feeder'){
 			var polylinePath = busLine.getPath();

@@ -189,7 +189,7 @@ function loadFindFlowDirectionFilesAndLaunch(){
 		includeJs("preTreatment/findFlowDirection/mainFindFlowDirectionCreation.js");
 		includeJs("preTreatment/findFlowDirection/Arrow.js");
 		includeJs("preTreatment/findFlowDirection/gmap.Polyline_extend.js");
-		includeJs("preTreatment/findFlowDirection/arrayOfBusLines_extended.js");
+		includeJs("preTreatment/findFlowDirection/SubMap._busStationArray_extended.js");
 		includeJs("preTreatment/findFlowDirection/showArrowsOnMap.js");
 	}
 	
