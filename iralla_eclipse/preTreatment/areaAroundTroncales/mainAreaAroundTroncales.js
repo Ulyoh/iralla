@@ -42,10 +42,10 @@ function mainAreaAroundTroncales(){
 			var outVertex;
 			
 			var firstVertex = polylinePath.getAt(0);
-			var lastVertex = polylinePath.getAt(length-1)
+			var lastVertex = polylinePath.getAt(length-1);
 			//remove the vertex which were created by the previous calculation
 			if (typeof(busLine.vertexInsideMainLineArea) != 'undefined') {
-				for (var j = 0; j < busLine.vertexInsideMainLineArea.length; j++) {
+				for (j = 0; j < busLine.vertexInsideMainLineArea.length; j++) {
 					enterVertex = busLine.vertexInsideMainLineArea[j].enter;
 					outVertex = busLine.vertexInsideMainLineArea[j].out;
 					if(enterVertex != firstVertex){
@@ -207,7 +207,7 @@ function mainAreaAroundTroncales(){
 				}
 			}
 			
-			if(vertexInside == true){
+			if(vertexInside === true){
 				//save the couple of go in and go out points:
 				busLine.vertexInsideMainLineArea.push({
 					enter: goInPoint,
@@ -250,13 +250,14 @@ Segment.prototype.intersectWithAreas = function(){
 		}
 	}
 	return intersections;
-}
+};
 
 Segment.prototype.nearestIntersectionOfFirstPointWithAreas = function(){
 	var intersections = this.intersectWithAreas();
 	var firstPoint = this.getPt1();
 	var distance;
 	var shortestDistance = Infinity;
+	var nearestIntersection;
 	
 	for (var i = 0; i < intersections.length; i++){
 		distance = firstPoint.distanceOf(intersections[i].latLng);
@@ -273,13 +274,14 @@ Segment.prototype.nearestIntersectionOfFirstPointWithAreas = function(){
 		return 'error';
 	}
 	
-}
+};
 
 Segment.prototype.nearestIntersectionOfLastPointWithAreas = function(){
 	var intersections = this.intersectWithAreas();
 	var lastPoint = this.getPt2();
 	var distance;
 	var shortestDistance = Infinity;
+	var nearestIntersection;
 	
 	for (var i = 0; i < intersections.length; i++){
 		distance = lastPoint.distanceOf(intersections[i].latLng);
@@ -290,7 +292,7 @@ Segment.prototype.nearestIntersectionOfLastPointWithAreas = function(){
 	}
 	
 	return nearestIntersection;
-}
+};
 
 function newGreenCircle(latLng){
 	return new gmap.Circle({

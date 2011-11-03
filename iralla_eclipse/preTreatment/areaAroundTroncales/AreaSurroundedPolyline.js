@@ -3,9 +3,12 @@
  */
 
  
- AreaSurroundedPolyline = function(polyline, distance){
- 	
- 	var areaSurroundedPolyline = new gmap.Polygon({
+AreaSurroundedPolyline = function(polyline, distance){
+	
+	
+	var i, j, indexOfPoint;
+	
+	var areaSurroundedPolyline = new gmap.Polygon({
 		map: polyline.map,
 		clickable: false,
 		strokeColor: '#00008b',
@@ -19,7 +22,7 @@
 	
 	polyline.areaSurrounded = areaSurroundedPolyline;
 	var polylinePath = polyline.getPath();
-	var polygonPath = new Array();
+	var polygonPath = [];
 	
 	//constructor
 	
@@ -42,41 +45,45 @@
 	polygonPath[1] = pt1.addVector(vectorMinus45Grados).convertToLatLng();
 		
 //for the other appart of the last one:
-	for (var i = 1; i < polylinePath.length - 1; i++){
+	var ptFind1;
+	var ptFind2;
+	for (i = 1; i < polylinePath.length - 1; i++){
 		pt1 = Point.latLngToPoint(polylinePath.getAt(i-1));
 		pt2 = Point.latLngToPoint(polylinePath.getAt(i));
 		var pt3 = Point.latLngToPoint(polylinePath.getAt(i+1));
 				
 		//create vectores:
-		var vector21 = new Vector(pt2, pt1);
+		vector21 = new Vector(pt2, pt1);
 		var vector23 = new Vector(pt2, pt3);
 		
 		//the vectorSupport which the direction have the same slope than the line 
 		//passing by the pt2 and the point we are looking for:
 		var angle = /*Math.abs(*/vector21.getAngleWith(vector23)/*)*/;
-		if (angle > Math.PI)
+		if (angle > Math.PI){
 			angle -= Math.PI;
-		if (angle < -Math.PI)
+		}
+		if (angle < -Math.PI){
 			angle += Math.PI;
-			
+		}
+		var vectorSupport;
+		var magnitude;
 		if ((angle != round(Math.PI)) && (angle != 0)) {
-			
-			var magnitude = distance / Math.sin(angle / 2);
+			magnitude = distance / Math.sin(angle / 2);
 			
 			//add the vector 21 and 23 to get a vector which its direction passing to the point we looking for
-			var vectorSupport = vector21.rotate(angle / 2);
+			vectorSupport = vector21.rotate(angle / 2);
 			//set the magnitude:
 			vectorSupport.setMagnitude(magnitude);
 		}
 		else{
-			var vectorSupport = vector21.rotate(Math.PI / 2);
-			var magnitude = distance;
+			vectorSupport = vector21.rotate(Math.PI / 2);
+			magnitude = distance;
 			vectorSupport.setMagnitude(magnitude);
 		}
 
 		//calculate the two points we are looking for:
-		var ptFind1 = pt2.addVector(vectorSupport);
-		var ptFind2 = pt2.subVector(vectorSupport);
+		ptFind1 = pt2.addVector(vectorSupport);
+		ptFind2 = pt2.subVector(vectorSupport);
 		
 		//find in which order to add this two elements:
 		//create two segments, each which one ptFind and one of the two previous point calculated
@@ -111,9 +118,10 @@
 	
 	//test polygonPath:
 	
-	for ( var i = 0; i < polygonPath.length; i++){
-		if ((isNaN(polygonPath[i].lat()) == true) || (isNaN(polygonPath[i].lng()) == true))
+	for ( i = 0; i < polygonPath.length; i++){
+		if ((isNaN(polygonPath[i].lat()) === true) || (isNaN(polygonPath[i].lng()) === true)){
 			alert('error 72');		//TODO change the alert to other thing
+		}
 	}
 	
 	areaSurroundedPolyline.setPath(polygonPath);
@@ -125,7 +133,7 @@
 		var pathOfTheAreaLatLng = areaSurroundedPolyline.getPath();
 				
 		//convert latlng to point:
-		var pathOfTheArea= new Array();
+		var pathOfTheArea= [];
 		for(var i = 0; i < pathOfTheAreaLatLng.getLength(); i++){
 			pathOfTheArea.push(Point.latLngToPoint(pathOfTheAreaLatLng.getAt(i)));
 		}
@@ -133,9 +141,10 @@
 
 		//in case two point following each other are egal, the algorithm can not work
 		//so we just move a bit the first point in order that the algo can still work :
-		for(var i = 0; i < length; i++){
+		var e;
+		for(i = 0; i < length; i++){
 			if (( (i == length - 1) && (pathOfTheArea[i].y == pathOfTheArea[0].y) &&
-				(pathOfTheArea[i].x == pathOfTheArea [0].x)
+				(pathOfTheArea[i].x == pathOfTheArea[0].x)
 				) || (
 				(i < length - 1) && (pathOfTheArea[i].y == pathOfTheArea[i+1].y) &&
 				(pathOfTheArea[i].x == pathOfTheArea[i+1].x))){
@@ -143,7 +152,7 @@
 				//we want to make the point of index i ant i+1 two distinguish point
 				//to get a segment.
 				//we will translate the point on index i in direction of the point in front of it "e" :
-				var e = length - 1 - i;
+				e = length - 1 - i;
 				var pti = Point.latLngToPoint(pathOfTheArea[i]);
 				var facingVector = new Vector(pti, Point.latLngToPoint(pathOfTheArea[e]));
 				
@@ -161,11 +170,11 @@
 		
 	//searching all the points of the area that should be removed
 	//to do not have part of the area stacked by itself.
-		var i = 0;		//beginning of the array
-		var e = length - 1; //end of the array
+		i = 0;		//beginning of the array
+		e = length - 1; //end of the array
 		
 		//array of all the index of point that have to be removed from the area:
-		var indexOfPointsToRemove = new Array();
+		var indexOfPointsToRemove = [];
 		
 		while( (i + 1) < (e - 1) ){
 			//create the four points we need:
@@ -181,6 +190,8 @@
 			//create the segment [pti1 , pte1]:
 			var ie1Segment = new Segment(pti1, pte1);
 			
+			var ie2Segment;
+			
 			//testing if the quadrilateral we want to do doesn't cross it self:
 			//ie: the segments [pti1, pte1] [pti2, pte2]doesn't cross each other
 			//ie: pti2 and pte2 are on the same side of the supportLine of the
@@ -190,21 +201,21 @@
 			
 			//if the points are not on the same side
 			if ( ie1Line.positionOf(pti2) != ie1Line.positionOf(pte2) ){
-				var ie1Segment = new Segment(pti1, pte2);
-				var ie2Segment = new Segment(pti2, pte1);
+				ie1Segment = new Segment(pti1, pte2);
+				ie2Segment = new Segment(pti2, pte1);
 			}
 			else{
-				var ie2Segment = new Segment(pti2, pte2);
+				ie2Segment = new Segment(pti2, pte2);
 			}
 			
 			//test of the position of each point appart of the ones used for the quadrilateral:
-			for (var j = 0; j < length; j++){
+			for (j = 0; j < length; j++){
 				if ((j != i) && (j != i+1) && (j != e) && (j != e-1)){
 					var testedPoint = pathOfTheArea[j];
 					
-					var iLine = iSegment.getSupportLine();
+					iLine = iSegment.getSupportLine();
 					var eLine = eSegment.getSupportLine();
-					var ie1Line = ie1Segment.getSupportLine();
+					ie1Line = ie1Segment.getSupportLine();
 					var ie2Line = ie2Segment.getSupportLine();
 					
 					//if the point is inside the quadrilateral
@@ -237,7 +248,7 @@
 			indexOfPointsToRemove.sort(function(a,b){return a - b;});
 			
 			//remove the double:
-			for( var i=0; i < indexOfPointsToRemove.length-2; i++){
+			for(i = 0; i < indexOfPointsToRemove.length-2; i++){
 				if(indexOfPointsToRemove[i+1] == indexOfPointsToRemove[i]){
 					indexOfPointsToRemove.splice(i,1);
 					i--;
@@ -245,9 +256,9 @@
 			}
 			
 			//create index of point to keep:
-			var indexOfPointsToKeep = new Array();
+			var indexOfPointsToKeep = [];
 			var k = 0;
-			for(var i = 0; i < length; i++){
+			for(i = 0; i < length; i++){
 				if(indexOfPointsToRemove[k] == i){
 					k++;
 				}
@@ -273,7 +284,7 @@
 			//creation of chains for each consecutive points in indexOfPointsToKeep:
 			//at each extremity of the chains the extension point which has to be removed
 			//is added
-			var chains = new Array();
+			var chains = [];
 			var chainIndex = 0;
 			var previousVertex;
 			var currentVertex;
@@ -281,7 +292,7 @@
 			chains[chainIndex] = new VertexLink( indexOfPointsToKeep[0], pathOfTheArea[indexOfPointsToKeep[0]]);
 			previousVertex = chains[chainIndex];
 			
-			for( var i = 1; i < indexOfPointsToKeep.length; i++){
+			for( i = 1; i < indexOfPointsToKeep.length; i++){
 				
 				if((indexOfPointsToKeep[i] - indexOfPointsToKeep[i-1]) == 1){
 					currentVertex = new VertexLink(indexOfPointsToKeep[i], pathOfTheArea[indexOfPointsToKeep[i]], previousVertex);
@@ -302,7 +313,7 @@
 			//if the end and beginning of indexOfPointsToKeep are the corresponding end and beginning index of pathOfTheArea
 			//the first chain and the last chain of chains[] as to be joined
 			if (( indexOfPointsToKeep[indexOfPointsToKeep.length-1] == length -1) 
-			&& (indexOfPointsToKeep[0] == 0)){
+			&& (indexOfPointsToKeep[0] === 0)){
 				var last = chains[0].last;
 				chains[0].previous = chains[chainIndex].last;
 				chains[chainIndex].last.next = chains[0];
@@ -312,38 +323,44 @@
 			}
 
 			//adding the extremities points which have been removed:
-			for( var i = 0; i < chains.length; i++){
+			for( i = 0; i < chains.length; i++){
 				var index = chains[i].index - 1;
-				if ( index >= 0)
+				if ( index >= 0){
 					chains[i].previous = new VertexLink(index , pathOfTheArea[index], "undefined", chains[i]);
-				else
+				}
+				else{
 					chains[i].previous = new VertexLink(length - 1 , pathOfTheArea[length - 1], "undefined", chains[i]);
-					
+				}
 				index = chains[i].last.index + 1;
-				if ( index < length)
+				if ( index < length){
 					chains[i].last.next = new VertexLink(index , pathOfTheArea[index], chains[i].last);
-				else
+				}
+				else{
 					chains[i].last.next = new VertexLink(0 , pathOfTheArea[0], chains[i].last);
+				}
 			}
 			
 			//connect the chains which are separate of only one point:
-			test1 : for (var i = 0; i < chains.length - 1; i++) {
+			var segment1;
+			var segment2;
+			loop1 : for (i = 0; i < chains.length - 1; i++) {
 				if( Math.abs(chains[i].last.index - chains[i+1].index) == 2){
 					//only if the two segments from the points are not cut by an other segment
 					//index of the point to test:
-					var indexOfPoint = ( chains[i].last.index + chains[i+1].index ) / 2;
+					indexOfPoint = ( chains[i].last.index + chains[i+1].index ) / 2;
 					//the two segment from the point:
-					var segment1 = new Segment(pathOfTheArea[indexOfPoint - 1], pathOfTheArea[indexOfPoint]);
-					var segment2 = new Segment(pathOfTheArea[indexOfPoint], pathOfTheArea[indexOfPoint + 1]);
+					segment1 = new Segment(pathOfTheArea[indexOfPoint - 1], pathOfTheArea[indexOfPoint]);
+					segment2 = new Segment(pathOfTheArea[indexOfPoint], pathOfTheArea[indexOfPoint + 1]);
 					
 					//for all the segments apart of the semgent1 and segment2:
-					for( var j = 0; j < indexOfPointsToKeep.length - 1; j++){
+					for( j = 0; j < indexOfPointsToKeep.length - 1; j++){
 						if ((indexOfPointsToKeep[j+1] - indexOfPointsToKeep[j] == 1 )
 						&& (indexOfPointsToKeep[j+1] != indexOfPoint) && (indexOfPointsToKeep[j] != indexOfPoint)){
 							var segmentTest = new Segment(pathOfTheArea[indexOfPointsToKeep[j]], pathOfTheArea[indexOfPointsToKeep[j+1]]);
 							//if one cut segment1 or segment2
-							if ((segment1.IsIntersectWithSegment(segmentTest) == true) || (segment2.IsIntersectWithSegment(segmentTest) == true)){
-								continue test1;
+							if ((segment1.IsIntersectWithSegment(segmentTest) === true)
+							 || (segment2.IsIntersectWithSegment(segmentTest) === true)){
+								continue loop1;
 							}
 						}
 					}
@@ -367,13 +384,13 @@
 				var makeConnection = true;
 				//only if the two segments from the points are not cut by an other segment
 				//index of the point to test:
-				var indexOfPoint = ( chains[chains.length-1].last.index + chains[0].index ) / 2;
+				indexOfPoint = ( chains[chains.length-1].last.index + chains[0].index ) / 2;
 				//the two segment from the point:
-				var segment1 = new Segment(chains[chains.length-1].last.point, pathOfTheArea[indexOfPoint]);
-				var segment2 = new Segment(chains[0].point, pathOfTheArea[indexOfPoint]);
+				segment1 = new Segment(chains[chains.length-1].last.point, pathOfTheArea[indexOfPoint]);
+				segment2 = new Segment(chains[0].point, pathOfTheArea[indexOfPoint]);
 					
 				//for all the segments apart of the semgent1 and segment2:
-				for( var j = 0; j < indexOfPointsToKeep.length - 1; j++){
+				for( j = 0; j < indexOfPointsToKeep.length - 1; j++){
 					if ((indexOfPointsToKeep[j+1] - indexOfPointsToKeep[j] == 1 )
 					&& (indexOfPointsToKeep[j+1] != indexOfPoint) && (indexOfPointsToKeep[j] != indexOfPoint)){
 						var segmentTest = new Segment(pathOfTheArea[indexOfPointsToKeep[j]], pathOfTheArea[indexOfPointsToKeep[j+1]]);
@@ -392,7 +409,7 @@
 						}
 				}
 				
-				if (makeConnection == true){
+				if (makeConnection === true){
 					chains[chains.length-1].last.next = chains[0];
 					chains[0].previous = chains[chains.length-1].last;
 					chains[chains.length-1].last = chains[0].last;
@@ -402,7 +419,7 @@
 			
 			//close the chains for which the beginning and end are separate of one point
 			//except the one formed of only two point:
-			for (var i = 0; i < chains.length; i++) {
+			for (i = 0; i < chains.length; i++) {
 				if(( Math.abs(chains[i].last.index - chains[i].index) <= 2)
 				&& (chains[i].next != chains[i].last)){
 					chains[i].last.next = chains[i];
@@ -420,7 +437,7 @@
 			var where = 'noWhere';
 			var link;
 			//connect the chain which follow each other:
-			for( var i = 0; i < chains.length - 1; i++){
+			for( i = 0; i < chains.length - 1; i++){
 				//create the segment of the end of chains[i]:
 				segmentRef = new Segment(chains[i].last.point,chains[i].last.next.point);
 				
@@ -488,7 +505,7 @@
 			var intersectionPoint1;
 			var intersectionPoint2;
 			//search chains could be added to another from one segment
-			for (var i = 0; i < chains.length - 1; i++) {
+			for (i = 0; i < chains.length - 1; i++) {
 				link = chains[i].previous;
 				//for each segment in chain[i]:
 				do{
@@ -565,7 +582,7 @@
 		
 		// comment for debug
 		 
-		 	for( var i = 0; i < chains.length; i++){
+		 	for( i = 0; i < chains.length; i++){
 				if (chains[i].last.next != chains[i]){
 					//search if the end and beginning of the chains[i] can be connected:
 					var segmentBegin = new Segment(chains[i].previous.point, chains[i].point);
@@ -605,9 +622,9 @@
 		
 	
 			//creation of the paths:
-			var paths = new Array();
+			var paths = [];
 			for( var i = 0; i < chains.length; i++){
-				paths[i] = new Array();
+				paths[i] = [];
 				link = chains[i];
 				var firstMaillon = link;
 				var j = 0;
@@ -631,7 +648,7 @@
 		var pathOfTheArea = areaSurroundedPolyline.getPath();
 		var length = pathOfTheArea.getLength();
 		//
-		var intersectionPoints = new Array();
+		var intersectionPoints = [];
 		
 		//find the intersection between the lineTest and the border of the area
 		
@@ -707,7 +724,7 @@
 			for ( var i = 0; i < intersectionPoints.length; i++){
 				
 				//to test:
-	/*			var intersecPolygonCircle = new Array();
+	/*			var intersecPolygonCircle = [];
 				if (intersectionPoints[i].lat() == -2.139652)
 					intersecPolygonCircle[i] = new PolygonCircle({
 								map: map,

@@ -3,8 +3,8 @@
  */
 
  function Node(options){
- 	this.to = new Array();
-	this.from = new Array();
+	this.to = [];
+	this.from = [];
 	this.latLng = new gmap.latLng();
 	
 	if (typeof(options.to) == 'object'){
@@ -18,6 +18,8 @@
 	if (typeof(options.latLng) == 'object'){
 		this.latLng = options.latLng;
 	}
+	
+	var to;
 	
 	this.addTo = function(node, distance, time){
 		
@@ -38,8 +40,8 @@
  }
  
  function To(node, distance, time){
- 	this.node = node;
- 	this.distance = distance;
+	this.node = node;
+	this.distance = distance;
 	this.time = time;
  }
  
