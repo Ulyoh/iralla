@@ -9,7 +9,7 @@ SubMap._busStationArray.createAreasAroundBusLines = function(index){
 		this[index].areaSurrounded.mergedStackedPart();
 	
 		//affichage du résultat
-		setTimeout(function(){SubMap._busStationArray[" + index + "].areaSurrounded.setOptions({map:null})}, 2000);
+		setTimeout('function(){SubMap._busStationArray[" + index + "].areaSurrounded.setOptions({map:null})}', 2000);
 	}
 	
 };

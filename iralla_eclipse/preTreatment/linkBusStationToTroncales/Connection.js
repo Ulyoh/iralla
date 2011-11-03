@@ -172,7 +172,7 @@ Connection.createAllOnTheMap = function(){
 	Connection.infos.index = index;
 	
 	if (index < SubMap._busStationArray.length ){
-		setTimeout(function(){Connection.createAllOnTheMap()}, 500);
+		setTimeout('function(){Connection.createAllOnTheMap()}', 500);
 	}
 	else{
 		Connection.infos.index = 0;

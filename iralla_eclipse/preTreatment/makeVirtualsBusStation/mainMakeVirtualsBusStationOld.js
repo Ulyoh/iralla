@@ -410,7 +410,7 @@ function scanSegmentRecursif(args){
 				lastBusStationPosition: lastBusStationPosition
 			};
 			showState();
-			setTimeout(function(){scanSegmentRecursif(SubMap._busStationArray.argumentsScan)},100);
+			setTimeout("function(){scanSegmentRecursif(SubMap._busStationArray.argumentsScan)}",100);
 		}
 		else{
 

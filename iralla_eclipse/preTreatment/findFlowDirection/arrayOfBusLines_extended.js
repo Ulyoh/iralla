@@ -268,7 +268,7 @@ SubMap._busStationArray.findFlowOfAllBusLines = function(index){
 	
 	index++;
 	if(index < this.length){
-		setTimeout(function(){SubMap._busStationArray.findFlowOfAllBusLines( ' + index + ' )},100);
+		setTimeout("function(){SubMap._busStationArray.findFlowOfAllBusLines( ' + index + ' )}",100);
 	}
 };
 
