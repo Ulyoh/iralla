@@ -5,8 +5,8 @@
  gmap.Polyline.prototype.setAddingConnections = function(){
 	
 	//remove listener to select bus stations:
-	for (var i = 0; i < arrayOfBusStations.length; i++) {
-		arrayOfBusStations[i].removeFunctionsToListeners(arrayOfBusStations[i].listenerId, 'click');
+	for (var i = 0; i < SubMap._busStationsArray.length; i++) {
+		SubMap._busStationsArray[i].removeFunctionsToListeners(SubMap._busStationsArray[i].listenerId, 'click');
 	}
 	
 	//hide all the connections
@@ -16,20 +16,20 @@
 	this.setConnectionsVisible(true);
 		
 	//add a connection when click a busStation
-	for( i = 0; i < arrayOfBusStations.length; i++){
+	for( i = 0; i < SubMap._busStationsArray.length; i++){
 		//remove the listeners to addConnection from an other busStation:
-		if (typeof(arrayOfBusStations[i].idOfListenerOfAddConnection) != 'undefined'){
-			arrayOfBusStations[i].removeFunctionsToListeners(arrayOfBusStations[i].idOfListenerOfAddConnection,'click');
-			arrayOfBusStations[i].idOfListenerOfAddConnection = undefined;
+		if (typeof(SubMap._busStationsArray[i].idOfListenerOfAddConnection) != 'undefined'){
+			SubMap._busStationsArray[i].removeFunctionsToListeners(SubMap._busStationsArray[i].idOfListenerOfAddConnection,'click');
+			SubMap._busStationsArray[i].idOfListenerOfAddConnection = undefined;
 		}
-		arrayOfBusStations[i].idOfListenerOfAddConnection = arrayOfBusStations[i].addFunctionsToListener('click',arrayOfBusStations[i].createConnectionsWithOneBusLine,[arrayOfBusStations[i], this]);
+		SubMap._busStationsArray[i].idOfListenerOfAddConnection = SubMap._busStationsArray[i].addFunctionsToListener('click',SubMap._busStationsArray[i].createConnectionsWithOneBusLine,[SubMap._busStationsArray[i], this]);
 		
 	}
 
 	//find the index of the busline:
 	//found the index of the bus station in arrayofbusline
-	for( i = 0; i < arrayOfBusLines.length; i++){
-		if (arrayOfBusLines[i] == this)
+	for( i = 0; i < SubMap._busLinesArray.length; i++){
+		if (SubMap._busLinesArray[i] == this)
 			break;
 	}
 	
@@ -41,7 +41,7 @@
 		button_create_connections.innerHTML = 'make connections';
 		newField.appendChild(button_create_connections);
 	}
-	document.getElementById('button_create_connections').setAttribute('onclick', 'arrayOfBusLines[' + i + '].createConnectionsWithAllBusStations();');
+	document.getElementById('button_create_connections').setAttribute('onclick', 'SubMap._busLinesArray[' + i + '].createConnectionsWithAllBusStations();');
 
 	//add a button to unselect the selected busLine:
 	if (document.getElementById('button_deselect') == null) {
@@ -51,7 +51,7 @@
 		button_deselect.innerHTML = 'deselect';
 		newField.appendChild(button_deselect);
 	}
-	document.getElementById('button_deselect').setAttribute('onclick', 'arrayOfBusLines[' + i + '].deselect();');
+	document.getElementById('button_deselect').setAttribute('onclick', 'SubMap._busLinesArray[' + i + '].deselect();');
 
  	//make the name of the line changeable
 	if (!document.getElementById('div_set_name')){
@@ -59,7 +59,7 @@
 		busLineName.setAttribute('id', 'div_set_name');
 		getInfosPreBoxNode().appendChild(busLineName);
 	}
-	document.getElementById('div_set_name').innerHTML = "name of the selected bus line :<br/> <textarea rows='2' cols='40' id='busLineName'  onKeyUp=arrayOfBusLines[" + i + "].setNewNameToShow() />" + 
+	document.getElementById('div_set_name').innerHTML = "name of the selected bus line :<br/> <textarea rows='2' cols='40' id='busLineName'  onKeyUp=SubMap._busLinesArray[" + i + "].setNewNameToShow() />" + 
 	this.name + "</textarea>";
 	
 	var texte = '';
@@ -87,8 +87,8 @@
 
  gmap.Polyline.prototype.createConnectionsWithAllBusStations = function(){
   	//create all the connections of the bus line:
-	for( var i = 0; i < arrayOfBusStations.length; i++){
-		arrayOfBusStations[i].createConnectionsWithOneBusLine(this);
+	for( var i = 0; i < SubMap._busStationsArray.length; i++){
+		SubMap._busStationsArray[i].createConnectionsWithOneBusLine(this);
 	}
  };
  

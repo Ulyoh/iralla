@@ -13,8 +13,8 @@ function mainSavingModifications(which){
 	var i = 0;
 	var k = 0;
 	
-	if ((arrayOfBusLines[0] != '') && (typeof(which) == 'undefined')){
-		for (i = 0; i < arrayOfBusLines.length; i++) {
+	if ((SubMap._busLinesArray[0] != '') && (typeof(which) == 'undefined')){
+		for (i = 0; i < SubMap._busLinesArray.length; i++) {
 			
 			//INIT
 			pathString = null;
@@ -25,10 +25,10 @@ function mainSavingModifications(which){
 		
 			//extract boundaries id of flow if exist:
 			boundariesListId = null;
-			if ((typeof(arrayOfBusLines[i].arrayOfBoundaries) != 'undefined') &&
-			(arrayOfBusLines[i].arrayOfBoundaries.length > 0)) {
-				for (j = 0; j < arrayOfBusLines[i].arrayOfBoundaries.length; j++) {
-					boundaryId = arrayOfBusLines[i].arrayOfBoundaries[j].id;
+			if ((typeof(SubMap._busLinesArray[i].arrayOfBoundaries) != 'undefined') &&
+			(SubMap._busLinesArray[i].arrayOfBoundaries.length > 0)) {
+				for (j = 0; j < SubMap._busLinesArray[i].arrayOfBoundaries.length; j++) {
+					boundaryId = SubMap._busLinesArray[i].arrayOfBoundaries[j].id;
 					if(boundariesListId == null){
 						boundariesListId = boundaryId;
 					}
@@ -40,20 +40,20 @@ function mainSavingModifications(which){
 			
 			//extract flows order if exist:
 			var flows = "";
-			if (typeof(arrayOfBusLines[i].sections) != 'undefined') {
-				for (j = 0; j < arrayOfBusLines[i].sections.length; j++) {
-					flows += ' ' + arrayOfBusLines[i].sections[j].flowOrder;
+			if (typeof(SubMap._busLinesArray[i].sections) != 'undefined') {
+				for (j = 0; j < SubMap._busLinesArray[i].sections.length; j++) {
+					flows += ' ' + SubMap._busLinesArray[i].sections[j].flowOrder;
 				}
 				flows = flows.removeFirstLetter();
 			}
 			
 			//extract the path:
-			pathString = JSON.stringify(pathToArray(arrayOfBusLines[i].getPath()));
+			pathString = JSON.stringify(pathToArray(SubMap._busLinesArray[i].getPath()));
 			
 			//if area around bus line, extract the path:
 			pathsAreaStrings = null;
-			if (typeof(arrayOfBusLines[i].areaSurrounded) != 'undefined') {
-				pathsArea = arrayOfBusLines[i].areaSurrounded.getPaths();
+			if (typeof(SubMap._busLinesArray[i].areaSurrounded) != 'undefined') {
+				pathsArea = SubMap._busLinesArray[i].areaSurrounded.getPaths();
 				pathsAreaStrings = [];
 				var length1 = pathsArea.getLength();
 				for (j = 0; j < length1; j++) {
@@ -64,14 +64,14 @@ function mainSavingModifications(which){
 			}
 			
 			//extract the vertex inside area:
-			if ( (typeof(arrayOfBusLines[i].vertexInsideMainLineArea) != 'undefined')
-			 && (arrayOfBusLines[i].vertexInsideMainLineArea.length > 0)){
+			if ( (typeof(SubMap._busLinesArray[i].vertexInsideMainLineArea) != 'undefined')
+			 && (SubMap._busLinesArray[i].vertexInsideMainLineArea.length > 0)){
 			 	var areaOnlyBusStations = [];
 				var enter;
 				var out;
-				for( j = 0; j < arrayOfBusLines[i].vertexInsideMainLineArea.length; j++){
-					 enter = arrayOfBusLines[i].vertexInsideMainLineArea[j].enter;
-					 out = arrayOfBusLines[i].vertexInsideMainLineArea[j].out;
+				for( j = 0; j < SubMap._busLinesArray[i].vertexInsideMainLineArea.length; j++){
+					 enter = SubMap._busLinesArray[i].vertexInsideMainLineArea[j].enter;
+					 out = SubMap._busLinesArray[i].vertexInsideMainLineArea[j].out;
 					
 					areaOnlyBusStations.push({
 						enter:{
@@ -87,10 +87,10 @@ function mainSavingModifications(which){
 			}
 			
 			busLineDatas = {
-				id: arrayOfBusLines[i].id,
-				name: arrayOfBusLines[i].name,
-				type: arrayOfBusLines[i].type,
-				color: arrayOfBusLines[i].strokeColor.removeFirstLetter(),
+				id: SubMap._busLinesArray[i].id,
+				name: SubMap._busLinesArray[i].name,
+				type: SubMap._busLinesArray[i].type,
+				color: SubMap._busLinesArray[i].strokeColor.removeFirstLetter(),
 				path: pathString,
 				flows: flows,
 				boundariesListId: boundariesListId,
@@ -121,29 +121,29 @@ function mainSavingModifications(which){
 	var linkToTest;
 	//var canBeFirstLink;
 	
-	for( i = 0; i < arrayOfBusStations.length; i++) {
-		if (((typeof(which) == 'undefined') && (arrayOfBusStations[i].type != 'virtual')) ||
-		((which == 'virtual') && (arrayOfBusStations[i].type == 'virtual'))) {
+	for( i = 0; i < SubMap._busStationsArray.length; i++) {
+		if (((typeof(which) == 'undefined') && (SubMap._busStationsArray[i].type != 'virtual')) ||
+		((which == 'virtual') && (SubMap._busStationsArray[i].type == 'virtual'))) {
 			//busStations
 			busStationDatas = {
-				id: arrayOfBusStations[i].id,
-				layerId: arrayOfBusStations[i].layerId,
-				name: arrayOfBusStations[i].name,
-				lat: arrayOfBusStations[i].getPosition().lat(),
-				lng: arrayOfBusStations[i].getPosition().lng(),
-				circleCenterLat: arrayOfBusStations[i].circle.getCenter().lat(),
-				circleCenterLng: arrayOfBusStations[i].circle.getCenter().lng(),
-				circleRadius: arrayOfBusStations[i].circle.getRadius(),
-				idFromJavascript: arrayOfBusStations[i].javascriptId,
-				type: arrayOfBusStations[i].type
+				id: SubMap._busStationsArray[i].id,
+				layerId: SubMap._busStationsArray[i].layerId,
+				name: SubMap._busStationsArray[i].name,
+				lat: SubMap._busStationsArray[i].getPosition().lat(),
+				lng: SubMap._busStationsArray[i].getPosition().lng(),
+				circleCenterLat: SubMap._busStationsArray[i].circle.getCenter().lat(),
+				circleCenterLng: SubMap._busStationsArray[i].circle.getCenter().lng(),
+				circleRadius: SubMap._busStationsArray[i].circle.getRadius(),
+				idFromJavascript: SubMap._busStationsArray[i].javascriptId,
+				type: SubMap._busStationsArray[i].type
 			};
 			allBusStationsDatas.push(busStationDatas);
 			
 			//links:
-			if (typeof(arrayOfBusStations[i].arrayOfConnectionsMarkers) != 'undefined') {
-				for (j = 0; j < arrayOfBusStations[i].arrayOfConnectionsMarkers.length; j++) {
+			if (typeof(SubMap._busStationsArray[i].arrayOfConnectionsMarkers) != 'undefined') {
+				for (j = 0; j < SubMap._busStationsArray[i].arrayOfConnectionsMarkers.length; j++) {
 					
-					link = arrayOfBusStations[i].arrayOfConnectionsMarkers[j];
+					link = SubMap._busStationsArray[i].arrayOfConnectionsMarkers[j];
 					position = link.getPosition();
 					linkProyection = link.busLine.findNearestProyectionOrthogonal(Point.latLngToPoint(position));
 

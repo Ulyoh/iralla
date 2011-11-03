@@ -82,10 +82,10 @@ function preTreatmentBusLines(DbList, busLine){
 				
 				if (boundariesListId.length > 0) {
 					for (i = 0; i < boundariesListId.length; i++) {
-						for (j = 0; j < SubMap._busStationArray.length; j++) {
-							if (boundariesListId[i] == SubMap._busStationArray[j].id) {
+						for (j = 0; j < SubMap._busStationsArray.length; j++) {
+							if (boundariesListId[i] == SubMap._busStationsArray[j].id) {
 								//busLine.showBoundary()
-								busLine.addBoundary(SubMap._busStationArray[j].getPosition(), true, SubMap._busStationArray[j]);
+								busLine.addBoundary(SubMap._busStationsArray[j].getPosition(), true, SubMap._busStationsArray[j]);
 								break;
 							}
 						}

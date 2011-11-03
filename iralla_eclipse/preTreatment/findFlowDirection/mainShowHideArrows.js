@@ -6,25 +6,25 @@
 
 function mainShowHideArrows(){
 	var toShow;
-	if ((typeof(arrayOfBusLines.arrowVisible) == 'undefined') || (arrayOfBusLines.arrowVisible == false)){
+	if ((typeof(SubMap._busLinesArray.arrowVisible) == 'undefined') || (SubMap._busLinesArray.arrowVisible == false)){
 		toShow = true;
-		arrayOfBusLines.arrowVisible = true;
+		SubMap._busLinesArray.arrowVisible = true;
 	}
 	else{
 		toShow = false;
-		arrayOfBusLines.arrowVisible = false;
+		SubMap._busLinesArray.arrowVisible = false;
 	}
 
-	for (var i =0; i < arrayOfBusLines.length; i++){
-		if (typeof(arrayOfBusLines[i].sections) != 'undefined'){
-			for(var j =0; j < arrayOfBusLines[i].sections.length; j++){
-				if (typeof(arrayOfBusLines[i].sections[j].arrayOfArrows) != 'undefined'){
-					for(var k =0; k < arrayOfBusLines[i].sections[j].arrayOfArrows.length; k++){
+	for (var i =0; i < SubMap._busLinesArray.length; i++){
+		if (typeof(SubMap._busLinesArray[i].sections) != 'undefined'){
+			for(var j =0; j < SubMap._busLinesArray[i].sections.length; j++){
+				if (typeof(SubMap._busLinesArray[i].sections[j].arrayOfArrows) != 'undefined'){
+					for(var k =0; k < SubMap._busLinesArray[i].sections[j].arrayOfArrows.length; k++){
 						if ( toShow == true ){
-							arrayOfBusLines[i].sections[j].arrayOfArrows[k].setMap(map);
+							SubMap._busLinesArray[i].sections[j].arrayOfArrows[k].setMap(map);
 						}
 						else{
-							arrayOfBusLines[i].sections[j].arrayOfArrows[k].setMap(null);
+							SubMap._busLinesArray[i].sections[j].arrayOfArrows[k].setMap(null);
 						}
 
 					}

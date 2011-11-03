@@ -7,8 +7,8 @@ Connection.infos = {
 };
 
 Connection.setAllConnectionsVisible = function(bool){
-	for(var i = 0; i < SubMap._busStationArray.length; i++) {
-		SubMap._busStationArray[i].setConnectionsVisible(bool);
+	for(var i = 0; i < SubMap._busStationsArray.length; i++) {
+		SubMap._busStationsArray[i].setConnectionsVisible(bool);
 	}
 };
 
@@ -159,19 +159,19 @@ Connection.createAllOnTheMap = function(){
 
 	var qty = index + 1;
 
-	getAddInfoDiv().innerHTML = 'looking for connections: <br />' + qty  + '/' + SubMap._busStationArray.length + ' bus stations done <br />';
+	getAddInfoDiv().innerHTML = 'looking for connections: <br />' + qty  + '/' + SubMap._busStationsArray.length + ' bus stations done <br />';
 
 	var divInfos = getEltById('infos');
 	divInfos.scrollTop = divInfos.scrollHeight;
 
 	//for each bus station (recursively)
-	SubMap._busStationArray[index].createConnectionsWithAllBusLines();
+	SubMap._busStationsArray[index].createConnectionsWithAllBusLines();
 
 	index++;
 	
 	Connection.infos.index = index;
 	
-	if (index < SubMap._busStationArray.length ){
+	if (index < SubMap._busStationsArray.length ){
 		setTimeout('function(){Connection.createAllOnTheMap()}', 500);
 	}
 	else{

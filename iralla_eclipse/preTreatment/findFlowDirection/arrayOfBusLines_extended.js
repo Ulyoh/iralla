@@ -1,7 +1,7 @@
 /**
  * @author Yoh
  */
-SubMap._busStationArray.enableAddArrow = function(){
+SubMap._busStationsArray.enableAddArrow = function(){
 	//deselect the previous function:
 	//virtual press the deselect button:
 	if (document.getElementById('button_deselect') !== null)
@@ -20,21 +20,21 @@ SubMap._busStationArray.enableAddArrow = function(){
 		newField.appendChild(button_deselect);
 	}
 	document.getElementById('button_deselect').setAttribute('onclick', 
-			"{SubMap._busStationArray.disableAddArrow(); " +
+			"{SubMap._busStationsArray.disableAddArrow(); " +
 			"removeNodeById('button_deselect');}" +
 			"removeEmptyLinesOfTable(document.getElementById('tablePreTreatment'));"
 			);
 	
 };
 
-SubMap._busStationArray.disableAddArrow = function(){
+SubMap._busStationsArray.disableAddArrow = function(){
 	for(var i = 0; i < this.length; i++){
 		if ((typeof(this[i].idOfListenerOfAddArrow) != 'undefined') && (this[i].idOfListenerOfAddArrow >= 0 ))
 			this[i].disableAddArrow();
 	}
 };
 
-SubMap._busStationArray.enableAddBoundary = function(){
+SubMap._busStationsArray.enableAddBoundary = function(){
 	//deselect the previous function:
 	//virtual press the deselect button:
 	if (document.getElementById('button_deselect') !== null)
@@ -53,21 +53,21 @@ SubMap._busStationArray.enableAddBoundary = function(){
 		newField.appendChild(button_deselect);
 	}
 	document.getElementById('button_deselect').setAttribute('onclick', 
-			"{SubMap._busStationArray.disableAddBoundary(); " +
+			"{SubMap._busStationsArray.disableAddBoundary(); " +
 			"removeNodeById('button_deselect');}" +
 			"removeEmptyLinesOfTable(document.getElementById('tablePreTreatment'));"
 			);
 		
 };
 
-SubMap._busStationArray.disableAddBoundary = function(){
+SubMap._busStationsArray.disableAddBoundary = function(){
 	for(var i = 0; i < this.length; i++){
 		if ((typeof(this[i].idOfListenerOfAddBoundary) != 'undefined') && (this[i].idOfListenerOfAddBoundary >= 0 ))
 			this[i].disableAddBoundary();
 	}
 };
 
-SubMap._busStationArray.enableRemoveArrows = function(){
+SubMap._busStationsArray.enableRemoveArrows = function(){
 	//deselect the previous function:
 	//virtual press the deselect button:
 	if (document.getElementById('button_deselect') !== null)
@@ -86,21 +86,21 @@ SubMap._busStationArray.enableRemoveArrows = function(){
 		newField.appendChild(button_deselect);
 	}
 	document.getElementById('button_deselect').setAttribute('onclick', 
-			"{SubMap._busStationArray.disableRemoveArrows(); " +
+			"{SubMap._busStationsArray.disableRemoveArrows(); " +
 			"removeNodeById('button_deselect');}" +
 			"removeEmptyLinesOfTable(document.getElementById('tablePreTreatment'));"
 			);
 	
 };
 
-SubMap._busStationArray.disableRemoveArrows = function(){
+SubMap._busStationsArray.disableRemoveArrows = function(){
 	for(var i = 0; i < this.length; i++){
 		if ((typeof(this[i].idOfListenerOfRemoveArrows) != 'undefined') && (this[i].idOfListenerOfRemoveArrows >= 0 ))
 			this[i].disableRemoveArrows();
 	}
 };
 
-SubMap._busStationArray.enableFindFlowAuto = function(){
+SubMap._busStationsArray.enableFindFlowAuto = function(){
 	//deselect the previous function:
 	//virtual press the deselect button:
 	if (document.getElementById('button_deselect') !== null)
@@ -119,13 +119,13 @@ SubMap._busStationArray.enableFindFlowAuto = function(){
 		newField.appendChild(button_deselect);
 	}
 	document.getElementById('button_deselect').setAttribute('onclick',
-			"{SubMap._busStationArray.disableFindFlowAuto(); " +
+			"{SubMap._busStationsArray.disableFindFlowAuto(); " +
 			"removeNodeById('button_deselect');}" +
 			"removeEmptyLinesOfTable(document.getElementById('tablePreTreatment'));"
 			);
 };
 
-SubMap._busStationArray.disableFindFlowAuto = function(){
+SubMap._busStationsArray.disableFindFlowAuto = function(){
 	for(var i = 0; i < this.length; i++){
 		if ((typeof(this[i].idOfListenerOfFindFlowAuto) != 'undefined') && (this[i].idOfListenerOfFindFlowAuto >= 0 )){
 			this[i].disableFindFlowAuto();
@@ -134,7 +134,7 @@ SubMap._busStationArray.disableFindFlowAuto = function(){
 };
 
 
-SubMap._busStationArray.enableFindFlowFromXmlArrows = function(){
+SubMap._busStationsArray.enableFindFlowFromXmlArrows = function(){
 	//deselect the previous function:
 	//virtual press the deselect button:
 	if (document.getElementById('button_deselect') !== null){
@@ -154,13 +154,13 @@ SubMap._busStationArray.enableFindFlowFromXmlArrows = function(){
 		newField.appendChild(button_deselect);
 	}
 	document.getElementById('button_deselect').setAttribute('onclick', 
-			"{SubMap._busStationArray.disableFindFlowFromXmlArrows();" +
+			"{SubMap._busStationsArray.disableFindFlowFromXmlArrows();" +
 			"removeNodeById('button_deselect');}" +
 			"removeEmptyLinesOfTable(document.getElementById('tablePreTreatment'));"
 			);
 };
 
-SubMap._busStationArray.disableFindFlowFromXmlArrows = function(){
+SubMap._busStationsArray.disableFindFlowFromXmlArrows = function(){
 	for(var i = 0; i < this.length; i++){
 		if ((typeof(this[i].idOfListenerOfFindFlowFromXmlArrows) != 'undefined') && (this[i].idOfListenerOfFindFlowFromXmlArrows >= 0 )){
 			this[i].disableFindFlowFromXmlArrows();
@@ -168,7 +168,7 @@ SubMap._busStationArray.disableFindFlowFromXmlArrows = function(){
 	}
 };
 
-SubMap._busStationArray.enableReverseFlow = function(){
+SubMap._busStationsArray.enableReverseFlow = function(){
 	//deselect the previous function:
 	//virtual press the deselect button:
 	if (document.getElementById('button_deselect') !== null){
@@ -188,13 +188,13 @@ SubMap._busStationArray.enableReverseFlow = function(){
 		newField.appendChild(button_deselect);
 	}
 	document.getElementById('button_deselect').setAttribute('onclick', 
-			"{SubMap._busStationArray.disableReverseFlow();" +
+			"{SubMap._busStationsArray.disableReverseFlow();" +
 			"removeNodeById('button_deselect');}" +
 			"removeEmptyLinesOfTable(document.getElementById('tablePreTreatment'));"
 			);
 };
 
-SubMap._busStationArray.disableReverseFlow = function(){
+SubMap._busStationsArray.disableReverseFlow = function(){
 	for(var i = 0; i < this.length; i++){
 		if ((typeof(this[i].idOfListenerOfReverseFlow) != 'undefined') && (this[i].idOfListenerOfReverseFlow >= 0 )){
 			this[i].disableReverseFlow();
@@ -202,7 +202,7 @@ SubMap._busStationArray.disableReverseFlow = function(){
 	}
 };
 
-SubMap._busStationArray.enableAddBidirectionalArrows = function(){
+SubMap._busStationsArray.enableAddBidirectionalArrows = function(){
 	//deselect the previous function:
 	//virtual press the deselect button:
 	if (document.getElementById('button_deselect') !== null){
@@ -222,13 +222,13 @@ SubMap._busStationArray.enableAddBidirectionalArrows = function(){
 		newField.appendChild(button_deselect);
 	}
 	document.getElementById('button_deselect').setAttribute('onclick', "{" +
-			"SubMap._busStationArray.disableAddBidirectionalArrows(); " +
+			"SubMap._busStationsArray.disableAddBidirectionalArrows(); " +
 			"removeNodeById('button_deselect');}" +
 			"removeEmptyLinesOfTable(document.getElementById('tablePreTreatment'));"
 			);
 };
 
-SubMap._busStationArray.disableAddBidirectionalArrows = function(){
+SubMap._busStationsArray.disableAddBidirectionalArrows = function(){
 	for(var i = 0; i < this.length; i++){
 		if ((typeof(this[i].idOfListenerOfAddBidirectionalArrows) != 'undefined') && (this[i].idOfListenerOfAddBidirectionalArrows >= 0 )){
 			this[i].disableAddBidirectionalArrows();
@@ -236,7 +236,7 @@ SubMap._busStationArray.disableAddBidirectionalArrows = function(){
 	}
 };
 
-SubMap._busStationArray.findFlowOfAllBusLines = function(index){
+SubMap._busStationsArray.findFlowOfAllBusLines = function(index){
 	if (( typeof(map.allArrowsFromFileShown) == 'undefined' ) || ( map.allArrowsFromFileShown === false )){
 		showArrowsOnMap();
 		map.allArrowsFromFileShown = true;
@@ -261,19 +261,19 @@ SubMap._busStationArray.findFlowOfAllBusLines = function(index){
 		newLine.innerHTML = index + ') ' + this[index].name + 'click here to see the bus line';
 		document.getElementById('infos').appendChild(newLine);
 		//make it clikcable to show only this bus line in the map:
-		newLine.setAttribute('onclick', 'SubMap._busStationArray.showOnlyOneBusLine(' + index + ');');
-		//give the possibility to remove it from the SubMap._busStationArray:
+		newLine.setAttribute('onclick', 'SubMap._busStationsArray.showOnlyOneBusLine(' + index + ');');
+		//give the possibility to remove it from the SubMap._busStationsArray:
 		
 	}
 	
 	index++;
 	if(index < this.length){
-		setTimeout("function(){SubMap._busStationArray.findFlowOfAllBusLines( ' + index + ' )}",100);
+		setTimeout("function(){SubMap._busStationsArray.findFlowOfAllBusLines( ' + index + ' )}",100);
 	}
 };
 
 
-SubMap._busStationArray.showOnlyOneBusLine = function(index){
+SubMap._busStationsArray.showOnlyOneBusLine = function(index){
 	for ( var i = 0; i <  this.length; i++){
 		if ( i != index){
 			this[i].setMap(null);
@@ -294,7 +294,7 @@ SubMap._busStationArray.showOnlyOneBusLine = function(index){
 		button_show_all_bus_lines.innerHTML = 'showAllBusLines';
 		newField.appendChild(button_show_all_bus_lines);
 		button_show_all_bus_lines.setAttribute('onclick',
-				"SubMap._busStationArray.showAllBusLine();" +
+				"SubMap._busStationsArray.showAllBusLine();" +
 				"removeNodeById(this);" +
 				"removeEmptyLinesOfTable(document.getElementById('tablePreTreatment'));"
 				);
@@ -302,7 +302,7 @@ SubMap._busStationArray.showOnlyOneBusLine = function(index){
 	
 };
 
-SubMap._busStationArray.showAllBusLine = function(index){
+SubMap._busStationsArray.showAllBusLine = function(index){
 	for (var i = 0; i < this.length; i++) {
 		this[i].setOptions({
 			map: map,
@@ -311,38 +311,38 @@ SubMap._busStationArray.showAllBusLine = function(index){
 	}
 };
 
-SubMap._busStationArray.saveFlowsInDatabase = function(){
+SubMap._busStationsArray.saveFlowsInDatabase = function(){
 
 	//create a JSON object to send to the database:
 	var datasToSend = [];
 	var oneBusLineFlow;
 
 	//for each bus line:
-	for (var i = 0; i < SubMap._busStationArray.length; i++){
+	for (var i = 0; i < SubMap._busStationsArray.length; i++){
 
 		//if sections, ie: flows have been determinated
-		if (typeof(SubMap._busStationArray[i].sections) != 'undefined'){
+		if (typeof(SubMap._busStationsArray[i].sections) != 'undefined'){
 			//record the id:
-			oneBusLineFlow.id = SubMap._busStationArray[i].id;
+			oneBusLineFlow.id = SubMap._busStationsArray[i].id;
 			//init to record the flows:
 			oneBusLineFlow.flows = '';
 
 			//for each section:
-			for(var j = 0; j < SubMap._busStationArray[i].sections.length; j++){
+			for(var j = 0; j < SubMap._busStationsArray[i].sections.length; j++){
 				//if arrows in the section:
-				if (typeof(SubMap._busStationArray[i].sections[j].arrayOfArrows) != 'undefined'){
+				if (typeof(SubMap._busStationsArray[i].sections[j].arrayOfArrows) != 'undefined'){
 					//record the flow:
-					oneBusLineFlow.flows += ' ' + SubMap._busStationArray[i].sections[j].arrayOfArrows[0].flow;
+					oneBusLineFlow.flows += ' ' + SubMap._busStationsArray[i].sections[j].arrayOfArrows[0].flow;
 				}
 			}
 
 			oneBusLineFlow.boundaries = '';
 
 			if (typeof(arrayOfBoundaries) != 'undefined'){
-				for( j = 0; j < SubMap._busStationArray[i].arrayOfBoundaries.length; j++){
+				for( j = 0; j < SubMap._busStationsArray[i].arrayOfBoundaries.length; j++){
 
-					oneBusLineFlow.boundaries += ',' + SubMap._busStationArray[i].arrayOfBoundaries[j].center.lat() + ' ' +
-						SubMap._busStationArray[i].arrayOfBoundaries[j].center.lng();
+					oneBusLineFlow.boundaries += ',' + SubMap._busStationsArray[i].arrayOfBoundaries[j].center.lat() + ' ' +
+						SubMap._busStationsArray[i].arrayOfBoundaries[j].center.lng();
 				}
 				oneBusLineFlow.boundaries = oneBusLineFlow.boundaries.removeFirstLetter();
 			}
@@ -354,17 +354,17 @@ SubMap._busStationArray.saveFlowsInDatabase = function(){
 
 };
 
-SubMap._busStationArray.showFlows = function(){
-	for(var i = 0; i < SubMap._busStationArray.length; i++){
-		SubMap._busStationArray[i].showFlow();
+SubMap._busStationsArray.showFlows = function(){
+	for(var i = 0; i < SubMap._busStationsArray.length; i++){
+		SubMap._busStationsArray[i].showFlow();
 	}
 };
 
-SubMap._busStationArray.hideFlows = function(){
-	for(var i = 0; i < SubMap._busStationArray.length; i++){
-		SubMap._busStationArray[i].hideFlow();
+SubMap._busStationsArray.hideFlows = function(){
+	for(var i = 0; i < SubMap._busStationsArray.length; i++){
+		SubMap._busStationsArray[i].hideFlow();
 	}
 };
 
-loaded.findFlowDirection.push('SubMap._busStationArray_extended.js');
+loaded.findFlowDirection.push('SubMap._busStationsArray_extended.js');
 

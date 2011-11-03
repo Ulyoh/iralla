@@ -2,7 +2,7 @@
  * @author Yoh
  */
 SubMap._busLinesArray = new ArrayOfBusLines();
-SubMap._busStationArray = new  ArrayOfBusStation();
+SubMap._busStationsArray = new  ArrayOfBusStation();
 
 function SubMap(canvas, opts){
 
@@ -238,11 +238,11 @@ function SubMap(canvas, opts){
 			busStation.iconPath = iconPath;
 			
 			//save reference to SubMap._busLinesArray
-			if (SubMap._busStationArray[0] === "") {
-				SubMap._busStationArray[0] = busStation;
+			if (SubMap._busStationsArray[0] === "") {
+				SubMap._busStationsArray[0] = busStation;
 			}
 			else {
-				SubMap._busStationArray.push(busStation);
+				SubMap._busStationsArray.push(busStation);
 			}
 			
 			// create event to show the station on mouseover the marker
@@ -254,7 +254,7 @@ function SubMap(canvas, opts){
 			}
 		}
 		
-		if (SubMap._busStationArray.length > 0) {
+		if (SubMap._busStationsArray.length > 0) {
 			subMap.setSizeOfBusStationsDependingOnZoomLevel({
 				11: 5,
 				12: 8,
@@ -268,7 +268,7 @@ function SubMap(canvas, opts){
 			subMap.enableBusStationsSizeDependingOnZoom(true);
 		}
 	
-		SubMap._busStationArray.busStationsSizingDependingOnZoom();
+		SubMap._busStationsArray.busStationsSizingDependingOnZoom();
 	};
 	
 	//busLines
@@ -290,7 +290,7 @@ function SubMap(canvas, opts){
 	//busStation
 	subMap.setSizeOfBusStationsDependingOnZoomLevel = function(sizesDependingOnZoomsLevels){
 		subMap.busStationSizeDependingOnZoom = sizesDependingOnZoomsLevels;
-		SubMap._busStationArray.setSizeOfBusStationsDependingOnZoomLevel(sizesDependingOnZoomsLevels);
+		SubMap._busStationsArray.setSizeOfBusStationsDependingOnZoomLevel(sizesDependingOnZoomsLevels);
 	};
 	
 	subMap.enableBusStationsSizeDependingOnZoom = function(bool){
@@ -300,7 +300,7 @@ function SubMap(canvas, opts){
 		else{
 			subMap.busStationsSizeDependingOnZoom = "off";
 		}
-		SubMap._busStationArray.enableSizeDependingOnZoom(bool);
+		SubMap._busStationsArray.enableSizeDependingOnZoom(bool);
 	};
 	
 	
@@ -327,7 +327,7 @@ function SubMap(canvas, opts){
 	
 	subMap.showBusStationsOnMap = function(busStationListFromDb){
 		this.addBusStationsFromDb(JSON.parse(busStationListFromDb));
-		arrayOfBusStations.busStationsSizingDependingOnZoom();
+		SubMap._busStationsArray.busStationsSizingDependingOnZoom();
 	};
 	
 	subMap.showBusLinesOnMap = function(busLinesListFromDb){
