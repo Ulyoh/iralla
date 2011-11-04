@@ -1,0 +1,63 @@
+for each bus line{
+	find all the vertexAndInter 
+	currentSimpleRoute = a simplePieceRoute with the first vertex as pt1
+	beginingGroupe = list of vertexAndInter related to the first vertex
+	beginningBusLinesList = list of bus lines in beginning group
+	previousBusLinesList = list of busline from beginingGroupe
+	prevousGroupe = beginningGroupe
+	newPieceRouteCreated = true
+	
+	for each vertexAndInter following{
+	
+		currentBusLinesList = list of all busline of the vertexAndInters related to the current vertex
+		
+		if (newPieceRouteCreated == true){
+		
+			newPieceRouteCreated = false
+			
+			if (currentBusLinesList inclus ds beginningBusLinesList){
+				busLinesListToHave = currentBusLinesList;
+				previous vertexAndInter = current vertexAndInter
+				previous BusLinesList = currentBusLinesList
+				continue
+			}
+			else{
+				currentSimpleRoute.pt2 = current vertexAndInter
+				save it
+				create a new one:
+				currentSimpleRoute.pt1 = current vertexAndInter
+				newPieceRouteCreated = true
+				beginningBusLinesList = currentBusLinesList
+			}
+		}
+		
+		if(currentBusLinesList == busLinesListToHave){
+			continue;
+		}
+		else if (busLinesListToHave inclus ds currentBusLinesList){
+			currentSimpleRoute.pt2 = current vertexAndInter
+			save it
+			create a new one:
+			currentSimpleRoute.pt1 = current vertexAndInter
+			newPieceRouteCreated = true
+			beginningBusLinesList = currentBusLinesList
+		}
+		else{
+			//if faut creer le currentSimpleRoute.pt1 a partir du precedent vertexAndInter
+			currentSimpleRoute.pt2 = previous vertexAndInter
+			save it
+			create a new one:
+			currentSimpleRoute.pt1 = previous vertexAndInter
+			newPieceRouteCreated = true
+			beginningBusLinesList = previous BusLinesList
+			
+			i-- 
+		}
+		
+		
+		//attention: take them depending on i
+		previous vertexAndInter = current vertexAndInter
+		previous BusLinesList = currentBusLinesList
+		
+	}
+}
