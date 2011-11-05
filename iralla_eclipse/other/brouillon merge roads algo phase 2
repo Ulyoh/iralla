@@ -1,5 +1,8 @@
-for each bus line{
-	find all the vertexAndInter 
+TOGO: add infos si point sur une busline ne fait parti d aucun des 2 segments
+
+
+for each busline{
+	find all the vertexAndInter
 	currentSimpleRoute = a simplePieceRoute with the first vertex as pt1
 	beginingGroupe = list of vertexAndInter related to the first vertex
 	beginningBusLinesList = list of bus lines in beginning group
@@ -7,22 +10,28 @@ for each bus line{
 	prevousGroupe = beginningGroupe
 	newPieceRouteCreated = true
 	
-	for each vertexAndInter following{
+	for each vertexAndInter following do{
 	
-		currentBusLinesList = list of all busline of the vertexAndInters related to the current vertex
+		currentBusLinesList = list of all buslines of the vertexAndInters related to the current vertex
+		currentBusLinesListAble = whichBusLinesAreAbleBetweenThese2vertexAndInter(
+					previousBusLinesList
+					currentBusLinesList,
+					previous vertexAndInter,
+					current vertexAndInter,
+					current busLine
+					);
 		
 		if (newPieceRouteCreated == true){
-		
 			newPieceRouteCreated = false
 			
-			if (currentBusLinesList inclus ds beginningBusLinesList){
-				busLinesListToHave = currentBusLinesList;
-				previous vertexAndInter = current vertexAndInter
-				previous BusLinesList = currentBusLinesList
-				continue
+			//if (currentBusLinesList inclus ds beginn
+			ingBusLinesList){
+			if (currentBusLinesListAble inclus ds beginningBusLinesList){
+				busLinesListToHave = currentBusLinesListAble;
 			}
 			else{
 				currentSimpleRoute.pt2 = current vertexAndInter
+				currentSimpleRoute.busLineList = currentBusLinesListAble
 				save it
 				create a new one:
 				currentSimpleRoute.pt1 = current vertexAndInter
@@ -30,34 +39,55 @@ for each bus line{
 				beginningBusLinesList = currentBusLinesList
 			}
 		}
-		
-		if(currentBusLinesList == busLinesListToHave){
-			continue;
-		}
-		else if (busLinesListToHave inclus ds currentBusLinesList){
-			currentSimpleRoute.pt2 = current vertexAndInter
-			save it
-			create a new one:
-			currentSimpleRoute.pt1 = current vertexAndInter
-			newPieceRouteCreated = true
-			beginningBusLinesList = currentBusLinesList
-		}
 		else{
-			//if faut creer le currentSimpleRoute.pt1 a partir du precedent vertexAndInter
-			currentSimpleRoute.pt2 = previous vertexAndInter
-			save it
-			create a new one:
-			currentSimpleRoute.pt1 = previous vertexAndInter
-			newPieceRouteCreated = true
-			beginningBusLinesList = previous BusLinesList
+			whichBusLinesAreAbleBetweenThese2vertexAndInter(
 			
-			i-- 
+			if(currentBusLinesListAble == busLinesListToHave){
+				continue;
+			}
+			else if (busLinesListToHave include in currentBusLinesListAble){
+			
+				currentSimpleRoute.pt2 = currentVertexAndInter
+				currentSimpleRoute.busLineList = busLinesListToHave
+				save it
+				create a new one:
+				currentSimpleRoute.pt1 = currentVertexAndInter
+				newPieceRouteCreated = true
+				beginningBusLinesList = currentBusLinesList
+			}
+			else{
+				//if faut creer le currentSimpleRoute.pt1 a partir du precedent vertexAndInter
+				currentSimpleRoute.pt2 = previous vertexAndInter
+				currentSimpleRoute.busLineList = busLinesListToHave
+				save it
+				create a new one:
+				currentSimpleRoute.pt1 = previousVertexAndInter
+				newPieceRouteCreated = true
+				beginningBusLinesList = previousBusLinesList
+				
+				i-- 
+			}
 		}
-		
-		
 		//attention: take them depending on i
-		previous vertexAndInter = current vertexAndInter
-		previous BusLinesList = currentBusLinesList
-		
+		previousVertexAndInter = current vertexAndInter
+		previousBusLinesList = currentBusLinesList
+		previousBusLinesListAble = currentBusLinesListAble
 	}
 }
+
+
+
+
+
+function whichBusLinesAreAbleBetweenThese2vertexAndInter(previousBusLinesList, currentBusLine, vertexAndInter1, vertexAndInter2, busLinesList){
+	busLinesListAble = [];
+	for each busline in currentBusLine{
+		If ( (busline include in previousBusLinesList) 
+		&& (there is not a vertex between vertexAndInter1 and vertexAndInter2)){
+			busLinesListAble[] = current busLine
+		}
+	}
+}
+
+
+
