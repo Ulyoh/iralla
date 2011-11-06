@@ -1,7 +1,7 @@
 <?php
 /*
  * 
- * 	In this phase all at each the vertex of each "other" road, will look for 
+ * 	In this phase for each vertex of each "other" road, will look for 
  * near buslines.
  * 
  */
