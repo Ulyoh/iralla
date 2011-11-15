@@ -21,7 +21,7 @@ class Vector{
 		}
 	}
 	
-	public function __construct($var_1, $var_2 = false, $accuracy = 10){
+	public function __construct($var_1, $var_2 = false,  $scale = null){
 		
 		$n = get_class($var_1);
 		
