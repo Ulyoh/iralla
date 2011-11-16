@@ -26,6 +26,10 @@ class Geometry{
 			return bcsub($pt1->y, bcmul(bcdiv(bcsub($pt2->y, $pt1->y), bcsub($pt2->x, $pt1->x)), $pt1->x));
 		}
 	}
+	
+	public static function bcscale_value(){
+		return $scale = strlen ( bcdiv ( 1, 3 ) ) - 2;
+	}
 }
 /*
 //test:

@@ -1,4 +1,7 @@
 <?php
+include_once 'Geometry.php';
+include_once 'Segment.php';
+include_once 'Vector.php';
 
 class Point {
 	public $x;
@@ -70,7 +73,7 @@ class Point {
 			}
 		}
 		
-		//test if segñents are colinears:
+		//test if segments are colinears:
 		$v1 = new Vector ( $pt1, $pt2 );
 		$v2 = new Vector ( $pt3, $pt4 );
 		
@@ -108,7 +111,7 @@ class Point {
 		return $result;
 	}
 	
-	public static function isPartOfSegment($var1, $var2 = null, $scale = null) {
+	public function isPartOfSegment($var1, $var2 = null, $scale = null) {
 		
 		if ($var1 instanceof Segment) {
 			if ($var2 == null) {
@@ -132,7 +135,7 @@ class Point {
 		}
 		
 		if ($scale === null) {
-			$scale = strlen ( bcdiv ( 1, 3 ) ) - 2;
+			$scale = bcscale_value();
 		}
 		
 		//are the 3 points aligned:
@@ -237,157 +240,15 @@ class Point {
 		}
 	}
 	
-	public function __construct($x = 0, $y = 0) {
+	public function __construct($x, $y) {
+		if( is_numeric($x) && is_numeric($y) ){
+			$this->x = $x;
+			$this->y = $y;
+		}
+		else{
+			throw new Exception('one or more parameters not valid');
+		}
 		$this->x = $x;
 		$this->y = $y;
 	}
 }
-
-//tests:
-
-/*
-include_once 'Segment.php';
-include_once 'Vector.php';
-include_once 'Geometry.php';
-
-echo "*****************************************\n";
-echo "test of 2 segments on the same line: \n";
-echo "\t separated \n";
-$p1 = new Point ( - 2, - 2 );
-$p2 = new Point ( 0, 2 );
-$p3 = $p1;
-$p4 = $p2;
-var_dump ( Point::segment_intersection ( $p1, $p2, $p3, $p4, true ) );
-echo "\n";
-echo "\n";
-
-echo "*****************************************\n";
-echo "test of 2 segments on the same line: \n";
-echo "\t separated \n";
-$p1 = new Point ( - 2, - 2 );
-$p2 = new Point ( 0, 2 );
-$p3 = new Point ( 2, 4 );
-$p4 = new Point ( 3, 6 );
-var_dump ( Point::segment_intersection ( $p1, $p2, $p3, $p4, true ) );
-echo "\n";
-echo "\n";
-
-
-//test of segment_intersection:
-
-echo"*****************************************\n";
-echo "test of 2 intersect segments: \n";
-echo "\t result should be (0.5,1): \n";
-$p1 = new Point(0,0);
-$p2 = new Point(1,2);
-$p3 = new Point(0,2);
-$p4 = new Point(1,0);
-var_dump(Point::segment_intersection($p1, $p2, $p3, $p4));
-echo "\n";
-echo"*****************************************\n";
-echo "\n";
-
-echo"*****************************************\n";
-echo "test of 2 parallels segments: \n";
-echo "\t horizontals: \n";
-$p1 = new Point(0,0);
-$p2 = new Point(5,0);
-$p3 = new Point(0,1);
-$p4 = new Point(5,1);
-var_dump(Point::segment_intersection($p1, $p2, $p3, $p4));
-echo "\n";
-echo "\n";
-
-echo "\t verticals: \n";
-$p1 = new Point(0,5);
-$p2 = new Point(0,0);
-$p3 = new Point(1,5);
-$p4 = new Point(1,0);
-var_dump(Point::segment_intersection($p1, $p2, $p3, $p4));
-echo "\n";
-echo "\n";
-
-echo "\t other type: \n";
-$p1 = new Point(0,0);
-$p2 = new Point(1,2);
-$p3 = new Point(1,0);
-$p4 = new Point(2,4);
-var_dump(Point::segment_intersection($p1, $p2, $p3, $p4));
-echo "\n";
-echo"*****************************************\n";
-echo "\n";
-
-echo"*****************************************\n";
-echo "test with one commun point: \n";
-echo "\t result should be (0,0): \n";
-$p1 = new Point(0,0);
-$p2 = new Point(1,2);
-$p3 = new Point(0,0);
-$p4 = new Point(1,0);
-var_dump(Point::segment_intersection($p1, $p2, $p3, $p4));
-echo "\n";
-echo "\n";
-
-echo "test of 2 parallels segments with one point en commun: \n";
-echo "\t result should be colinear: \n";
-$p1 = new Point(0,0);
-$p2 = new Point(1,2);
-$p3 = new Point(0,0);
-$p4 = new Point(2,4);
-var_dump(Point::segment_intersection($p1, $p2, $p3, $p4));
-echo "\n";
-echo "\n";
-
-echo "test of 2 verticals segments with one point en commun: \n";
-echo "\t result should be colinear: \n";
-$p1 = new Point(0,0);
-$p2 = new Point(0,1);
-$p3 = new Point(0,0);
-$p4 = new Point(0,5);
-var_dump(Point::segment_intersection($p1, $p2, $p3, $p4));
-echo "\n";
-echo "\n";
-
-echo "test of 2 horizontal segments with one point en commun: \n";
-echo "\t result should be colinear: \n";
-$p1 = new Point(0,0);
-$p2 = new Point(5,0);
-$p3 = new Point(0,0);
-$p4 = new Point(6,0);
-var_dump(Point::segment_intersection($p1, $p2, $p3, $p4));
-echo "\n";
-echo"*****************************************\n";
-echo "\n";
-
-echo"*****************************************\n";
-echo "test of 2 colinear segments: \n";
-echo "\t identicals: \n";
-$p1 = new Point(0,0);
-$p2 = new Point(5,0);
-$p3 = new Point(0,0);
-$p4 = new Point(5,0);
-var_dump(Point::segment_intersection($p1, $p2, $p3, $p4));
-echo "\n";
-echo "\n";
-
-echo "\t verticals: \n";
-$p1 = new Point(0,5);
-$p2 = new Point(0,0);
-$p3 = new Point(0,1);
-$p4 = new Point(0,2);
-var_dump(Point::segment_intersection($p1, $p2, $p3, $p4));
-echo "\n";
-echo "\n";
-
-echo "\t other type: \n";
-$p1 = new Point(0,0);
-$p2 = new Point(1,2);
-$p3 = new Point(0,0);
-$p4 = new Point(2,4);
-var_dump(Point::segment_intersection($p1, $p2, $p3, $p4));
-echo "\n";
-echo "\n";
-
-
-
-*/
