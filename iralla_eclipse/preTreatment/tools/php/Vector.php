@@ -1,4 +1,5 @@
 <?php
+include_once 'Geometry.php';
 include_once 'Segment.php';
 
 class Vector{
@@ -25,7 +26,7 @@ class Vector{
 	public function __construct($var_1, $var_2 = false,  $scale = null){
 		
 		if ($scale === null) {
-			$scale = bcscale_value();
+			$scale = Geometry::bcscale_value();
 		}
 		
 		$n = get_class($var_1);

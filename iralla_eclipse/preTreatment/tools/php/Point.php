@@ -135,7 +135,7 @@ class Point {
 		}
 		
 		if ($scale === null) {
-			$scale = bcscale_value();
+			$scale = Geometry::bcscale_value();
 		}
 		
 		//are the 3 points aligned:
