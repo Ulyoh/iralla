@@ -1,7 +1,7 @@
 <?php
-include_once 'Geometry.php';
-include_once 'Segment.php';
-include_once 'Vector.php';
+include_once Geometry.php;
+include_once Segment.php;
+include_once Vector.php;
 
 class Point {
 	public $x;
@@ -135,7 +135,7 @@ class Point {
 		}
 		
 		if ($scale === null) {
-			$scale = bcscale_value();
+			$scale = Geometry::bcscale_value();
 		}
 		
 		//are the 3 points aligned:

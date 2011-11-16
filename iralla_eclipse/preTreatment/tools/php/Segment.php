@@ -1,7 +1,7 @@
 <?php
-include_once 'Point.php';
+include_once Point.php;
 
-class Segments{
+class Segment{
 	private $pt1;
 	private $pt2;
 	
