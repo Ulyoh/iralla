@@ -1,4 +1,5 @@
 <?php
+include_once 'Point.php';
 
 class Segments{
 	private $pt1;
