@@ -7,12 +7,12 @@ class Point {
 	public $x;
 	public $y;
 	
-	public function set_x() {
-		return $this->x;
+	public function set_x($x) {
+		$this->x = $x;
 	}
 	
-	public function set_y() {
-		return $this->y;
+	public function set_y($y) {
+		$this->y = $y;
 	}
 	
 	public function get_x() {
@@ -126,12 +126,12 @@ class Point {
 			throw new Exception ( "ERROR of parameters\n" );
 		}
 		
-		if ($var1 == $var2){
-			throw new Exception ( "The segment is a point\n" );
-		}
-		
 		if(($this == $var1) || ($this == $var2)){
 			return true;
+		}
+				
+		if ($var1 == $var2){
+			throw new Exception ( "The segment is a point\n" );
 		}
 		
 		if ($scale === null) {
@@ -139,15 +139,14 @@ class Point {
 		}
 		
 		//are the 3 points aligned:
-		//determinant = 0
-		if (abs ( bcmul ( ($var2->x - $this->x), ($var1->y - $this->y) ) - bcmul ( ($var1->x - $this->x), ($var2->y - $this->y) ) ) < (bcpow ( 10, - $scale ))) {
+		//cross product = 0
+		if (abs ( bcmul ( ($var2->x - $this->x), ($var1->y - $this->y), $scale) - bcmul ( ($var1->x - $this->x), ($var2->y - $this->y), $scale ) ) <= (bcpow ( 10, - $scale, $scale))) {
 			//is the point part of the segment :
-			//dot product <= 0 
-			if ((bcmul ( ($this->x - $var2->x), ($var1->x - $this->x) ) - bcmul ( ($this->y - $var2->y), ($var1->y - $this->y) )) < bcpow ( 10, - $scale )) {
+			if ( ( ( ($var1->x <= $this->x)  && ($this->x <= $var2->x) ) || ( ($var2->x <= $this->x)  && ($this->x <= $var1->x) ) )
+			  && ( ( ($var1->y <= $this->y)  && ($this->y <= $var2->y) ) || ( ($var2->y <= $this->y)  && ($this->y <= $var1->y) ) ) ){
 				return true;
 			}
 		}
-
 		return false;
 	}
 	
@@ -232,14 +231,6 @@ class Point {
 		return ($a [1]->y < $b [1]->y) ? - 1 : 1;
 	}
 	
-	public function is_egal_to($other_point) {
-		if (($this->x == $other_point->x) && ($this->y == $other_point->y)) {
-			return true;
-		} else {
-			return false;
-		}
-	}
-	
 	public function __construct($x, $y) {
 		if( is_numeric($x) && is_numeric($y) ){
 			$this->x = $x;
@@ -251,4 +242,5 @@ class Point {
 		$this->x = $x;
 		$this->y = $y;
 	}
+	
 }

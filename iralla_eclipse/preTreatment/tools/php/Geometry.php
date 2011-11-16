@@ -28,7 +28,7 @@ class Geometry{
 	}
 	
 	public static function bcscale_value(){
-		return $scale = strlen ( bcdiv ( 1, 3 ) ) - 2;
+		return $scale = strlen ( bcdiv ( 1, 3 ) ) - 1;
 	}
 }
 /*
