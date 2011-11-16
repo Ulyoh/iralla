@@ -1,4 +1,5 @@
 <?php
+include_once 'Segment.php';
 
 class Vector{
 	private $x;
@@ -23,6 +24,10 @@ class Vector{
 	
 	public function __construct($var_1, $var_2 = false,  $scale = null){
 		
+		if ($scale === null) {
+			$scale = bcscale_value();
+		}
+		
 		$n = get_class($var_1);
 		
 		switch ($n){
@@ -30,11 +35,11 @@ class Vector{
 				if (!($var_2 instanceof Point)){
 					throw new Exception('ERROR when creating a vector');
 				}
-				$this->x = bcsub($var_1->get_x(), $var_2->get_x(), $accuracy);
-				$this->y = bcsub($var_1->get_y(), $var_2->get_y(), $accuracy);
+				$this->x = bcsub($var_1->get_x(), $var_2->get_x(), $scale);
+				$this->y = bcsub($var_1->get_y(), $var_2->get_y(), $scale);
 			break;
 			
-			case 'Segments':
+			case 'Segment':
 				if ($var_2 !== false){
 					throw new Exception('ERROR when creating a vector');
 				}
@@ -42,8 +47,8 @@ class Vector{
 				$pt1 = $var_1->get_pt1();
 				$pt2 = $var_1->get_pt2();
 				
-				$this->x = bcsub($pt1->get_x(), $pt2->get_x(), $accuracy);
-				$this->y = bcsub($pt1->get_y(), $pt2->get_y(), $accuracy);
+				$this->x = bcsub($pt1->get_x(), $pt2->get_x(), $scale);
+				$this->y = bcsub($pt1->get_y(), $pt2->get_y(), $scale);
 			break;
 			
 			default:
