@@ -30,10 +30,11 @@ class Point {
 	 * 
 	 * If the two segements are merged and
 	 * $return_value_if_merged == true
-	 * will return the array:
-	 * array("merged", array(pta, ptb))
-	 * pta and ptb are the 2 points whitch are merged with the other 
-	 * segment
+	 * will return the array with the extremities points which are parts
+	 * of the two segments:
+	 * array("merged", array(1=>pta, 2=>ptb, 4=>ptd))
+	 * with key depending of the point:
+	 * 1:pt1, 2:pt2, 3:pt3 and 4:pt4 
 	 * 
 	 * @param Point		$pt1
 	 * @param Point		$pt2
@@ -46,30 +47,48 @@ class Point {
 		
 		//test if communs points between the segments:
 		if ($pt1 == $pt3) {
-			if ($pt2->isPartOfSegment ( $pt3, $pt4 )) {
-				return array ("merged", array ($pt1, $pt2, $pt3 ) );
-			} elseif ($pt4->isPartOfSegment ( $pt1, $pt2 )) {
-				return array ("merged", array ($pt1, $pt3, $pt4 ) );
+			if($return_value_if_merged == false){
+				return true;
+			}
+			if ($pt2 == $pt4){
+				return array ("same", array (1=>$pt1, 2=>$pt2) );
+			}
+			else if ($pt2->isPartOfSegment ( $pt3, $pt4 )) {
+				return array ("merged", array (1=>$pt1, 2=>$pt2, 3=>$pt3 ) );
+			} 
+			else if ($pt4->isPartOfSegment ( $pt1, $pt2 )) {
+				return array ("merged", array (1=>$pt1, 3=>$pt3, 4=>$pt4 ) );
 			}
 		} elseif ($pt1 == $pt4) {
-			
-			if ($pt2->isPartOfSegment ( $pt3, $pt4 )) {
-				return array ("merged", array ($pt1, $pt2, $pt4 ) );
-			} elseif ($pt3->isPartOfSegment ( $pt1, $pt2 )) {
-				return array ("merged", array ($pt1, $pt3, $pt4 ) );
+			if($return_value_if_merged == false){
+				return true;
+			}
+			if ($pt2 == $pt3){
+				return array ("same", array (1=>$pt1, 2=>$pt2) );
+			}
+			else if ($pt2->isPartOfSegment ( $pt3, $pt4 )) {
+				return array ("merged", array (1=>$pt1, 2=>$pt2, 4=>$pt4 ) );
+			} elseif ($pt3->isPartOfSegment ( $pt1,$pt2 )) {
+				return array ("merged", array (1=>$pt1, 3=>$pt3, 4=>$pt4 ) );
 			}
 		
 		} elseif ($pt2 == $pt3) {
+			if($return_value_if_merged == false){
+				return true;
+			}
 			if ($pt1->isPartOfSegment ( $pt3, $pt4 )) {
-				return array ("merged", array ($pt1, $pt2, $pt3 ) );
+				return array ("merged", array (1=>$pt1, 2=>$pt2, 3=>$pt3 ) );
 			} elseif ($pt4->isPartOfSegment ( $pt1, $pt2 )) {
-				return array ("merged", array ($pt2, $pt3, $pt4 ) );
+				return array ("merged", array (2=>$pt2, 3=>$pt3, 4=>$pt4 ) );
 			}
 		} elseif ($pt2 == $pt4) {
+			if($return_value_if_merged == false){
+				return true;
+			}
 			if ($pt1->isPartOfSegment ( $pt3, $pt4 )) {
-				return array ("merged", array ($pt1, $pt2, $pt4 ) );
+				return array ("merged", array (1=>$pt1, 2=>$pt2, 4=>$pt4 ) );
 			} elseif ($pt3->isPartOfSegment ( $pt1, $pt2 )) {
-				return array ("merged", array ($pt2, $pt3, $pt4 ) );
+				return array ("merged", array (2=>$pt2, 3=>$pt3, 4=>$pt4 ) );
 			}
 		}
 		

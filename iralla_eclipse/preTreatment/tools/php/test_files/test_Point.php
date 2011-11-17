@@ -124,7 +124,7 @@ try {
 echo "\n";
 
 echo '******************* with $scale passed as argument'."\n";
-echo '****** with $this = (0,0)'."\n";
+echo '*********** with $this = (0,0)'."\n";
 echo "****** horizontal case: \n";
 $scale = 10;
 $pt2 = new Point(0, 2.65464);
@@ -168,18 +168,53 @@ echo "****** other case 3: \n";
 $pt2 = new Point(4.973661, 30.0314388);
 $pt3 = new Point(-2.1, -12.68);
 if ($pt1->isPartOfSegment($pt2, $pt3, 3)){
-	echo '$pt1->isPartOfSegment($pt2, $pt3, $scale) returned true '."\n";
+	echo '$pt1->isPartOfSegment($pt2, $pt3, 3) returned true '."\n";
 }
 else{
-	exit('$pt1->isPartOfSegment($pt2, $pt3, $scale) returned false ERROR ');
+	exit('$pt1->isPartOfSegment($pt2, $pt3, 3) returned false ERROR ');
 }
 
 echo '******************* with $scale passed as global'."\n";
+bcscale(0);
+echo '*********** with $this = (0,0)'."\n";
+echo "****** horizontal case: \n";
+$scale = 50;
+$pt2 = new Point(0, 2.65464);
+$pt3 = new Point(0, -0.36498468);
+if ($pt1->isPartOfSegment($pt2, $pt3)){
+	echo '$pt1->isPartOfSegment($pt2, $pt3) returned true '."\n";
+}
+else{
+	exit('$pt1->isPartOfSegment($pt2, $pt3) returned false ERROR ');
+}
+echo "****** vertical case: \n";
+$pt2 = new Point(2.65464, 0);
+$pt3 = new Point(-0.36498468, 0);
+if ($pt1->isPartOfSegment($pt2, $pt3)){
+	echo '$pt1->isPartOfSegment($pt2, $pt3) returned true '."\n";
+}
+else{
+	exit('$pt1->isPartOfSegment($pt2, $pt3) returned false ERROR ');
+}
+echo "****** other case 1: \n";
+$pt2 = new Point(21.63, 130.604);
+$pt3 = new Point(-2.1, -12.68);
+if ($pt1->isPartOfSegment($pt2, $pt3)){
+	echo '$pt1->isPartOfSegment($pt2, $pt3) returned true '."\n";
+}
+else{
+	exit('$pt1->isPartOfSegment($pt2, $pt3) returned false ERROR ');
+}
 
-
-echo '******************* with $pt2 = $pt3'."\n";
-
-echo '******************* with $this = $pt2 = $pt3'."\n";
+echo "****** other case 2: \n";
+$pt2 = new Point(4.973661, 30.0314388);
+$pt3 = new Point(-2.1, -12.68);
+if ($pt1->isPartOfSegment($pt2, $pt3)){
+	echo '$pt1->isPartOfSegment($pt2, $pt3) returned true '."\n";
+}
+else{
+	exit('$pt1->isPartOfSegment($pt2, $pt3) returned false ERROR ');
+}
 
 echo "***************************************************\n";
 echo "            end isPartOfSegment():\n";
@@ -256,7 +291,7 @@ echo "              Point::segment_intersection():\n";
 echo "***************************************************\n";
 
 echo "*****************************************\n";
-echo "test of 2 segments on the same line: \n";
+echo "test of 2 identicals segments: \n";
 echo "\t separated \n";
 $p1 = new Point ( - 2, - 2 );
 $p2 = new Point ( 0, 2 );
@@ -267,26 +302,24 @@ echo "\n";
 echo "\n";
 
 echo "*****************************************\n";
-echo "test of 2 segments on the same line: \n";
+echo "test of 2 segments on the same line which intersect: \n";
 echo "\t separated \n";
-$p1 = new Point ( - 2, - 2 );
-$p2 = new Point ( 0, 2 );
-$p3 = new Point ( 2, 4 );
-$p4 = new Point ( 3, 6 );
+$p1 = new Point ( 2.369, 7.348201 );
+$p2 = new Point ( -0.34698, -1436.048201);
+$p3 = new Point ( -568.369, -3459.0737);
+$p4 = new Point ( -1368.3, 0.47948758 );
 var_dump ( Point::segment_intersection ( $p1, $p2, $p3, $p4, true ) );
 echo "\n";
 echo "\n";
 
 
-//test of segment_intersection:
-
 echo"*****************************************\n";
-echo "test of 2 intersect segments: \n";
-echo "\t result should be (0.5,1): \n";
-$p1 = new Point(0,0);
-$p2 = new Point(1,2);
-$p3 = new Point(0,2);
-$p4 = new Point(1,0);
+echo "test of 2 intersect segments on the same line: \n";
+echo "\t result should be: \n";
+$p1 = new Point ( 2.369, 7.348201 );
+$p2 = new Point ( -568.369, -3459.0737);
+$p3 = new Point ( -0.34698, -1436.048201);
+$p4 = new Point ( -1368.3, 0.47948758 );
 var_dump(Point::segment_intersection($p1, $p2, $p3, $p4));
 echo "\n";
 echo"*****************************************\n";
