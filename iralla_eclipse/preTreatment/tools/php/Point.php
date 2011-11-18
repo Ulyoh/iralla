@@ -46,8 +46,8 @@ class Point {
 	public static function segment_intersection(Point $pt1, Point $pt2, Point $pt3, Point $pt4, $return_value_if_merged = false) {
 		
 		//throw exception if they are not segments:
-		if(($pt1 == $pt2) || ($pt3 == $pt4)){
-			throw new Exception("At least one of the segment is a point");
+		if (($pt1 == $pt2) || ($pt3 == $pt4)) {
+			throw new Exception ( "At least one of the segment is a point" );
 		}
 		
 		//test if segments are colinears:
@@ -81,20 +81,21 @@ class Point {
 		}
 		
 		$result [0] = true;
-		$result [1] = new Point ();
-		$result [1]->x = $pt1->x + $v1->get_x () * $t;
-		$result [1]->y = $pt1->y + $v1->get_y () * $t;
+		$x = $pt1->x + $v1->get_x () * $t;
+		$y = $pt1->y + $v1->get_y () * $t;
+		$result [1] = new Point ($x, $y);
 		
 		return $result;
 	}
 	
-	public function isPartOfSegment($var1, $var2 = null, $scale = null) {
+	public function isPartOfSegment($var1, $var2 = null) {
 		
 		if ($var1 instanceof Segment) {
 			if ($var2 == null) {
 				$var2 = $var1->get_pt2 ();
 				$var1 = $var1->get_pt1 ();
-			} else {
+			}
+			else {
 				throw new Exception ( "ERROR of parameters 2\n" );
 			}
 		}
@@ -102,33 +103,32 @@ class Point {
 		if (! ($var1 instanceof Point) || ! ($var2 instanceof Point)) {
 			throw new Exception ( "ERROR of parameters\n" );
 		}
-
-		if ($var1 == $var2){
+		
+		if ($var1 == $var2) {
 			throw new Exception ( "The segment is a point\n" );
 		}
 		
-		if(($this == $var1) || ($this == $var2)){
+		if (($this == $var1) || ($this == $var2)) {
 			return true;
 		}
 		
 		//are the 3 points aligned:
-		if ($this->isAlignedWith($pt1, $pt2) == true) {
+		if ($this->isAlignedWith ( $var1, $var2 ) === true) {
 			//is the point part of the segment :
-			if ( ( ( ($var1->x <= $this->x)  && ($this->x <= $var2->x) ) || ( ($var2->x <= $this->x)  && ($this->x <= $var1->x) ) )
-			  && ( ( ($var1->y <= $this->y)  && ($this->y <= $var2->y) ) || ( ($var2->y <= $this->y)  && ($this->y <= $var1->y) ) ) ){
+			if (((($var1->x <= $this->x) && ($this->x <= $var2->x)) || (($var2->x <= $this->x) && ($this->x <= $var1->x))) && ((($var1->y <= $this->y) && ($this->y <= $var2->y)) || (($var2->y <= $this->y) && ($this->y <= $var1->y)))) {
 				return true;
 			}
 		}
 		return false;
 	}
 	
-	public function isAlignedWith($pt1, $pt2){
-		$scale = Geometry::bcscale_max(array($this, $pt1, $pt2)) + 1;
+	public function isAlignedWith($pt1, $pt2) {
+		$scale = Geometry::bcscale_max ( array ($this->x, $this->y, $pt1->x, $pt1->y, $pt2->x, $pt2->y ) ) + 1;
 		//cross product = 0
-		if (abs ( bcmul ( ($pt2->x - $this->x), ($pt1->y - $this->y), $scale) - bcmul ( ($pt1->x - $this->x), ($pt2->y - $this->y), $scale ) ) <= (bcpow ( 10, - $scale, $scale))){
+		if (abs ( bcmul ( ($pt2->x - $this->x), ($pt1->y - $this->y), $scale ) - bcmul ( ($pt1->x - $this->x), ($pt2->y - $this->y), $scale ) ) <= (bcpow ( 10, - $scale, $scale ))) {
 			return true;
 		}
-		else{
+		else {
 			return false;
 		}
 	}
@@ -136,8 +136,18 @@ class Point {
 	private static function intersection_point_of_colinears_segments(Point $pt1, Point $pt2, Point $pt3, Point $pt4) {
 		
 		//throw exception if they are not segments:
-		if(($pt1 == $pt2) || ($pt3 == $pt4)){
-			throw new Exception("At least one of the segment is a point");
+		if (($pt1 == $pt2) || ($pt3 == $pt4)) {
+			throw new Exception ( "At least one of the segment is a point" );
+		}
+		
+		//if deux egal points:
+		if ((($pt1 == $pt3) && ($pt2 == $pt4)) || (($pt1 == $pt3) && ($pt2 == $pt4))) {
+			return array ("same", array (1 => $pt1, 2 => $pt2 ) );
+		}
+		
+		//if the segments are not on the same line:
+		if (($pt1->isAlignedWith ( $pt3, $pt4 ) == false) || ($pt2->isAlignedWith ( $pt3, $pt4 ) == false)) {
+			return array (false, null );
 		}
 		
 		//if segments are verticals:
@@ -148,7 +158,7 @@ class Point {
 			}
 			
 			//test if they have a common part:
-			$y_list_of_points = array (array ("line A", $pt1 ), array ("line A", $pt2 ), array ("line B", $pt3 ), array ("line B", $pt4 ) );
+			$y_list_of_points = array (array ("line A", $pt1, 1 ), array ("line A", $pt2, 2 ), array ("line B", $pt3, 3 ), array ("line B", $pt4, 4 ) );
 			
 			usort ( $y_list_of_points, "Point::cmp_y" );
 			
@@ -158,26 +168,12 @@ class Point {
 			}
 			
 			//return the 2 points which are in the middle of $y_list_of_points
-			$pts_to_return = array ($y_list_of_points [1] [1], $y_list_of_points [2] [1] );
+			$pts_to_return = array ($y_list_of_points [1] [1] => $y_list_of_points [1] [1], $y_list_of_points [2] [2] => $y_list_of_points [2] [1] );
 			return array ("merged", $pts_to_return );
 		}
 		
-		//if the segments are not on the same line:
-		$pt1->isPartOfSegment($pt3, $pt4);
-		$pt2->isPartOfSegment($pt3, $pt4);
-		$pt3->isPartOfSegment($pt1, $pt2);
-		
-		
-		
-		//TODO
-		
-		
-		if ($y_intercept_1 != $y_intercept_2) {
-			return array (false, null );
-		}
-		
 		//test if they have a common part:
-		$x_list_of_points = array (array ("line A", $pt1 ), array ("line A", $pt2 ), array ("line B", $pt3 ), array ("line B", $pt4 ) );
+		$x_list_of_points = array (array ("line A", $pt1, 1 ), array ("line A", $pt2, 2 ), array ("line B", $pt3, 3 ), array ("line B", $pt4, 4 ) );
 		
 		usort ( $x_list_of_points, "Point::cmp_x" );
 		
@@ -188,7 +184,7 @@ class Point {
 		
 		//if they have a common part:
 		//return the 2 points which are in the middle of $y_list_of_points
-		$pts_to_return = array ($x_list_of_points [1] [1], $x_list_of_points [2] [1] );
+		$pts_to_return = array ($x_list_of_points [1] [2] => $x_list_of_points [1] [1], $x_list_of_points [2] [2] => $x_list_of_points [2] [1] );
 		return array ("merged", $pts_to_return );
 	
 	}
@@ -207,16 +203,16 @@ class Point {
 		return ($a [1]->y < $b [1]->y) ? - 1 : 1;
 	}
 	
-	public function __construct($x ,$y ) {
-		if( is_numeric($x) && is_numeric($y) ){
+	public function __construct($x, $y) {
+		if (is_numeric ( $x ) && is_numeric ( $y )) {
 			$this->x = $x;
 			$this->y = $y;
 		}
-		else{
-			throw new Exception('one or more parameters not valid');
+		else {
+			throw new Exception ( 'one or more parameters not valid' );
 		}
 		$this->x = $x;
 		$this->y = $y;
 	}
-	
+
 }

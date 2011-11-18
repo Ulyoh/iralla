@@ -34,8 +34,8 @@ class Geometry{
 	public static function bcscale_max(array $array_of_values){
 		$scale_max = 0;
 		foreach ($array_of_values as $value) {
-			$tab = preg_split('.', (string)$value);
-			if ($tab[1] > $scale_max){
+			$tab = explode('.', (string)$value);
+			if (isset($tab[1]) && $tab[1] > $scale_max){
 				$scale_max = strlen($tab[1]);
 			}
 		}
