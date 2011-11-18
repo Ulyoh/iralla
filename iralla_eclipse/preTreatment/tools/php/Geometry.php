@@ -30,7 +30,20 @@ class Geometry{
 	public static function bcscale_value(){
 		return $scale = strlen ( bcdiv ( 1, 3 ) ) - 1;
 	}
+	
+	public static function bcscale_max(array $array_of_values){
+		$scale_max = 0;
+		foreach ($array_of_values as $value) {
+			$tab = preg_split('.', (string)$value);
+			if ($tab[1] > $scale_max){
+				$scale_max = strlen($tab[1]);
+			}
+		}
+		return $scale_max;
+	}
 }
+
+
 /*
 //test:
 include_once 'Point.php';
