@@ -111,13 +111,8 @@ class Point {
 			return true;
 		}
 		
-		if ($scale === null) {
-			Geometry::bcscale_max(array($this, $var1, $var2));
-		}
-		
 		//are the 3 points aligned:
-		//cross product = 0
-		if (abs ( bcmul ( ($var2->x - $this->x), ($var1->y - $this->y), $scale) - bcmul ( ($var1->x - $this->x), ($var2->y - $this->y), $scale ) ) <= (bcpow ( 10, - $scale, $scale))) {
+		if ($this->isAlignedWith($pt1, $pt2) == true) {
 			//is the point part of the segment :
 			if ( ( ( ($var1->x <= $this->x)  && ($this->x <= $var2->x) ) || ( ($var2->x <= $this->x)  && ($this->x <= $var1->x) ) )
 			  && ( ( ($var1->y <= $this->y)  && ($this->y <= $var2->y) ) || ( ($var2->y <= $this->y)  && ($this->y <= $var1->y) ) ) ){
@@ -125,6 +120,17 @@ class Point {
 			}
 		}
 		return false;
+	}
+	
+	public function isAlignedWith($pt1, $pt2){
+		$scale = Geometry::bcscale_max(array($this, $pt1, $pt2)) + 1;
+		//cross product = 0
+		if (abs ( bcmul ( ($pt2->x - $this->x), ($pt1->y - $this->y), $scale) - bcmul ( ($pt1->x - $this->x), ($pt2->y - $this->y), $scale ) ) <= (bcpow ( 10, - $scale, $scale))){
+			return true;
+		}
+		else{
+			return false;
+		}
 	}
 	
 	private static function intersection_point_of_colinears_segments(Point $pt1, Point $pt2, Point $pt3, Point $pt4) {
