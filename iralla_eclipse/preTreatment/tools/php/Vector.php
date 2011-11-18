@@ -23,11 +23,7 @@ class Vector{
 		}
 	}
 	
-	public function __construct($var_1, $var_2 = false,  $scale = null){
-		
-		if ($scale === null) {
-			$scale = Geometry::bcscale_value();
-		}
+	public function __construct($var_1, $var_2 = false){
 		
 		$n = get_class($var_1);
 		
@@ -36,8 +32,8 @@ class Vector{
 				if (!($var_2 instanceof Point)){
 					throw new Exception('ERROR when creating a vector');
 				}
-				$this->x = bcsub($var_1->get_x(), $var_2->get_x(), $scale);
-				$this->y = bcsub($var_1->get_y(), $var_2->get_y(), $scale);
+				$this->x = $var_1->get_x()- $var_2->get_x();
+				$this->y = $var_1->get_y()- $var_2->get_y();
 			break;
 			
 			case 'Segment':
@@ -48,8 +44,8 @@ class Vector{
 				$pt1 = $var_1->get_pt1();
 				$pt2 = $var_1->get_pt2();
 				
-				$this->x = bcsub($pt1->get_x(), $pt2->get_x(), $scale);
-				$this->y = bcsub($pt1->get_y(), $pt2->get_y(), $scale);
+				$this->x = $pt1->get_x()- $pt2->get_x();
+				$this->y = $pt1->get_y()- $pt2->get_y();
 			break;
 			
 			default:

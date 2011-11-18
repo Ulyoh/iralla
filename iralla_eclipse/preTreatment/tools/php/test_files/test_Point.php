@@ -302,7 +302,7 @@ echo "\n";
 echo "\n";
 
 echo "*****************************************\n";
-echo "test of 2 segments on the same line which intersect: \n";
+echo "test of 2 segments on the same line which not intersect: \n";
 echo "\t separated \n";
 $p1 = new Point ( 2.369, 7.348201 );
 $p2 = new Point ( -0.34698, -1436.048201);
