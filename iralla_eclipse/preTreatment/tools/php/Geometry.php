@@ -10,32 +10,28 @@ class Geometry{
 	 * 
 	 * @param Point $pt1
 	 * @param Point $pt2
-	 * @param integer $scale
 	 */
-	public static function y_intercept_of_line_passing_by(Point $pt1, Point $pt2, $scale = null){
-		if(($scale != null) && !(is_int($scale))){
-			throw new Exception("ERROR : the scale is not an integer");
-		}
+	public static function y_intercept_of_line_passing_by(Point $pt1, Point $pt2){
+		$scale = Geometry::bcscale_max(array($pt1->x, $pt1->y, $pt2->x, $pt2->y)) + 2;
+
 		if($pt1->x == $pt2->x){
 			return false;
 		}
-		if($scale){
-			return bcsub($pt1->y, bcmul(bcdiv(bcsub($pt2->y, $pt1->y, $scale), bcsub($pt2->x, $pt1->x, $scale), $scale), $pt1->x, $scale), $scale);
-		}
-		else{
-			return bcsub($pt1->y, bcmul(bcdiv(bcsub($pt2->y, $pt1->y), bcsub($pt2->x, $pt1->x)), $pt1->x));
-		}
+		return bcsub($pt1->y, bcmul(bcdiv(bcsub($pt2->y, $pt1->y, $scale), bcsub($pt2->x, $pt1->x, $scale), $scale), $pt1->x, $scale), $scale);
+
 	}
 	
 	public static function bcscale_value(){
-		return $scale = strlen ( bcdiv ( 1, 3 ) ) - 1;
+		$string_length = strlen ( bcdiv ( 1, 3 ) );
+		return ($string_length == 1) ? 0 : $string_length - 2;
 	}
 	
 	public static function bcscale_max(array $array_of_values){
 		$scale_max = 0;
 		foreach ($array_of_values as $value) {
 			$tab = explode('.', (string)$value);
-			if (isset($tab[1]) && $tab[1] > $scale_max){
+			$scale = isset($tab[1]) ? strlen($tab[1]): 0;
+			if ($scale > $scale_max ){
 				$scale_max = strlen($tab[1]);
 			}
 		}
@@ -43,44 +39,3 @@ class Geometry{
 	}
 }
 
-
-/*
-//test:
-include_once 'Point.php';
-
-echo "simple test without scale parameter: \n";
-$pt1 = new Point(0,2.5);
-$pt2 = new Point(4,1);
-echo "should give 2 has result:\n";
-echo Geometry::y_intercept_of_line_passing_by($pt1, $pt2);
-echo "\n";
-echo "\n";
-echo "********************************************************";
-
-echo "simple test with scale parameter = 2: \n";
-$pt1 = new Point(0,2.5);
-$pt2 = new Point(4,1);
-echo "should give 2.50 has result:\n";
-echo Geometry::y_intercept_of_line_passing_by($pt1, $pt2, 2);
-echo "\n";
-echo "\n";
-echo "********************************************************";
-
-echo "simple test with non Point as parameter: \n";
-$pt1 = 2;
-$pt2 = new Point(4,2);
-echo "should give fatal error:\n";
-echo Geometry::y_intercept_of_line_passing_by($pt1, $pt2, "test");
-echo "\n";
-echo "\n";
-echo "********************************************************";
-
-echo "simple test with non integer scale parameter: \n";
-$pt1 = new Point(-2,-2);
-$pt2 = new Point(4,2);
-echo "should throw error:\n";
-echo Geometry::y_intercept_of_line_passing_by($pt1, $pt2, "test");
-echo "\n";
-echo "\n";
-echo "********************************************************";
-*/
