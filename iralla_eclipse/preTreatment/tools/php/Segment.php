@@ -70,6 +70,8 @@ class Segment{
 			}
 			$this->pt1 = $pt1;
 			$this->pt2 = $pt2;
+			$pt1->segment = $this;
+			$pt2->segment = $this;
 		}
 		else{
 			throw new Exception('$pt1 or $pt2 is not a Point Object');
