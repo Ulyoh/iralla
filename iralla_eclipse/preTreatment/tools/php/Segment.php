@@ -20,7 +20,11 @@ class Segment{
 	}
 	
 	public function get_right_pt(){
-		return $this->$left_pt;
+		return $this->$right_pt;
+	}
+	
+	public function pts_as_array(){
+		return array($this->$left_pt, $this->$right_pt);
 	}
 	
 	/*
@@ -64,7 +68,6 @@ class Segment{
 				$this->left_pt = $pt2;
 				$this->right_pt = $pt1;
 			}
-			
 			$this->pt1 = $pt1;
 			$this->pt2 = $pt2;
 		}
