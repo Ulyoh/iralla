@@ -46,17 +46,20 @@ class Segment{
 		}
 	}
 	*/
-	public function find_intersection_with($other_segment){
+	public function find_intersection_with($other_segment, $return_value_if_merged = false){
 		return Point::segment_intersection(
-		$this->pt1, $this->pt2, $other_segment->pt1, $other_segment->pt2);
+		$this->pt1, $this->pt2, $other_segment->pt1, $other_segment->pt2, $return_value_if_merged);
 	}
 	
 	public function __construct($pt1, $pt2){
+		if($pt1 == $pt2){
+			die("null segment");
+		}
 		if(($pt1 instanceof Point) && ($pt2 instanceof Point)){
 			$pt1 = clone $pt1;
 			$pt2 = clone $pt2;
 			//left and right point:
-			if(($pt1->x < $pt2->x) || (($pt1->x == $pt2->x) && ($pt1->y > $pt2->y))){
+			if(($pt1->x < $pt2->x) || (($pt1->x == $pt2->x) && ($pt1->y < $pt2->y))){
 				$pt1->position = "left";
 				$pt2->position = "right";
 				$this->left_pt = $pt1;
