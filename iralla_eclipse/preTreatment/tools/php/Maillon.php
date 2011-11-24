@@ -12,6 +12,15 @@ class Maillon {
 		$cur_maillon->previous = $new_maillon;
 	}
 	
+	public static function add_after($new_maillon, $cur_maillon) {
+		$new_maillon->previous = $cur_maillon;
+		$new_maillon->next = $cur_maillon->next;
+		if ($new_maillon->next != null) {
+			$new_maillon->next->previous = $new_maillon;
+		}
+		$cur_maillon->next = $new_maillon;
+	}
+	
 	public function remove() {
 		$this->next->previous = $this->previous;
 		$this->previous->next = $this->next;
@@ -22,19 +31,15 @@ class Maillon {
 		$buffer = $this->next;
 		$this->next = $other->next;
 		$other->next = $buffer;
-		if ($this->next != null)
-			$this->next->previous = $this;
-		if ($other->next != null)
-			$other->next->previous = $other;
+		$this->next->previous = ($this->next != null) ? $this : null;
+		$other->next->previous = ($other->next != null) ? $other : null;
 		
 		//change with the previous maillons
 		$buffer = $this->previous;
 		$this->previous = $other->previous;
 		$other->previous = $buffer;
-		if ($this->previous != null)
-			$this->previous->next = $this;
-		if ($other->previous != null)
-			$other->previous->next = $other;
+		$this->previous->next = ($this->previous != null) ? $this : null;
+		$other->previous->next = ($other->previous != null) ? $other : null;
 	}
 	
 	public function __construct($previous = null, $next = null) {
