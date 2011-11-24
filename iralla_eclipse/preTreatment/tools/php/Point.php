@@ -23,6 +23,15 @@ class Point {
 		return $this->y;
 	}
 	
+	public function same_coord_as(Point $other_pt){
+		if(($this->x == $other_pt->x) && ($this->y == $other_pt->y)){
+			return true;
+		}
+		else{
+			return false;
+		}
+	}
+	
 	/**
 	 * 
 	 * Return the intersection point between two segments if exists
