@@ -6,6 +6,8 @@ class Segment {
 	private $pt2;
 	private $left_pt;
 	private $right_pt;
+	private $slope;
+	private $y_intercept;
 	
 	public function get_pt1() {
 		return $this->pt1;
@@ -27,6 +29,19 @@ class Segment {
 		return array ($this->left_pt, $this->right_pt );
 	}
 	
+	public function get_slope(){
+		if(!$this->slope){
+			$this->slope = bcdiv(($this->pt2->y - $this->pt1->y),($this->pt2->x - $this->pt1->x), 20);
+		}
+		return $this->slope;
+	}
+	
+	public function get_y_intercept(){
+		if(!$this->y_intercept){
+			$this->y_intercept = $this->pt1->y - $this->get_slope() * $this->pt1->x;
+		}
+		return $this->y_intercept;
+	} 
 	/*
 	public function set_pt1($pt1){
 		if ($pt1 instanceof Point){
