@@ -22,24 +22,39 @@ class Maillon {
 	}
 	
 	public function remove() {
-		$this->next->previous = $this->previous;
-		$this->previous->next = $this->next;
+		if ($this->next != null)
+			$this->next->previous = $this->previous;
+		if ($this->previous != null)
+			$this->previous->next = $this->next;
 	}
 	
-	public function swap_with(Maillon $other) {
+	public function swap_with(Maillon $other, Maillon &$first_maillon = null) {
 		//change with the next maillons:
 		$buffer = $this->next;
 		$this->next = $other->next;
 		$other->next = $buffer;
-		$this->next->previous = ($this->next != null) ? $this : null;
-		$other->next->previous = ($other->next != null) ? $other : null;
+		if (isset( $this->next ))
+			$this->next->previous = ($this->next != null) ? $this : null;
+		if (isset( $other->next ))
+			$other->next->previous = ($other->next != null) ? $other : null;
 		
 		//change with the previous maillons
 		$buffer = $this->previous;
 		$this->previous = $other->previous;
 		$other->previous = $buffer;
-		$this->previous->next = ($this->previous != null) ? $this : null;
-		$other->previous->next = ($other->previous != null) ? $other : null;
+		if (isset( $this->previous ))
+			$this->previous->next = ($this->previous != null) ? $this : null;
+		if (isset( $other->previous ))
+			$other->previous->next = ($other->previous != null) ? $other : null;
+		
+		if ($first_maillon != null) {
+			if ($other->previous == null) {
+				$first_maillon = $other;
+			}
+			if ($this->previous == null) {
+				$first_maillon = $this;
+			}
+		}
 	}
 	
 	public function __construct($previous = null, $next = null) {
