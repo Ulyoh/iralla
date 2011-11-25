@@ -51,14 +51,15 @@ function inter_segments(array $segments) {
 		if (isset( $event->position ) && ($event->position == 'left')) {
 			
 			$seg_s_event = $event->segment;
-			$y_postion = $seg_s_event->get_left_pt()->y;
+			$x_postion = $seg_s_event->get_left_pt()->x;
 			$seg_s_event_and_y = array( "seg" => $seg_s_event, "y" => $y_postion );
 			
 			//insert the segment in the list depending of its y position:
 			if (! isset( $sweep_line_beginning )) {
 				$new_maillon = new Maillon();
 				$new_maillon->segment = $seg_s_event;
-				$new_maillon->y = $y_postion;
+				$new_maillon->y_position = $seg_s_event->get_left_pt()->y;
+				$new_maillon->x_position = $x_postion;
 				$seg_s_event->maillon = $new_maillon;
 				$sweep_line_beginning = $new_maillon;
 			
@@ -67,19 +68,20 @@ function inter_segments(array $segments) {
 			else {
 				$new_maillon = new Maillon();
 				$new_maillon->segment = $seg_s_event;
-				$new_maillon->y = $y_postion;
+				$new_maillon->y_position = $seg_s_event->get_left_pt()->y;
+				$new_maillon->x_position = $x_postion;
 				$seg_s_event->maillon = $new_maillon;
 				
 				//add the segment in a new maillon in y up order
-				if ($sweep_line_beginning->y > $new_maillon->y) {
+				if ($new_maillon->y_position < y_position_of($sweep_line_beginning)) {
+					
 					Maillon::add_before( $new_maillon, $sweep_line_beginning );
 				}
 				else {
-					
 					$cur_maillon = $sweep_line_beginning;
 					$add_before_this_maillon = $cur_maillon;
-					while ( ($cur_maillon != null) && ($new_maillon->y > $cur_maillon->y) ) {
-						if ($new_maillon->y > $cur_maillon->y) {
+					while ( ($cur_maillon != null) && ($new_maillon->y_position > y_position_of($cur_maillon)) ) {
+						if ($new_maillon->y_position > $cur_maillon->y_position) {
 							$add_after_this_maillon = $cur_maillon;
 						}
 						$cur_maillon = $cur_maillon->next;
@@ -128,13 +130,21 @@ function inter_segments(array $segments) {
 	return $output_list;
 }
 
+function y_position_of(Segment $seg, $at_x){
+	if($seg->x_position != $at_x){
+		$seg->y_position = $seg->get_slope() * $at_x + $seg->get_y_intercept();
+		$seg->x_position = $at_x;
+	}
+	return $seg->y_position;
+}
+
 function get_above_segment($cur_maillon) {
 	return ($cur_maillon->next != null) ? $cur_maillon->next->segment : null;
 }
 function get_below_segment($cur_maillon) {
 	//$maillon_test = ($cur_maillon->previous != null) ? $cur_maillon->previous->segment : null;
 	$maillon_test = $cur_maillon->previous;
-	while ( ($maillon_test != null) && ($cur_maillon->y == $maillon_test->y) ) {
+	while ( ($maillon_test != null) && ($cur_maillon->y_position == $maillon_test->y_position) ) {
 		$maillon_test = $maillon_test->previous;
 	}
 	if ($maillon_test == null) {
