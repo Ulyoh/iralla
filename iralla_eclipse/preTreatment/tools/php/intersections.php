@@ -13,6 +13,7 @@ function inter_segments(array $segments) {
 	foreach ( $segments as $segment ) {
 		$events_to_treat = array_merge( $events_to_treat, $segment->get_pts_as_array() );
 	}
+	$segment = null;
 	
 	//order the endpoints_to_treat by x-axis, y-axis value of end point
 	function cmp_local($pt1, $pt2) {
@@ -61,6 +62,8 @@ function inter_segments(array $segments) {
 			continue;
 		}
 		
+		$event->segment[ ] = $event->segment;
+		
 		//determine if the current event is the last one for its coordinates
 		if (isset( $events_to_treat[0] ) && ($event->same_coord_as( $events_to_treat[0] ))) {
 			$last_event_at_coord = false;
@@ -104,9 +107,12 @@ function inter_segments(array $segments) {
 							 $cur_maillon->segment->get_slope()) {
 								break;
 							}
+							// merged segment case:
 							elseif ($new_maillon->segment->get_slope() ==
 							 $cur_maillon->segment->get_slope()) {
-								//TODO : case of merged segment
+								$new_intersection = clone $event;
+								$new_intersection->segment[ ] = $cur_maillon->segment;
+								$output_list[ ] = $new_intersection;
 							}
 							
 							else {
@@ -120,15 +126,11 @@ function inter_segments(array $segments) {
 			}
 		}
 		elseif (isset( $event->position ) && ($event->position == 'right')) {
-			$seg_s_event = $event->segment;
+			$seg_s_event = $event->segment[0];
 			
 			//get the above and below segment:
 			$above_seg = get_above_segment( $seg_s_event, $x_position );
 			$below_seg = get_below_segment( $seg_s_event, $x_position );
-			
-			//if merged segment found
-			//link them to the point
-			//TODO
 			
 			//remove $seg_s_event from $sweep_line:
 			$seg_s_event->maillon->remove();
@@ -138,12 +140,18 @@ function inter_segments(array $segments) {
 		}
 		else { //intersection event
 			$output_list[ ] = $event;
-			
 			$segments = $event->segment;
 			$first_maillon = order_maillon_by_slope_at_one_point( $segments, $event );
+			if ($first_maillon == false) {
+				continue;
+			}
 			if ($first_maillon->previous == null) {
 				$sweep_line_beginning = $first_maillon;
 			}
+			
+			//put the segment of first maillon at first place in the array:
+			$event->segment[ ] = $event->segment[0];
+			$event->segment[0] = $first_maillon->segment;
 		}
 		
 		//find the 2 segments below and above of $lower and $higher segment
@@ -151,14 +159,13 @@ function inter_segments(array $segments) {
 		//if there are not other events at the same point
 		if (($last_event_at_coord == true) &&
 		 ! (isset( $event->position ) && ($event->position == 'right'))) {
-			$segment = $event->segment;
+			$segment = $event->segment[0];
+			/*if ($segment == null) {
+				continue;
+			}*/
 			
 			$above_seg = get_above_segment( $segment, $x_position );
 			$below_seg = get_below_segment( $segment, $x_position );
-			
-			//if merged segment found
-			//link them to the point
-			//TODO
 			
 			if ($above_seg != null) {
 				$higher_segment = $above_seg->maillon->previous->segment;
@@ -320,15 +327,20 @@ function order_maillon_by_slope_at_one_point($segments, $pt) {
 			break;
 		}
 	}
+	if (! isset( $maillon )) {
+		return false;
+	}
+	
 	$cur_maillon = $maillon;
 	//find the maillon before the first segment in the chain link to $pt:
-	while ( in_array( $cur_maillon->previous->segment, $segments ) ) {
+	while ( isset( $cur_maillon->previous ) &&
+	 in_array( $cur_maillon->previous->segment, $segments ) ) {
 		$cur_maillon = $cur_maillon->previous;
 	}
 	$first_maillon = $cur_maillon;
 	
 	//find the maillon after the last segment in the chain link to $pt:
-	while ( in_array( $cur_maillon->next->segment, $segments ) ) {
+	while ( isset( $cur_maillon->next ) && in_array( $cur_maillon->next->segment, $segments ) ) {
 		$cur_maillon = $cur_maillon->next;
 	}
 	$last_maillon = $cur_maillon;
@@ -337,7 +349,7 @@ function order_maillon_by_slope_at_one_point($segments, $pt) {
 	//previous_maillon:
 	Maillon::invert_between( $first_maillon, $last_maillon );
 	
-	return $last_maillon;
+	return $last_maillon; //which is now the first one
 }
 
 
