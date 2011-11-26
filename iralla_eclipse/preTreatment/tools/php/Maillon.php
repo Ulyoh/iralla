@@ -21,6 +21,15 @@ class Maillon {
 		$cur_maillon->next = $new_maillon;
 	}
 	
+	public static function invert_between($first_maillon, $last_maillon){
+		$next_first = $first_maillon->next;
+		$next_last = $last_maillon->previous;
+		$first_maillon->swap_with($last_maillon);
+		if(($next_first!=$next_last) && ($next_first!=$last_maillon)){
+			Maillon::invert_between($next_first, $next_last);
+		}
+	}
+	
 	public function remove() {
 		if ($this->next != null)
 			$this->next->previous = $this->previous;
