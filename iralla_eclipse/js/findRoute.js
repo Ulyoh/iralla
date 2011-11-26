@@ -591,7 +591,7 @@ function addMarkerOnTheMap(latLng){
 		if ((typeof(map.departureMarker) != 'undefined') && (map.departureMarker != null)) {
 			map.departureMarker.setMap(null);
 			//remove listener:
-			if(typeof(map.departureMarker.listenerDragEnd) != undefined){
+			if(typeof(map.departureMarker.listenerDragEnd) != "undefined"){
 				gmap.event.removeListener(map.departureMarker.listenerDragEnd);
 			}
 		}
@@ -607,7 +607,7 @@ function addMarkerOnTheMap(latLng){
 		if ((typeof(map.arrivalMarker) != 'undefined') && (map.arrivalMarker != null)) {
 			map.arrivalMarker.setPosition(null);
 			//remove listener:
-			if(typeof(map.departureMarker.listenerDragEnd) != undefined){
+			if(typeof(map.departureMarker.listenerDragEnd) != "undefined"){
 				gmap.event.removeListener(map.arrivalMarker.listenerDragEnd);
 			}
 		}
