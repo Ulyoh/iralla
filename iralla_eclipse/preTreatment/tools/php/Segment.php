@@ -26,22 +26,28 @@ class Segment {
 	}
 	
 	public function get_pts_as_array() {
-		return array ($this->left_pt, $this->right_pt );
+		return array( $this->left_pt, $this->right_pt );
 	}
 	
-	public function get_slope(){
-		if(!$this->slope){
-			$this->slope = bcdiv(($this->pt2->y - $this->pt1->y),($this->pt2->x - $this->pt1->x), 20);
+	public function get_slope() {
+		if (! $this->slope) {
+			if (($this->pt2->get_x() - $this->pt1->get_x()) == 0) {
+				$this->slope = INF;
+			}
+			else {
+				$this->slope = bcdiv( ($this->pt2->get_y() - $this->pt1->get_y()), ($this->pt2->get_x() -
+				 $this->pt1->get_x()), 20 );
+			}
 		}
 		return $this->slope;
 	}
 	
-	public function get_y_intercept(){
-		if(!$this->y_intercept){
-			$this->y_intercept = $this->pt1->y - $this->get_slope() * $this->pt1->x;
+	public function get_y_intercept() {
+		if (! $this->y_intercept) {
+			$this->y_intercept = $this->get_left_pt()->y - $this->get_slope() * $this->get_left_pt()->get_x();
 		}
 		return $this->y_intercept;
-	} 
+	}
 	/*
 	public function set_pt1($pt1){
 		if ($pt1 instanceof Point){
@@ -62,7 +68,7 @@ class Segment {
 	}
 	*/
 	public function find_intersection_with($other_segment, $return_value_if_merged = false) {
-		return Point::segment_intersection ( $this->pt1, $this->pt2, $other_segment->pt1, $other_segment->pt2, $return_value_if_merged );
+		return Point::segment_intersection( $this->pt1, $this->pt2, $other_segment->pt1, $other_segment->pt2, $return_value_if_merged );
 	}
 	
 	public function __construct($pt1_or_x1, $pt2_or_y1, $x2 = null, $y2 = null) {
@@ -70,33 +76,29 @@ class Segment {
 			$pt1 = $pt1_or_x1;
 			$pt2 = $pt2_or_y1;
 			if ($pt1 == $pt2) {
-				die ( "null segment" );
+				die( "null segment" );
 			}
-			if (($pt1 instanceof Point) && ($pt2 instanceof Point)) {
-				$pt1 = clone $pt1;
-				$pt2 = clone $pt2;
-			}
-			else {
-				throw new Exception ( '$pt1 or $pt2 is not a Point Object' );
+			if (!(($pt1 instanceof Point) && ($pt2 instanceof Point))) {
+				throw new Exception( '$pt1 or $pt2 is not a Point Object' );
 			}
 		}
-		else if (! is_numeric ( $pt1_or_x1 ) || ! is_numeric ( $pt2_or_y1 ) || ! is_numeric ( $x2 ) ||
-				 ! is_numeric ( $y2 )) {
-			throw new Exception ( 'one entry is not numeric' );
+		else if (! is_numeric( $pt1_or_x1 ) || ! is_numeric( $pt2_or_y1 ) || ! is_numeric( $x2 ) ||
+		 ! is_numeric( $y2 )) {
+			throw new Exception( 'one entry is not numeric' );
 		}
 		else {
-			$pt1 = new Point ( $pt1_or_x1, $pt2_or_y1 );
-			$pt2 = new Point ( $x2, $y2 );
+			$pt1 = new Point( $pt1_or_x1, $pt2_or_y1 );
+			$pt2 = new Point( $x2, $y2 );
 		}
-		if (($pt1->x < $pt2->x) || (($pt1->x == $pt2->x) && ($pt1->y < $pt2->y))) {
+		if (($pt1->get_x() < $pt2->get_x()) || (($pt1->get_x() == $pt2->get_x()) && ($pt1->get_y() < $pt2->get_y()))) {
 			$pt1->position = "left";
 			$pt2->position = "right";
 			$this->left_pt = $pt1;
 			$this->right_pt = $pt2;
 		}
 		else {
-		$pt2->position = "left";
-		$pt1->position = "right";
+			$pt2->position = "left";
+			$pt1->position = "right";
 			$this->left_pt = $pt2;
 			$this->right_pt = $pt1;
 		}
