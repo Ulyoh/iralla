@@ -52,8 +52,8 @@ class Shortest_road{
 	}
 }
 
-$request = $_POST['q'];
-//$request ='{"start":{"lat":-2.0907472653611823,"lng":-79.94669189453127},"end":{"lat":-2.1210250353406597,"lng":-79.95574703216555}}';
+//$request = $_POST['q'];
+$request ='{"start":{"lat":-2.0907472653611823,"lng":-79.94669189453127},"end":{"lat":-2.1210250353406597,"lng":-79.95574703216555}}';
 //$request = '{"start":{"lat":-2.076423017151715,"lng":-79.91639366149904},"end":{"lat":-2.0957221234194163,"lng":-79.91124382019045}}';
 
 //from square is not a bus station
@@ -84,10 +84,10 @@ $request[end][lat] = -2.2325;
 $request[end][lng] = -79.890;*/
 //END TO DEBUG
 
-$start[lat] = $request->start->lat;
-$start[lng] = $request->start->lng;
-$end[lat] = $request->end->lat;
-$end[lng] = $request->end->lng;
+$start['lat'] = $request->start->lat;
+$start['lng'] = $request->start->lng;
+$end['lat'] = $request->end->lat;
+$end['lng'] = $request->end->lng;
 
 //find nearst bus stations :
 $interval = 0.005;
@@ -97,10 +97,10 @@ $end_nearest_bus_stations = nearest_bus_stations($end, $interval, "bus_stations"
 //end find nearest bus stations
 
 //change start and end calcul to fit with to square and end square coordinates
-$start[lat] =abs( bcmul($request->start->lat, $grid_path_mult));
-$start[lng] =abs( bcmul($request->start->lng, $grid_path_mult));
-$end[lat] =abs( bcmul($request->end->lat, $grid_path_mult));
-$end[lng] =abs( bcmul($request->end->lng, $grid_path_mult));
+$start['lat'] =abs( bcmul($request->start->lat, $grid_path_mult));
+$start['lng'] =abs( bcmul($request->start->lng, $grid_path_mult));
+$end['lat'] =abs( bcmul($request->end->lat, $grid_path_mult));
+$end['lng'] =abs( bcmul($request->end->lng, $grid_path_mult));
 
 //from square and to square
 $interval = 50;
@@ -437,7 +437,7 @@ if($from_square->name != null ){
 	array_unshift($road, $square_to_add);
 }
 
-
+$to_send = new stdClass();
 $to_send->bus_stations = $bus_stations;
 $to_send->bs2bss = $road;
 $to_send->time = $shortest_road->total_time;
@@ -459,10 +459,10 @@ function nearest_squares($from_lat_lng, $interval, $table_name, $ecart_min_betwe
 	global $bus_speed;
 	global $grid_path_mult;
 	
-	$values[0] = $from_lat_lng[lat] - $interval;
-	$values[1] = $from_lat_lng[lat] + $interval;
-	$values[2] = $from_lat_lng[lng] - $interval;
-	$values[3] = $from_lat_lng[lng] + $interval;
+	$values[0] = $from_lat_lng['lat'] - $interval;
+	$values[1] = $from_lat_lng['lat'] + $interval;
+	$values[2] = $from_lat_lng['lng'] - $interval;
+	$values[3] = $from_lat_lng['lng'] + $interval;
 	
 	$req = $bdd->prepare('
 		SELECT * 
@@ -505,7 +505,7 @@ function nearest_squares($from_lat_lng, $interval, $table_name, $ecart_min_betwe
 			$squares[] = $square;
 		}
 		
-		if( $squares[0] == null){
+		if(!isset( $squares[0])){
 			//if not any square found
 			$interval *= 2;
 			$values[0] -= $interval;
@@ -592,10 +592,10 @@ function nearest_bus_stations($from_lat_lng, $interval, $table_name){
 	global $bdd;
 	global $foot_speed;
 	
-	$values[0] = $from_lat_lng[lat] - $interval;
-	$values[1] = $from_lat_lng[lat] + $interval;
-	$values[2] = $from_lat_lng[lng] - $interval;
-	$values[3] = $from_lat_lng[lng] + $interval;
+	$values[0] = $from_lat_lng['lat'] - $interval;
+	$values[1] = $from_lat_lng['lat'] + $interval;
+	$values[2] = $from_lat_lng['lng'] - $interval;
+	$values[3] = $from_lat_lng['lng'] + $interval;
 	
 	$req = $bdd->prepare('
 		SELECT * 
@@ -607,6 +607,7 @@ function nearest_bus_stations($from_lat_lng, $interval, $table_name){
 	');
 			
 	$nearest_point = array();
+	$bus_stations = array();
 	while(count($bus_stations) == 0){
 
 		$req->execute($values);
@@ -614,8 +615,8 @@ function nearest_bus_stations($from_lat_lng, $interval, $table_name){
 		
 		while($bus_station = $req->fetch()){
 			
-			$bus_station[distance] = real_distance_between_2_vertex($from_lat_lng, $bus_station);
-			$bus_station[time_by_foot] =  $bus_station[distance] / $foot_speed;
+			$bus_station['distance'] = real_distance_between_2_vertex($from_lat_lng, $bus_station);
+			$bus_station['time_by_foot'] =  $bus_station['distance'] / $foot_speed;
 			$bus_stations[] = $bus_station;
 		}
 		$interval *= 2;
@@ -628,7 +629,7 @@ function nearest_bus_stations($from_lat_lng, $interval, $table_name){
 }
 
 
-
+/*
 // not used:
 function nearest_point_from_array_to_point($array, $point){
 	$shortest_distance = -log(0);
@@ -643,7 +644,7 @@ function nearest_point_from_array_to_point($array, $point){
 	
 	return $nearest_point;
 }
-/*
+
 function extract_path_from_string_2($path_as_string){
 	
 	if($path_as_string == null){

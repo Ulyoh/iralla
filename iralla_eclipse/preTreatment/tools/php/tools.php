@@ -403,12 +403,12 @@
 		// R [cos^-1(sin(a)sin(b)+cos(a)cos(c-d)]
 		$earth_radius = 6378000;
 		$vertex_1_rad = new stdClass;
-		$lat1 = abs(deg_to_rad($vertex_1[lat]));
-		$lon1 = abs(deg_to_rad($vertex_1[lng]));
+		$lat1 = abs(deg_to_rad($vertex_1['lat']));
+		$lon1 = abs(deg_to_rad($vertex_1['lng']));
 		
 		$vertex_2_rad = new stdClass;
-		$lat2 = abs(deg_to_rad($vertex_2[lat]));
-		$lon2= abs(deg_to_rad($vertex_2[lng]));
+		$lat2 = abs(deg_to_rad($vertex_2['lat']));
+		$lon2= abs(deg_to_rad($vertex_2['lng']));
 		$part1 = bcmul(sin($lat1),sin($lat2), 14);
 		$part2 = bcmul(bcmul(cos($lat1),cos($lat2), 14), cos($lon2-$lon1), 14);
 		$pre_calcul = bcadd($part1, $part2, 14);
