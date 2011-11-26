@@ -4,9 +4,9 @@ include_once 'Segment.php';
 include_once 'Vector.php';
 
 class Point {
-	public $x;
-	public $y;
-	
+	private $x;
+	private $y;
+	/*
 	public function set_x($x) {
 		$this->x = $x;
 	}
@@ -14,7 +14,7 @@ class Point {
 	public function set_y($y) {
 		$this->y = $y;
 	}
-	
+	*/
 	public function get_x() {
 		return $this->x;
 	}
