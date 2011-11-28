@@ -625,7 +625,7 @@ function treatment($bus_line, $last_id){
 						//next link must be the first link once going out from the current square
 						do {
 							//todebug
-							$previsous_next_link = $next_link;
+							$previous_next_link = $next_link;
 							
 							//end to debug
 							$next_link = $bus_line[links_list][$current_next_link_index];
@@ -751,7 +751,7 @@ function treatment($bus_line, $last_id){
 					//TODO make a verification of concordance between last index coord and 
 					//last link
 					$last_link = $bus_line[links_list][count($bus_line[links_list]) - 1];
-					
+					$last_link[vertex] = new Vertex($last_link[lat], $last_link[lng]);
 					$lat = strval(abs(bcdiv($current_square->lat,$grid_path)));
 					$lng = strval(abs(bcdiv($current_square->lng,$grid_path)));
 					
@@ -760,13 +760,28 @@ function treatment($bus_line, $last_id){
 					$square_to_save[bus_line_name] = $bus_line_part->name;
 					$square_to_save[lat] = $lat;
 					$square_to_save[lng] = $lng;
+					$square_to_save[length] = 0;
 					$square_to_save[id_of_bus_station_linked] = $last_link[busStationId];
-					$square_to_save[path][0][lat] = $last_link[lat];
-					$square_to_save[path][0][lng] = $last_link[lng];
+					$square_to_save[path][0][lat] = $last_link[lat]; //verify
+					$square_to_save[path][0][lng] = $last_link[lng]; //verify
 					
 					$square_to_save[path] = json_encode($square_to_save[path]);
+					//from_index not used
+					//to_index not used
 					
-					$to_squares[] = $square_to_save;
+					//go_in_point_lat not used
+					//go_in_point_ln not used
+					$square_to_save[from_link_lat] = $last_link[vertex]->lat;
+					$square_to_save[from_link_lng] = $last_link[vertex]->lng;
+					$to_squares[to_link_lng] = $square_to_save;
+					
+					$square_to_save[to_link_lat] = $square_to_save[from_link_lat];
+					$square_to_save[to_link_lng] = $square_to_save[from_link_lng];
+					unset ($square_to_save[from_link_lat]);
+					unset ($square_to_save[from_link_lng]);
+					//go_out_point_lat not used
+					//go_out_point_ln not used
+					
 					$from_squares[] = $square_to_save;
 					
 				}
