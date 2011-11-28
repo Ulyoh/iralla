@@ -20,7 +20,7 @@ if(!is_dir($path_to_save)){
 }
 
 ini_set(memory_limit, "1000M");
-
+set_time_limit(10000);
 
 create_grid();
 
@@ -55,12 +55,12 @@ function create_grid(){
 		$square_list = array();
 
 		//to debug
-		if($bus_line[bus_line_id] != 35){
+		/*if($bus_line[bus_line_id] != 35){
 			continue;
 		}
 		else{
 			$last_id = 121590;
-		}
+		}*/
 		//end to debug
 		
 		
@@ -113,8 +113,6 @@ function create_grid(){
 			 	
 			FROM 
 				bus_lines
-			WHERE 
-				bus_lines.id = 35
 		");
 		
 		//to debug above:
