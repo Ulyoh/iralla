@@ -8,8 +8,8 @@ $grid_path = 0.001;
 $grid_path_mult = bcmul($multipicador, $grid_path);
 $foot_speed = 0.7; //0.7 m/s ~2.5km/h
 $bus_speed = 7; //13 m/s ~30km/h
-$path_of_roads = "d:/roads/";
-$path_of_squares = "f:/squares/";
+$path_of_roads = "c:/roads/";
+$path_of_squares = "c:/squares/";
 
 $max_time_lost_whitout_changing_bus_line = 600;
 
