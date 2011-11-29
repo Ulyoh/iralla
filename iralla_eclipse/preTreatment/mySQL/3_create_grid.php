@@ -20,7 +20,7 @@ if(!is_dir($path_to_save)){
 }
 
 ini_set(memory_limit, "1000M");
-set_time_limit(10000);
+set_time_limit(30000);
 
 create_grid();
 
