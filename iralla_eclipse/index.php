@@ -76,7 +76,7 @@
      	<table id="look_for_menu">
      		<tr><th><button id="select_look_for_roads" class="look_for_menu_button" onClick="show_look_for_roads()" > una ruta </button></th></tr>
      		<tr><th><button id="select_look_for_route" class="look_for_menu_button" onClick="show_look_for_route()" > un itinerario </button></th></tr>
-    <!--  		<tr><th><button id="select_look_for_roads_near_to" class="look_for_menu_button" onClick="show_look_for_roads_near_to()"> rutas cerca de </button></th></tr>  -->
+      		<tr><th><button id="select_look_for_roads_near_to" class="look_for_menu_button" onClick="show_look_for_roads_near_to()"> rutas cerca de </button></th></tr>
      	</table>
      	
      	<div id='direction'>
@@ -90,6 +90,7 @@
 			<tr><td>
 				<span id="from_road_title" class="from_road"> Desde la esquina : </span>
 				<span id="to_road_title" class="to_road"> Hasta la esquina : </span>
+				<span id="near_to_title" class="to_road"> Cerca de la esquina : </span>
 				<input class="cross_button" type="image" src="data/unvalid.png" onClick="cross_button_click(this, 'itinerario')"/>
 			</td></tr>
 			 <tr  id = "table_to_find_road_1" ><td>

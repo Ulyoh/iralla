@@ -285,6 +285,9 @@ function add_bus_stations_to_end_start_squares(&$start_or_end_squares, $start_or
 	}
 }
 
+function add_bus_stations_to_position_squares(){
+	return add_bus_stations_to_end_start_squares();
+} 
 /*
 
 function nearest_point($from_lat_lng, $interval, $table_name){

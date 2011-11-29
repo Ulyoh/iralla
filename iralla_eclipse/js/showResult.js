@@ -1,7 +1,5 @@
 
 function calculateRoad(){
-	/*var start = map.markerBegin.getPosition();
-	 var end = map.markerEnd.getPosition();*/
 	var startPosition = map.departureMarker.getPosition();
 	var endPosition = map.arrivalMarker.getPosition();
 	
@@ -324,4 +322,59 @@ function show_details(datas){
 	
 	
 	showBlockById("show_infos");
+}
+
+
+function find_nearest_roads(){
+	
+	var position = map.nearToMarker.getPosition();
+	
+	var position = {
+		lat: position.lat(),
+		lng: position.lng()
+	};
+	
+	if( (typeof(map.calculateNearTo) != 'undefined') && (map.calculateNearTo !== null) && (map.calculateNearTo.readyState != 0)){
+		map.calculateNearTo.abort();
+	}
+	
+	//send to the servor:
+	map.calculateNearTo = request({
+		phpFileCalled: mysite + 'find_nearest_roads.php',
+		argumentsToPhpFile: 'q=' + JSON.stringify(position),
+		type: "",
+		callback: showNearestRoads,
+		asynchrone: true
+	});
+}
+
+function showNearestRoads(roadsList){
+	roadsList = JSON.parse(roadsList);
+	var cleanLinesNode = document.getElementById('button_clean_lines');
+	cleanLinesNode.style.display = 'inline';
+
+	SubMap._busLinesArray.removePolylinesFromIds(cleanLinesNode.linesIdAdded); 
+	cleanLinesNode.linesIdAdded = [];	
+	
+	for( var i = 0; i < roadsList.length; i++){
+		road = roadsList[i];
+		var busLine = SubMap._busLinesArray.getItemById(road.id);
+		if (busLine === false) {
+			var array = [];
+			array.push(road);
+			map.addBusLinesFromDb(array);
+			busLine = SubMap._busLinesArray.getItemById(road.id);
+		}
+		else {
+			busLine.setMap(map);
+		}
+		SubMap._busLinesArray.setOptionsToAll({
+			strokeColor: 'default'
+		});
+		cleanLinesNode.linesIdAdded.push(busLine.id);
+	}
+	
+	
+	
+	
 }
