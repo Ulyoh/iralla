@@ -198,7 +198,7 @@ function SubMap(canvas, opts){
 			17: 12
 		});
 		
-		//subMap.enableSizeDependingOnZoom(true);
+		subMap.enableSizeDependingOnZoom(true);
 	};
 	
 	

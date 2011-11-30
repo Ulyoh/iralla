@@ -197,7 +197,8 @@ ArrayOfBusStation = function(){
 	//Methods:
 		//Public:		
 		arrayOfBusStations.setSizeOfBusStationsDependingOnZoomLevel = function(sizesDependingOnZoomsLevels){
-			var sizesDependingOnZoomsLevelsArray = [30];
+			var sizesDependingOnZoomsLevelsArray = [];
+			sizesDependingOnZoomsLevelsArray.length = 30;
 			var key;
 			for (key in sizesDependingOnZoomsLevels){
 				sizesDependingOnZoomsLevelsArray[key] = sizesDependingOnZoomsLevels[key];

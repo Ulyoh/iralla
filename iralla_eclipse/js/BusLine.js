@@ -82,7 +82,7 @@
 				};
 			}
 			
-			var position = new gmap.Point();
+			var position  = new gmap.Point();
 			position = map.convertLatLngToPixelCoord(latLng);
 			var xx = position.x + 5;
 			var yy = position.y - 5;
