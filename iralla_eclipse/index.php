@@ -9,12 +9,12 @@
 
 <!--call google map script: -->
 		<?php 
-			if ( (isset($_GET['preTreatment'])) && ($_GET['preTreatment'] == 'true') ){
+		//	if ( (isset($_GET['preTreatment'])) && ($_GET['preTreatment'] == 'true') ){
 				echo "<script type='text/javascript' src='http://maps.google.com/maps/api/js?libraries=geometry&v=3.3&sensor=false'></script>";
-			}
+		/*	}
 			else{
 				echo "<script type='text/javascript' src='http://maps.google.com/maps/api/js?v=3.3&sensor=false'></script>";
-			}
+			}*/
 		?>
 		<script src="libraries/json/json2.js" type="text/javascript"></script>
 		

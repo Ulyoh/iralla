@@ -168,7 +168,7 @@ function SubMap(canvas, opts){
 				strokeWeight: 3,
 				strokeColor: color,
 				path: path,
-				zIndex: 10
+				zIndex: 1000
 			});
 			
 			busLineBuffer.DbList = DbList[i];
@@ -198,7 +198,7 @@ function SubMap(canvas, opts){
 			17: 12
 		});
 		
-		//subMap.enableSizeDependingOnZoom(true);
+		subMap.enableSizeDependingOnZoom(true);
 	};
 	
 	
@@ -227,7 +227,7 @@ function SubMap(canvas, opts){
 				name: DbList[i].name,
 				position: new gmap.LatLng(DbList[i].lat, DbList[i].lng),
 				icon:iconStation,
-				zIndex:100
+				zIndex:2000
 			};
 			
 			var busStation = new BusStation(options);
@@ -359,7 +359,7 @@ function SubMap(canvas, opts){
 		subMap.zoomLimitation = "off";
 	}
 	
-	if (subMap.sizeDependingOnZoom) 
+	if (subMap.sizeDependingOnZoom == "on") 
 		subMap.setSizeOfBusLinesDependingOnZoomLevel(subMap.sizesDependingOnZoomsLevels);
 	
 	if (subMap.sizeDependingOnZoom == 'on') 

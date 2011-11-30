@@ -200,6 +200,9 @@ function addLineWithOneCellInTable(table, more, functionToExec){
 	if(typeof(more.lineClass) != 'undefined'){
 		newLine.className = more.lineClass;
 	}
+	if(typeof(more.lineId) != 'undefined'){
+		newLine.setAttribute('id', more.lineId);
+	}
 	
 	if(typeof(functionToExec) != 'undefined'){
 		functionToExec(more, table, newLine, newCell);
@@ -209,6 +212,7 @@ function addLineWithOneCellInTable(table, more, functionToExec){
 		line: newLine,
 		cell: newCell
 	};
+	return created;
 }
 
 function newButton(more){
@@ -217,4 +221,12 @@ function newButton(more){
 	newButtonVar.setAttribute('id', more.id);
 	newButtonVar.setAttribute('class', more.myClass);
 	return newButtonVar;
+}
+
+function isInsideArray(elt, array){
+	for(var i = 0; i < array.length; i++){
+		if(array[i] == elt)
+			return true;
+	}
+	return false;
 }
