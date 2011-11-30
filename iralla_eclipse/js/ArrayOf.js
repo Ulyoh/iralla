@@ -42,7 +42,7 @@ ArrayOf = function(){
 
 	
 	arrayOf.setOptionsToAll = function(opts){
-		if ((typeof(opts.strokeColor) != 'undefined') && (opts.strokeColor == 'default')) {
+		if ((typeof(opts.strokeColor) != undefined) && (opts.strokeColor == 'default')) {
 			setDefaultColor = true;
 		}
 		for (var i = 0; i < arrayOf.length; i++) {
@@ -76,7 +76,8 @@ ArrayOfPolylines = function(){
 //Methods:
 	//Public:		
 	arrayOfPolylines.setSizeOfPolylinesDependingOnZoomLevel = function(sizesDependingOnZoomsLevels){
-		var sizesDependingOnZoomsLevelsArray = [30];
+		var sizesDependingOnZoomsLevelsArray = [];
+		sizesDependingOnZoomsLevelsArray.length = 30;
 		var key;
 		for (key in sizesDependingOnZoomsLevels){
 			sizesDependingOnZoomsLevelsArray[key] = sizesDependingOnZoomsLevels[key];
