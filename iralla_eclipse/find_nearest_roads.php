@@ -1,8 +1,8 @@
 <?php
-require_once 'access_to_db.php';
+
 require_once 'tools.php';
 require_once 'tools_to_look_for_roads.php';
-
+require_once 'access_to_db.php';
 $multipicador = 10000000;
 $denominator_to_get_real_values = 10000000;
 $grid_path = 0.001;
@@ -10,7 +10,7 @@ $grid_path_mult = bcmul($multipicador, $grid_path)/10;  //TODO why /10???? to ch
 $path_of_squares = "c:/squares2/";
 
 $request = $_POST['q'];
-//$request = '{"lat":-2.1561053360208935,"lng":-79.91647949218748}';
+$request = '{"lat":-2.1561053360208935,"lng":-79.91647949218748}';
 $request = json_decode($request);
 
 $position['lat'] = $request->lat;
@@ -61,7 +61,7 @@ while($bus_line = $req->fetch()){
 	unset($bus_line[2]);
 	$bus_lines[]=$bus_line;
 }
-
+require_once 'close_bdd.php';
 
 echo json_encode($bus_lines);
 

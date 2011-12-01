@@ -182,6 +182,7 @@ function createTableInElt(elt){
  * 		lineId
  * 		lineClass
  * 		innerHTML
+ * 		childs[]
  * };
  */
 function addLineWithOneCellInTable(table, more, functionToExec){
@@ -200,8 +201,10 @@ function addLineWithOneCellInTable(table, more, functionToExec){
 	if(typeof(more.lineClass) != 'undefined'){
 		newLine.className = more.lineClass;
 	}
-	if(typeof(more.lineId) != 'undefined'){
-		newLine.setAttribute('id', more.lineId);
+	if(typeof(more.childs) != 'undefined'){
+		for(var i = 0; i < more.childs.length; i++){
+			newCell.appendChild(more.childs[i]);
+		}
 	}
 	
 	if(typeof(functionToExec) != 'undefined'){
