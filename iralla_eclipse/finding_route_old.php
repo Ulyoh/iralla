@@ -136,7 +136,7 @@ function nearest_square($lat_lng, $interval, $table_name){
 	while(count($nearest_square) == 0){
 
 		$req->execute($values);
-		$shortest_distance = -log(0);
+		$shortest_distance = +INF;
 		
 		while($square = $req->fetch()){
 			$distance = sqrt(pow($square[lat] - $lat_lng[lat], 2) + pow($square[lng] - $lat_lng[lng], 2));

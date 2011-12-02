@@ -371,7 +371,7 @@ function nearest_point($from_lat_lng, $interval, $table_name){
 	while(count($nearest_point) == 0){
 
 		$req->execute($values);
-		$shortest_distance = -log(0);
+		$shortest_distance = +INF;
 		
 		while($square = $req->fetch()){
 			
@@ -575,7 +575,7 @@ function nearest_bus_stations($from_lat_lng, $interval, $table_name){
 
 // not used:
 function nearest_point_from_array_to_point($array, $point){
-	$shortest_distance = -log(0);
+	$shortest_distance = +INF;
 	foreach ($array as $point_to_compare) {
 		$distance = sqrt(pow($point[lat] - $point_to_compare[lat], 2) + pow($point[lng] - $point_to_compare[lng], 2));
 		if ($distance < $shortest_distance){
