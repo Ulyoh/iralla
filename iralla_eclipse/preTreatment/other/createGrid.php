@@ -732,7 +732,7 @@ class Bus_line_part{
 	}
 	
 	function found_vertex_index_from_coordinates($vertex_to_found, $path){
-		$shortest_distance = -log(0);
+		$shortest_distance = +INF;
 		foreach ($path as $index => $vertex) {
 			$distance = distanceBetweenTwoVertex($vertex_to_found, $vertex);
 			if($distance < $shortest_distance){
