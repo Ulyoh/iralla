@@ -149,8 +149,8 @@ class Road{
 			//time to change bus:
 			$shortest_time += 300;
 		}
-		$this->shortest_time = $shortest_time;
-		return $shortest_time;
+		$this->shortest_time = (integer)$shortest_time;
+		return $this->shortest_time;
 	}
 	
 	public function format_datas_to_save(){
@@ -191,11 +191,21 @@ class Road{
 	}*/
 	
 	public static function return_shortest_road_key(array $roads){
-		$shortest_time = -log(0);
+		$shortest_time = +INF;
 		foreach($roads as $key => $road){
-			if(	$road->shortest_time < $shortest_time){
+			if($road->shortest_time < $shortest_time) {
 				$selected_key = $key;
 				$shortest_time = $road->shortest_time;
+				$shortest_bs2bss_length = count($road->bs2bss);
+			}
+			elseif ($road->shortest_time == $shortest_time){
+				$bs2bss_length = count($road->bs2bss);
+				
+				if($bs2bss_length < $shortest_bs2bss_length){
+					$selected_key = $key;
+					$shortest_time = $road->shortest_time;
+					$shortest_bs2bss_length = $bs2bss_length;
+				}
 			}
 		}
 		return $selected_key;

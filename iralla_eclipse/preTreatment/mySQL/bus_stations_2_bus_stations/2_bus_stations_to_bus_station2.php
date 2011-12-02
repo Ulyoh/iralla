@@ -12,7 +12,7 @@ require_once 'Sub_red.php';
 require_once 'tools.php';
 
 ini_set('memory_limit', '2000M');
-$path_to_save = "d:/roads";
+$path_to_save = "d:/road35";   //todebug 35
 
 if (!is_dir($path_to_save)){
 	if(!mkdir($path_to_save)){
@@ -72,15 +72,15 @@ $count_destruct = 0;
 $count = 0;
 
 //$bdd->query("TRUNCATE TABLE bus_stations_to_bus_stations");
-$first_id_of_bus_station_to_do = 990;
+$first_id_of_bus_station_to_do = 35;
 $nbr_of_bus_station_to_do = 1;
 $stop_when_count_egal = 10000;
 /*bus_stations_to_bus_station2($first_id_of_bus_station_to_do, $nbr_of_bus_station_to_do, $path_to_save);*/
-while((bus_stations_to_bus_station2($first_id_of_bus_station_to_do, $nbr_of_bus_station_to_do, $path_to_save))
+/*while((bus_stations_to_bus_station2($first_id_of_bus_station_to_do, $nbr_of_bus_station_to_do, $path_to_save))
 &&($stop_when_count_egal > $count)){
 	$first_id_of_bus_station_to_do += $nbr_of_bus_station_to_do;
 	gc_collect_cycles();
 	$count++;
-}
+}*/
 
 ?>

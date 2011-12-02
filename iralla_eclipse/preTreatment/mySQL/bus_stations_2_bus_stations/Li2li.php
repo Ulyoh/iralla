@@ -119,7 +119,7 @@ class Li2li{
 		$this->id = $connection[id];
 		$this->length = $connection[length];
 		$this->type = $connection[busLineType];
-		$this->time = $this->length / $sub_red->speeds[$this->type];
+		$this->time = (integer)($this->length / $sub_red->speeds[$this->type]);
 		$this->sub_red = $sub_red;
 		$this->start_link = new Link(
 			$connection[linkIdDeparture],
