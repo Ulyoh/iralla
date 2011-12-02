@@ -16,7 +16,7 @@
 				echo "<script type='text/javascript' src='http://maps.google.com/maps/api/js?v=3.3&sensor=false'></script>";
 			}*/
 				if ( (isset($_GET['debug'])) && ($_GET['debug'] == 'true') ){
-					echo ' <script src="debug/reload.js" type="text/javascript"></script>';
+					echo ' <script class="my_script" src="debug/reload.js" type="text/javascript"></script>';
 				}
 		?>
 		<script <?php if ( (isset($_GET['debug'])) && ($_GET['debug'] == 'true') ){echo 'class="my_script"';} ?>src="libraries/json/json2.js" type="text/javascript"></script>

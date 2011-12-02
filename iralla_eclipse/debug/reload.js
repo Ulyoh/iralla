@@ -35,5 +35,5 @@ function reload(){
 		//write it back in the dom to load the new script
 		document.getElementsByTagName('head')[0].appendChild(refreshOne);
 	}
-	eval(document.getElementsByTagName('body')[0].onload);
+	eval(document.getElementsByTagName('body')[0].getAttribute('onload'));
 }

@@ -59,7 +59,7 @@
 					myInfo.showingList[j].position=new gmap.LatLng(latLng.lat(), latLng.lng());
 				}
 			}
-			var button = newButton({class:button_buslines_list});
+			var button = newButton({class:'button_buslines_list'});
 			button.innerHTML = this.name;
 			
 			if(flag_add == true){
@@ -121,9 +121,9 @@
     return busLine;
 }
 
-function selectBusline(busLine){
+function selectBusline(busline){
 	//change color
-	busLine.setOptions({color: "DDDDDD"});
+	busline.setOptions({color: "DDDDDD"});
 	
 	//create a button:
 	button = newButton({class:"buslines_table_selected_button"});
@@ -136,7 +136,7 @@ function selectBusline(busLine){
 	cross.className = 'cross_button';
 	cross.type = 'image';
 	cross.src = "data/unvalid.png";
-	cross.setAttribute('onclick',"removeBusLineFromSelected()");
+	cross.setAttribute('onclick',"removeBuslineFromSelected()");
 	cross.busline = busline;
 	
 	//create table:
@@ -150,8 +150,8 @@ function selectBusline(busLine){
 	
 	cross.line = line;
 	line.busline = busline;
-	line.setAttribute('mouseover', 'showBusLineOverlay()');
-	line.setAttribute('mouseout', 'hideBusLineOverlay()');
+	line.setAttribute('mouseover', 'showBuslineOverlay()');
+	line.setAttribute('mouseout', 'hideBuslineOverlay()');
 }
 
 function showUnshowBusline(){
@@ -165,7 +165,7 @@ function showUnshowBusline(){
 	}
 }
 
-function removeBusLineFromSelected(){
+function removeBuslineFromSelected(){
 	//on the screen
 	//if part of info do nothing:
 	var myInfo = document.getElementById('myInfo');
@@ -181,7 +181,7 @@ function removeBusLineFromSelected(){
 	removeNode(this.line);
 }
  
-function showBusLineOverlay(){
+function showBuslineOverlay(){
 	busline = this.busline;
 	
 	var options = {
@@ -192,14 +192,14 @@ function showBusLineOverlay(){
 			strokeWeight: SubMap._busLinesArray.sizeForAZoomValue[map.getZoom()] + 5,
 			zIndex: 2000
 		};
-	if (typeof(map.busLineOverlay) == 'undefined') {
+	if (typeof(map.buslineOverlay) == 'undefined') {
 		map.buslineOverlay = new gmap.Polyline();
 	}
 	map.buslineOverlay.currentBusline = busline;
 	map.buslineOverlay.setOptions(options);
 }
 
-function hideBusLineOverlay(){
+function hideBuslineOverlay(){
 	if (this.busline == map.buslineOverlay.currentBusline){
 		map.buslineOverlay.setMap(null);
 	}
