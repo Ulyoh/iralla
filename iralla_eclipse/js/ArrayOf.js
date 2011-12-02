@@ -42,7 +42,7 @@ ArrayOf = function(){
 
 	
 	arrayOf.setOptionsToAll = function(opts){
-		if ((typeof(opts.strokeColor) != undefined) && (opts.strokeColor == 'default')) {
+		if ((typeof(opts.strokeColor) != 'undefined') && (opts.strokeColor == 'default')) {
 			setDefaultColor = true;
 		}
 		for (var i = 0; i < arrayOf.length; i++) {
@@ -88,11 +88,11 @@ ArrayOfPolylines = function(){
 		for (var i = 0; i < sizesDependingOnZoomsLevelsArray.length; i++){
 			var size = sizesDependingOnZoomsLevelsArray[i];
 			if (i === 0){
-				if (size === undefined){
+				if (typeof size == 'undefined'){
 					size = '1';
 				}
 			}
-			else if (size === undefined){
+			else if (typeof size === 'undefined'){
 				size = previousSize;
 			}
 			sizesDependingOnZoomsLevelsArray[i] = size;
@@ -103,7 +103,7 @@ ArrayOfPolylines = function(){
 	
 	arrayOfPolylines.enableSizeDependingOnZoom = function(bool){
 		
-			if ( (bool === true) && ((this._idListenerSizeDependingOnZoom == -1) || (this._idListenerSizeDependingOnZoom === undefined )) && (this.sizeForAZoomValue.length == 30))
+			if ( (bool === true) && ((this._idListenerSizeDependingOnZoom == -1) || (typeof this._idListenerSizeDependingOnZoom == 'undefined' )) && (this.sizeForAZoomValue.length == 30))
 			{
 				function sizingDependingOnZoom(){
 					var theMap;
@@ -209,12 +209,12 @@ ArrayOfBusStation = function(){
 			for (var i = 0; i < sizesDependingOnZoomsLevelsArray.length; i++) {
 				var size = sizesDependingOnZoomsLevelsArray[i];
 				if (i === 0) {
-					if (size === undefined){
+					if (typeof size === 'undefined'){
 						size = 20;
 					}
 				}
 				else 
-					if (size === undefined){   //TODO : make this part clear !!!!
+					if (typeof size === 'undefined'){   //TODO : make this part clear !!!!
 						size = previousSize;
 					}
 				
@@ -226,7 +226,7 @@ ArrayOfBusStation = function(){
 		
 		arrayOfBusStations.enableSizeDependingOnZoom = function(bool){
 		
-			if ((bool === true) && ((this._idListenerBusStationsSizeDependingOnZoom == -1) || (this._idListenerBusStationsSizeDependingOnZoom === undefined)) && (this.sizeForAZoomValue.length == 30)) {
+			if ((bool === true) && ((this._idListenerBusStationsSizeDependingOnZoom == -1) || (typeof this._idListenerBusStationsSizeDependingOnZoom === 'undefined')) && (this.sizeForAZoomValue.length == 30)) {
 			
 				this._idListenerBusStationsSizeDependingOnZoom = this[0].map.addFunctionsToListener('zoom_changed', this.busStationsSizingDependingOnZoom, [this]);
 				this.busStationsSizeDependingOnZoom = "on";

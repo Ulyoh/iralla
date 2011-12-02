@@ -3,13 +3,13 @@
  */
 
 var mysite = 'http://www.cortocamino.com/guayaquil/';
-var xDebugOn = true;
 
 var gmap = google.maps;
 var rutasLoaded; //TODO I think it s not in use anymore
 //var listOfFilesToLoad = [/*'troncales.xml', 'rutas.xml',*/ 'rutas_reresimplified.xml']; //'rutas.xml'
 
 function initialize() {
+	
 	rutasLoaded = false;
 	var defaultCenter = new gmap.LatLng(-2.17,-79.9);
 
