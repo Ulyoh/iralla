@@ -15,47 +15,50 @@
 			else{
 				echo "<script type='text/javascript' src='http://maps.google.com/maps/api/js?v=3.3&sensor=false'></script>";
 			}*/
+				if ( (isset($_GET['debug'])) && ($_GET['debug'] == 'true') ){
+					echo ' <script src="debug/reload.js" type="text/javascript"></script>';
+				}
 		?>
-		<script src="libraries/json/json2.js" type="text/javascript"></script>
+		<script <?php if ( (isset($_GET['debug'])) && ($_GET['debug'] == 'true') ){echo 'class="my_script"';} ?>src="libraries/json/json2.js" type="text/javascript"></script>
 		
-		<script src="js/commonsFunctions.js" type="text/javascript"></script>
+		<script <?php if ( (isset($_GET['debug'])) && ($_GET['debug'] == 'true') ){echo 'class="my_script"';} ?>src="js/commonsFunctions.js" type="text/javascript"></script>
 		
-		<script src="js/ArrayOf.js" type="text/javascript"></script>
+		<script <?php if ( (isset($_GET['debug'])) && ($_GET['debug'] == 'true') ){echo 'class="my_script"';} ?>src="js/ArrayOf.js" type="text/javascript"></script>
 
-		<script src="js/Map.js" type="text/javascript"></script>
+		<script <?php if ( (isset($_GET['debug'])) && ($_GET['debug'] == 'true') ){echo 'class="my_script"';} ?>src="js/Map.js" type="text/javascript"></script>
 
-		<script src="js/SubMap.js" type="text/javascript"></script>
+		<script <?php if ( (isset($_GET['debug'])) && ($_GET['debug'] == 'true') ){echo 'class="my_script"';} ?>src="js/SubMap.js" type="text/javascript"></script>
 		
-		<script src="js/Marker.js" type="text/javascript"></script>
+		<script <?php if ( (isset($_GET['debug'])) && ($_GET['debug'] == 'true') ){echo 'class="my_script"';} ?>src="js/Marker.js" type="text/javascript"></script>
 		
-		<script src="js/Cross.js" type="text/javascript"></script>
+		<script <?php if ( (isset($_GET['debug'])) && ($_GET['debug'] == 'true') ){echo 'class="my_script"';} ?>src="js/Cross.js" type="text/javascript"></script>
 		
-		<script src="js/BusLine.js" type="text/javascript"></script>
+		<script <?php if ( (isset($_GET['debug'])) && ($_GET['debug'] == 'true') ){echo 'class="my_script"';} ?>src="js/BusLine.js" type="text/javascript"></script>
 		
-		<script src="js/BusStation.js" type="text/javascript"></script>
+		<script <?php if ( (isset($_GET['debug'])) && ($_GET['debug'] == 'true') ){echo 'class="my_script"';} ?>src="js/BusStation.js" type="text/javascript"></script>
 		
-		<script src="js/Polyline.js" type="text/javascript"></script>
+		<script <?php if ( (isset($_GET['debug'])) && ($_GET['debug'] == 'true') ){echo 'class="my_script"';} ?>src="js/Polyline.js" type="text/javascript"></script>
 		
-		<script src="js/showResult.js" type="text/javascript"></script>
+		<script <?php if ( (isset($_GET['debug'])) && ($_GET['debug'] == 'true') ){echo 'class="my_script"';} ?>src="js/showResult.js" type="text/javascript"></script>
 		
-		<script src="js/findRutas.js" type="text/javascript"></script>
+		<script <?php if ( (isset($_GET['debug'])) && ($_GET['debug'] == 'true') ){echo 'class="my_script"';} ?>src="js/findRutas.js" type="text/javascript"></script>
 		
-		<script src="js/findRoute.js" type="text/javascript"></script>
+		<script <?php if ( (isset($_GET['debug'])) && ($_GET['debug'] == 'true') ){echo 'class="my_script"';} ?>src="js/findRoute.js" type="text/javascript"></script>
 		
-		<script src="js/lookForMenu.js" type="text/javascript"></script>
+		<script <?php if ( (isset($_GET['debug'])) && ($_GET['debug'] == 'true') ){echo 'class="my_script"';} ?>src="js/lookForMenu.js" type="text/javascript"></script>
 		
 		<?php 
 			if ( (isset($_GET['preTreatment'])) && ($_GET['preTreatment'] == 'true') ){
-				echo "<script src='preTreatment/preTreatment.js' type='text/javascript'></script>";
+				echo "class='my_script' <script src='preTreatment/preTreatment.js' type='text/javascript'></script>";
 			}
 		?>
 		
 		<!-- call handling script of busses lines -->
-		<script src="mainpage/init.js" type="text/javascript"></script>
+		<script <?php if ( (isset($_GET['debug'])) && ($_GET['debug'] == 'true') ){echo 'class="my_script"';} ?> src="mainpage/init.js" type="text/javascript"></script>
 		<!-- call handling script to add buses lines -->
-		<script src="mainpage/communication.js" type="text/javascript"></script>
+		<script <?php if ( (isset($_GET['debug'])) && ($_GET['debug'] == 'true') ){echo 'class="my_script"';} ?> src="mainpage/communication.js" type="text/javascript"></script>
 		<!-- call handling script to modify css styles -->
-		<script src="mainpage/style.js" type="text/javascript"></script>
+		<script <?php if ( (isset($_GET['debug'])) && ($_GET['debug'] == 'true') ){echo 'class="my_script"';} ?> src="mainpage/style.js" type="text/javascript"></script>
 		
 		<!--  load the bus stations from the db -->
 		<?php
@@ -66,12 +69,14 @@
 		?>
 		
     </head>
-    <body onload="initialize();
-    <?php
+    <body onload="<?php
     	if ( (isset($_GET['preTreatment'])) &&  ($_GET['preTreatment'] == 'true')){
      		echo " accessToPreTreatment(); setTimeout('launchMainShowBusStationsOnMap()', 20000);";
     	}
-     ?> ">
+    	if ( (isset($_GET['debug'])) && ($_GET['debug'] == 'true') ){
+    		echo 'debugMode();';
+    	}
+     ?> initialize();">
      	<div id="buscar" onMouseOver="showLookForMenu()"> buscar </div>
      	<table id="look_for_menu">
      		<tr><th><button id="select_look_for_roads" class="look_for_menu_button" onClick="show_look_for_roads()" > una ruta </button></th></tr>
