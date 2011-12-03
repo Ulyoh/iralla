@@ -116,48 +116,48 @@ class Li2li{
 	}*/
 	
 	public function __construct($connection, Sub_red $sub_red){
-		$this->id = $connection[id];
-		$this->length = $connection[length];
-		$this->type = $connection[busLineType];
+		$this->id = $connection['id'];
+		$this->length = $connection['length'];
+		$this->type = $connection['busLineType'];
 		$this->time = (integer)($this->length / $sub_red->speeds[$this->type]);
 		$this->sub_red = $sub_red;
 		$this->start_link = new Link(
-			$connection[linkIdDeparture],
-			$connection[linkPrevIndexDeparture],
-			$connection[linkDistanceToPrevIndexDeparture],
-			$connection[linkLatDeparture],
-			$connection[linkLngDeparture],
-			$connection[busStationIdDeparture]
+			$connection['linkIdDeparture'],
+			$connection['linkPrevIndexDeparture'],
+			$connection['linkDistanceToPrevIndexDeparture'],
+			$connection['linkLatDeparture'],
+			$connection['linkLngDeparture'],
+			$connection['busStationIdDeparture']
 			);
 		$this->start_bus_station = new Bus_station(
-			$connection[busStationIdDeparture],
-			$connection[busStationNameDeparture],
-			$connection[busStationLatDeparture],
-			$connection[busStationLngDeparture],
-			$connection[busStationTypeDeparture]
+			$connection['busStationIdDeparture'],
+			$connection['busStationNameDeparture'],
+			$connection['busStationLatDeparture'],
+			$connection['busStationLngDeparture'],
+			$connection['busStationTypeDeparture']
 			);
 		$this->end_bus_station = new Bus_station(
-			$connection[nextBusStationId],
-			$connection[nextBusStationName],
-			$connection[nextBusStationLat],
-			$connection[nextBusStationLng],
-			$connection[nextBusStationType]
+			$connection['nextBusStationId'],
+			$connection['nextBusStationName'],
+			$connection['nextBusStationLat'],
+			$connection['nextBusStationLng'],
+			$connection['nextBusStationType']
 			);
 		$this->end_link = new Link(
-			$connection[nextLinkId],
-			$connection[nextLinkPrevIndex],
-			$connection[nextLinkDistanceToPrevIndex],
-			$connection[nextLinkLat],
-			$connection[nextLinkLng],
-			$connection[nextBusStationId]
+			$connection['nextLinkId'],
+			$connection['nextLinkPrevIndex'],
+			$connection['nextLinkDistanceToPrevIndex'],
+			$connection['nextLinkLat'],
+			$connection['nextLinkLng'],
+			$connection['nextBusStationId']
 			);
 		$this->bus_line = new Bus_line(
-			$connection[busLineId],
-			$connection[busLineName],
-			$connection[busLinePath]
+			$connection['busLineId'],
+			$connection['busLineName'],
+			$connection['busLinePath']
 			);
 		
-		$this->set_path($connection[busLinePath]);
+		$this->set_path($connection['busLinePath']);
 		//$this->next_Li2lis = array();
 		
 		if($this->type != "by_foot"){

@@ -89,7 +89,7 @@ class Bs2bs{
 				}
 				
 				//save each lines:
-				$lines[steps] = array();
+				$lines['steps'] = array();
 				$part_lines = array();
 				
 				//init
@@ -120,11 +120,16 @@ class Bs2bs{
 					array_push($part_line->path, $end_link_coord);
 					*/
 					
-					$part_line->time += real_distance_between_2_vertex($start_link_coord, $part_line->path[0]) / $li2li->sub_red->speeds[$li2li->type];
-					array_unshift($part_line->path, $start_link_coord);
-					$part_line->time += real_distance_between_2_vertex($part_line->path[count($part_line->path)-1], $end_link_coord) / $li2li->sub_red->speeds[$li2li->type];
-					array_push($part_line->path, $end_link_coord);
 					
+					if(isset($part_line->path[0])){
+						$part_line->time += real_distance_between_2_vertex($start_link_coord, $part_line->path[0]) / $li2li->sub_red->speeds[$li2li->type];
+						$part_line->time += real_distance_between_2_vertex($part_line->path[count($part_line->path)-1], $end_link_coord) / $li2li->sub_red->speeds[$li2li->type];
+					}
+					else{
+						$part_line->time += real_distance_between_2_vertex($start_link_coord, $end_link_coord) / $li2li->sub_red->speeds[$li2li->type];
+					}
+					array_unshift($part_line->path, $start_link_coord);
+					array_push($part_line->path, $end_link_coord);
 					$part_line->time = (int)$part_line->time;
 					
 					//add to the path the points of the start and
@@ -142,8 +147,7 @@ class Bs2bs{
 					$i = $i_max;
 					if($i_max > 0){
 						//while(($part_line->length < $part_lines[$i-1]->length)
-						while(($part_line->time < $part_lines[$i-1]->time)
-						&&( $i > 0)){
+						while(( $i > 0) && ($part_line->time < $part_lines[$i-1]->time)){
 							$part_lines[$i] = $part_lines[$i-1];
 							$i--;
 						}
@@ -215,7 +219,12 @@ class Bs2bs{
 		for ($j = 0; $j < $length; $j++) {
 			if(($j == 0) || ($j == $length - 1)){
 				foreach ($bus_lines_parts[$j] as $part) {
-					if(is_nan($part->length)){
+					
+					if(!isset($part->time)){
+						exit("length not set");
+					}
+					
+					if(is_nan($part->time)){
 						exit("nan detected");
 					}
 					
@@ -227,7 +236,7 @@ class Bs2bs{
 				}
 			}
 			else{
-				if(is_nan($bus_lines_parts[$j]->length)){
+				if(is_nan($bus_lines_parts[$j]->time)){
 					exit("nan detected");
 				}
 				
@@ -263,20 +272,6 @@ class Bs2bs{
 	}
 }
 ?>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

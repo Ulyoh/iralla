@@ -383,15 +383,15 @@
 	function real_distance_between_2_vertex($vertex_1,$vertex_2){
 		if (is_object($vertex_1)){
 			$buffer = array();
-			$buffer[lat] = $vertex_1->lat;
-			$buffer[lng] = $vertex_1->lng;
+			$buffer['lat'] = $vertex_1->lat;
+			$buffer['lng'] = $vertex_1->lng;
 			$vertex_1 = $buffer;
 		}
 		
 		if (is_object($vertex_2)){
 			$buffer = array();
-			$buffer[lat] = $vertex_2->lat;
-			$buffer[lng] = $vertex_2->lng;
+			$buffer['lat'] = $vertex_2->lat;
+			$buffer['lng'] = $vertex_2->lng;
 			$vertex_2 = $buffer;
 		}
 		
