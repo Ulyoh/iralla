@@ -2,17 +2,18 @@
 require_once 'tools.php';
 require_once 'tools_to_look_for_roads.php';
 require_once 'access_to_db.php';
+$multipicador = 10000000;
+$denominator_to_get_real_values = 10000000;
+$grid_path = 0.001;
+$grid_path_mult = bcmul($multipicador, $grid_path)/10;  //TODO why /10???? to check with create grid
 
 function find_nearest_roads($position){
-	$multipicador = 10000000;
-	$denominator_to_get_real_values = 10000000;
-	$grid_path = 0.001;
-	$grid_path_mult = bcmul($multipicador, $grid_path)/10;  //TODO why /10???? to check with create grid
-	$path_of_squares = "c:/squares2/";
-	
+	global $bdd;
+	global $grid_path_mult;
 	//find nearst bus stations :
 	$interval = 0.005;
-
+	$path_of_squares = "c:/squares2/";
+	
 	$position_nearest_bus_stations = nearest_bus_stations($position, $interval, "bus_stations");
 	//end find nearest bus stations
 

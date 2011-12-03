@@ -23,17 +23,13 @@ class Rectangle {
 }
 
 $rec = array ();
-$rec[] = new Rectangle ( - 2.17, - 79.8, - 2.1690, - 79.7 );
+$rec[] = new Rectangle ( - 2.17, - 79.9, - 2.175, - 79.905 );
 
 ini_set ( 'memory_limit', '2000M' );
 set_time_limit ( 500000 );
 $path_to_save = "c:/nearest_squares";
 
-if (! is_dir ( $path_to_save )) {
-	if (! mkdir ( $path_to_save )) {
-		die ( "path to save could not be created" );
-	}
-}
+create_repertory($path_to_save);
 
 //create square size of ~ 100m by 100m with gap lat and gap lng integer
 $lat_gap = 0.001; //~111.3m
@@ -170,13 +166,9 @@ foreach ( $rec as $rectangle ) {
 }
 
 function write_on_disk($path, $buslines){
-	if (! is_dir ( $path )) {
-		if (! mkdir ( $path )) {
-			die ( "path to save could not be created" );
-		}
-	}
+	create_repertory($path);
 	
-	$fh = fopen($path, 'w') or die("can't open file\n");
+	$fh = fopen($path.'/buslines', 'w') or die("can't open file\n");
 	fwrite($fh, json_encode($buslines));
 	fclose($fh);
 }
@@ -186,6 +178,7 @@ function create_path($lat_or_lng_path, $lat_or_lng, $precision){
 	foreach($lat_or_lng_array as $numero){
 		if(is_numeric($numero)){
 			$lat_or_lng_path .= '/'.$numero;
+			create_repertory($lat_or_lng_path);
 		}
 	}
 	
@@ -199,6 +192,12 @@ function create_path($lat_or_lng_path, $lat_or_lng, $precision){
 }
 
 
-
+function create_repertory($path){
+	if (! is_dir ( $path )) {
+		if (! mkdir ( $path )) {
+			die ( "path to save could not be created" );
+		}
+	}
+}
 
 
