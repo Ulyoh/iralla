@@ -75,7 +75,7 @@ function initialize() {
 		map.addBusStationsFromDb(mainBusStationsList);
 	}
 	
-	mainBusStationsList = undefined;
+	//mainBusStationsList = undefined;
 /*	var color = mainBusLinesList[0].color;
 	var path = JSON.parse(mainBusLinesList[0].path);
 	var path2 = [];
@@ -99,7 +99,7 @@ function initialize() {
 	if (mainBusLinesList.length > 0) {
 		map.addBusLinesFromDb(mainBusLinesList);
 	}
-	mainBusLinesList = undefined;
+	//mainBusLinesList = undefined;
 	
 	setupCleanLines();
 	document.getElementById('suggestionListNode').nextId = 0;
