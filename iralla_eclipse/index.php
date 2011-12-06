@@ -178,6 +178,9 @@
 		
 		<div id="map_canvas"></div>
 		
+		<div id="show_buslines_list">
+		</div>
+		
     </body>
 
 <head>

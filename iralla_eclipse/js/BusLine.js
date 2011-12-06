@@ -93,35 +93,44 @@
 			
 			this.setOptions({zIndex:999});
 		};*/
-		
-		this.storeBuslinesInShowingList = function(latLng){
-			if(typeof(myInfo.showingList) == 'undefined'){
-				myInfo.showingList = [];
-				appendAsFirstChild(myInfo, myInfo.buslines_table);
-			}
-			if(isInsideArray(this, map.showingList) === false){
-				map.showingList.push(this);
-				this.cursorPositionForShowingList  = latLng;
+		map.toBeShown = [];
+		map.shownBusLines = [];
+		this.storeBuslinesToBeShown = function(latLng){
+
+			if(isInsideArray(this, map.toBeShown) === false){
+				map.toBeShown.push(this);
+				this.cursorPositionToBeShownList  = latLng;
 			}
 			//remove all further than 50m of the current point, removed it 
 			//from the list
-			for(var i = 0; i < map.showingList.length; i++){
-				if(gmap.geometry.spherical.computeDistanceBetween(latLng, map.showingList[i].cursorPositionForShowingList) > 50){
-					map.showingList[i].setOptions({zIndex:1000});
-					map.showingList.splice(i,1);
+			for(var i = 0; i < map.toBeShown.length; i++){
+				if(gmap.geometry.spherical.computeDistanceBetween(latLng, map.toBeShown[i].cursorPositionToBeShownList) > 50){
+					map.toBeShown[i].setOptions({zIndex:1000});
+					map.toBeShown.splice(i,1);
 				};
 			}
-		}
+		};
 			
 		
 	
 		
 		this.listenerClick = gmap.event.addListener(this, 'click', function(){
-			var myInfo = document.getElementById('myInfo');
-			myInfo.style.display = "block";
+			if(typeof show_buslines_table == 'undefined'){
+				var table = createTableInElt(getEltById('show_buslines_list'));
+				map.show_buslines_table = table.tbody;
+				map.buslines_shown = [];
+			}
+			for(var i = 0; i < map.toBeShown.length; i++){
+				if(isInsideArray(this, map.shownBusLines) == false){
+					//create a new line:
+					createLineForShowingListTable(map.show_buslines_table, this);
+					map.shownBusLines.push(this);
+				}
+			}
+			
 		});
 		
-		this.idOfListenerOfShowMyInfo = this.addFunctionsToListener('mouseover', this.showMyInfo, [this, "eVeNt:MouseEvent.latLng"]);
+		this.idOfListenerOfShowMyInfo = this.addFunctionsToListener('mouseover', this.storeBuslinesToBeShown, [this, "eVeNt:MouseEvent.latLng"]);
 		
 	/*
 		this.listenerMouseOut = gmap.event.addListener(this, 'mouseout', function(){
@@ -142,29 +151,7 @@
     return busLine;
 }
 
-function selectBusline(busline){
-	if((typeof busline.selected != 'undefined') && (busline.selected == true)){
-		return
-	}
-	var myInfo = document.getElementById('myInfo');
-
-	//create table:
-	if(typeof(myInfo.buslines_table_selected) == 'undefined'){
-		myInfo.buslines_table_selected = document.createElement('div');
-		myInfo.buslines_table_selected.setAttribute('id','div_buslines_table_selected');
-		tbody = createTableInElt(myInfo.buslines_table_selected).tbody;
-		document.getElementsByTagName('body')[0].appendChild(myInfo.buslines_table_selected);
-	}
-
-	busline.selected = true;
-	
-	if(typeof myInfo.buslines_table_selected.list == 'undefined'){
-		myInfo.buslines_table_selected.list = [];
-	}
-	myInfo.buslines_table_selected.list.push(busline);
-	//change color
-	//busline.setOptions({color: "#DDDDDD"}); does not work
-	
+function createLineForShowingListTable(table, busline){
 	//create a button:
 	var button = newButton({myClass:"buslines_table_selected_button"});
 	button.innerHTML = busline.name;
@@ -172,20 +159,66 @@ function selectBusline(busline){
 	button.busline = busline;
 	button.shown = true;
 	
+	//create add button
+	var keepButton = document.createElement('input');
+	keepButton.className = 'keep_button_selected_busline';
+	keepButton.type = 'image';
+	keepButton.src = "data/add.png";
+	keepButton.setAttribute('onclick',"keepBuslineToSelected()");
+	keepButton.busline = busline;
+	busline.keepButton = keepButton;
+	
+	//create less button
+	var cancelButton = document.createElement('input');
+	cancelButton.className = 'less_button_selected_busline';
+	cancelButton.type = 'image';
+	cancelButton.src = "data/cancel.png";
+	cancelButton.setAttribute('onclick',"cancelBuslineToSelected()");
+	cancelButton.busline = busline;
+	busline.cancelButton = busline;
+	
+	//create cross
 	var cross = document.createElement('input');
 	cross.className = 'cross_button_selected_busline';
 	cross.type = 'image';
-	cross.src = "data/unvalid.png";
+	cross.src = "data/cross.png";
 	cross.setAttribute('onclick',"removeBuslineFromSelected()");
 	cross.busline = busline;
 	
 	//add to the selected list:
-	var line = addLineWithOneCellInTable(tbody, {childs:[button,cross]}).line;
+	var tableLine = addLineWithOneCellInTable(table, {childs:[button,addButton,cancelButton,cross]}).line;
 	
-	cross.line = line;
-	line.busline = busline;
-	line.setAttribute('mouseover', 'showBuslineOverlay()');
-	line.setAttribute('mouseout', 'hideBuslineOverlay()');
+	cross.tableLine = tableLine;
+	tableLine.busline = busline;
+	tableLine.setAttribute('mouseover', 'showBuslineOverlay()');
+	tableLine.setAttribute('mouseout', 'hideBuslineOverlay()');
+	busline.tableLine = tableLine;
+	
+	busline.keepStatus = false;
+	this.keepButton.inline = "block";
+	this.cancelButton = "none";
+}
+function keepBuslineToSelected(){
+	this.keepStatus = true;
+	//show unselect button:
+	this.keepButton.inline = "none";
+	this.cancelButton = "block";
+}
+
+function cancelBuslineToSelected(){
+	this.keepStatus = false;
+	//show keep button
+	this.keepButton.inline = "block";
+	this.cancelButton = "none";	
+}
+
+function removeBuslineFromSelected(){
+	for(var i = 0; i < map.shownBusLines.length; i++){
+		if(map.shownBusLines[i] == this){
+			busline.tableLine = undefined;
+			map.shownBusLines.splice(i,1);
+		};
+	}
 }
 
 function showUnshowBusline(){
