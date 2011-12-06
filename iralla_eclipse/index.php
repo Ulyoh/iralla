@@ -49,7 +49,7 @@
 		
 		<?php 
 			if ( (isset($_GET['preTreatment'])) && ($_GET['preTreatment'] == 'true') ){
-				echo "class='my_script' <script src='preTreatment/preTreatment.js' type='text/javascript'></script>";
+				echo " <script class='my_script' src='preTreatment/preTreatment.js' type='text/javascript'></script>";
 			}
 		?>
 		
@@ -62,7 +62,7 @@
 		
 		<!--  load the bus stations from the db -->
 		<?php
-			echo'<script type="text/javascript">';
+			echo'<script class="my_script" type="text/javascript">';
 			include 'get_mains_bus_stations_to_show.php';
 			include 'get_mains_lines_to_show.php';
 			echo'</script>';

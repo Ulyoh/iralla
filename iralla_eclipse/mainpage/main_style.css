@@ -222,3 +222,15 @@ span {
 	background-color: #FFFFFF;
 	z-index:1;
 }*/
+.buslines_table_selected_button {
+    color: red;
+}
+#div_buslines_table_selected {
+   /* background-color: #AAAAAA;*/
+    position: fixed;
+    right: 0;
+    top: 0;
+}
+.cross_button_selected_busline{
+	position:top;	
+}

@@ -61,6 +61,10 @@
 			}
 			var button = newButton({class:'button_buslines_list'});
 			button.innerHTML = this.name;
+			button.busline = this,
+			button.setAttribute('onclick', "selectBusline(this.busline)");
+			button.setAttribute('onmouseover', "showBuslineOverlay(this.busline)");
+			button.setAttribute('onmouseout', "hideBuslineOverlay(this.busline)");
 			
 			if(flag_add == true){
 				more = {
@@ -69,9 +73,6 @@
 					};
 				var newCell = addLineWithOneCellInTable(myInfo.buslines_table.childNodes[1], more);
 	
-				newCell.cell.busline = this,
-				newCell.cell.setAttribute('onclick', "selectBusline(this.busline)");
-				
 				myInfo.showingList.push({
 					busline:this, 
 					position:new gmap.LatLng(latLng.lat(), latLng.lng()),
@@ -122,29 +123,42 @@
 }
 
 function selectBusline(busline){
+	if((typeof busline.selected != 'undefined') && (busline.selected == true)){
+		return
+	}
+	var myInfo = document.getElementById('myInfo');
+
+	//create table:
+	if(typeof(myInfo.buslines_table_selected) == 'undefined'){
+		myInfo.buslines_table_selected = document.createElement('div');
+		myInfo.buslines_table_selected.setAttribute('id','div_buslines_table_selected');
+		tbody = createTableInElt(myInfo.buslines_table_selected).tbody;
+		document.getElementsByTagName('body')[0].appendChild(myInfo.buslines_table_selected);
+	}
+
+	busline.selected = true;
+	
+	if(typeof myInfo.buslines_table_selected.list == 'undefined'){
+		myInfo.buslines_table_selected.list = [];
+	}
+	myInfo.buslines_table_selected.list.push(busline);
 	//change color
-	busline.setOptions({color: "DDDDDD"});
+	//busline.setOptions({color: "#DDDDDD"}); does not work
 	
 	//create a button:
-	button = newButton({class:"buslines_table_selected_button"});
-	button.innerHTML = this.name;
+	var button = newButton({myClass:"buslines_table_selected_button"});
+	button.innerHTML = busline.name;
 	button.setAttribute('onclick', "showUnshowBusline");
 	button.busline = busline;
 	button.shown = true;
 	
 	var cross = document.createElement('input');
-	cross.className = 'cross_button';
+	cross.className = 'cross_button_selected_busline';
 	cross.type = 'image';
 	cross.src = "data/unvalid.png";
 	cross.setAttribute('onclick',"removeBuslineFromSelected()");
 	cross.busline = busline;
 	
-	//create table:
-	if(typeof(myInfo.buslines_table_selected) == 'undefined'){
-		myInfo.buslines_table_selected = document.createElement('div');
-		tbody = createTableInElt(myInfo.buslines_table_selected).tbody;
-		getEltById('body').appendChild(myInfo.buslines_table_selected);
-	}
 	//add to the selected list:
 	var line = addLineWithOneCellInTable(tbody, {childs:[button,cross]}).line;
 	
@@ -169,20 +183,21 @@ function removeBuslineFromSelected(){
 	//on the screen
 	//if part of info do nothing:
 	var myInfo = document.getElementById('myInfo');
-	flag = false;
+	/*flag = false;
 	for(var j = 0; j < myInfo.showingList.length; j++){
 		if(myInfo.showingList[j] != null && myInfo.showingList[j].busline.name == this.name ){
 			flag = true;
 		}
-	}
-	if(flag == false){
+	}*/
+	
+	if(isInsideArray(this, myInfo.showingList) == false){
 		this.busline.setMap(null);
 	}
+	this.busline.selected = false;
 	removeNode(this.line);
 }
  
-function showBuslineOverlay(){
-	busline = this.busline;
+function showBuslineOverlay(busline){
 	
 	var options = {
 			path: busline.getPath(),
@@ -199,8 +214,8 @@ function showBuslineOverlay(){
 	map.buslineOverlay.setOptions(options);
 }
 
-function hideBuslineOverlay(){
-	if (this.busline == map.buslineOverlay.currentBusline){
+function hideBuslineOverlay(busline){
+	if (busline == map.buslineOverlay.currentBusline){
 		map.buslineOverlay.setMap(null);
 	}
 }

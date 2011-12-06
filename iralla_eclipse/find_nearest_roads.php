@@ -10,7 +10,7 @@ $grid_path_mult = bcmul($multipicador, $grid_path)/10;  //TODO why /10???? to ch
 $path_of_squares = "c:/squares2/";
 
 $request = $_POST['q'];
-$request = '{"lat":-2.1561053360208935,"lng":-79.91647949218748}';
+//$request = '{"lat":-2.1561053360208935,"lng":-79.91647949218748}';
 $request = json_decode($request);
 
 $position['lat'] = $request->lat;
