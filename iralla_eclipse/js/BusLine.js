@@ -24,30 +24,8 @@
 		
     //private:
 	busLine.addListenerOnBusLine = function(){
-		this.listenerMouseOver = gmap.event.addListener(this, 'mouseover', function(MouseEvent){
-			
-			//add a polyline with the same path but larger:
-			//BusLineOverlay(this);
-		});
-		
-		
-		/*
-		 reflexion to create a tempo before showing the table od buslines:
-		 mouseover busline =>
-		 	execute the actual showMyInfo without showing the result
-		 		(showMyInfo should be rename)
-		 	if table not already shown
-			 	if a tempo already in action and distance at the tempo from latlng > 100m 
-			 		remove the current tempo
-			 		
-			 	if not any tempo in action
-			 		execute a tempo of 500 ms
-			 			
-		 	
-		 		
-		*/
-		
-		this.showMyInfo = function(latLng){
+	
+		/*this.showMyInfo = function(latLng){
 			var myInfo = document.getElementById('myInfo');
 			clearTimeout(myInfo.idTimeOutMyInfo);
 			
@@ -113,10 +91,35 @@
 			myInfo.style.left = xx + "px";
 			myInfo.style.top = yy + "px";
 			
-			myInfo.style.display = "block";
 			this.setOptions({zIndex:999});
-		};
+		};*/
 		
+		this.storeBuslinesInShowingList = function(latLng){
+			if(typeof(myInfo.showingList) == 'undefined'){
+				myInfo.showingList = [];
+				appendAsFirstChild(myInfo, myInfo.buslines_table);
+			}
+			if(isInsideArray(this, map.showingList) === false){
+				map.showingList.push(this);
+				this.cursorPositionForShowingList  = latLng;
+			}
+			//remove all further than 50m of the current point, removed it 
+			//from the list
+			for(var i = 0; i < map.showingList.length; i++){
+				if(gmap.geometry.spherical.computeDistanceBetween(latLng, map.showingList[i].cursorPositionForShowingList) > 50){
+					map.showingList[i].setOptions({zIndex:1000});
+					map.showingList.splice(i,1);
+				};
+			}
+		}
+			
+		
+	
+		
+		this.listenerClick = gmap.event.addListener(this, 'click', function(){
+			var myInfo = document.getElementById('myInfo');
+			myInfo.style.display = "block";
+		});
 		
 		this.idOfListenerOfShowMyInfo = this.addFunctionsToListener('mouseover', this.showMyInfo, [this, "eVeNt:MouseEvent.latLng"]);
 		
