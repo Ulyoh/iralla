@@ -17,7 +17,7 @@ require_once 'tools.php';
 
 ini_set('memory_limit', '2000M');
 set_time_limit ( 100000 );
-$path_to_save = "c:/roads2";   //todebug 35
+$path_to_save = "c:/roads3";   //todebug 35
 
 if (!is_dir($path_to_save)){
 	if(!mkdir($path_to_save)){
@@ -82,7 +82,7 @@ $count = 0;
 $bdd->query("TRUNCATE TABLE bus_stations_to_bus_stations");
 $first_id_of_bus_station_to_do = 1;
 $nbr_of_bus_station_to_do = 1;
-$stop_when_count_egal = 10000;
+$stop_when_count_egal = 300;
 //bus_stations_to_bus_station2($first_id_of_bus_station_to_do, $nbr_of_bus_station_to_do, $path_to_save);
 while((bus_stations_to_bus_station2($first_id_of_bus_station_to_do, $nbr_of_bus_station_to_do, $path_to_save))
 &&($stop_when_count_egal > $count)){
