@@ -61,7 +61,7 @@ while($bus_line = $req->fetch()){
 	unset($bus_line[2]);
 	$bus_lines[]=$bus_line;
 }
-
+require_once 'close_bdd.php';
 
 echo json_encode($bus_lines);
 

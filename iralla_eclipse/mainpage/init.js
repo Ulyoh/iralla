@@ -3,13 +3,13 @@
  */
 
 var mysite = 'http://www.cortocamino.com/guayaquil/';
-var xDebugOn = true;
 
 var gmap = google.maps;
 var rutasLoaded; //TODO I think it s not in use anymore
 //var listOfFilesToLoad = [/*'troncales.xml', 'rutas.xml',*/ 'rutas_reresimplified.xml']; //'rutas.xml'
 
 function initialize() {
+	
 	rutasLoaded = false;
 	var defaultCenter = new gmap.LatLng(-2.17,-79.9);
 
@@ -75,7 +75,7 @@ function initialize() {
 		map.addBusStationsFromDb(mainBusStationsList);
 	}
 	
-	mainBusStationsList = undefined;
+	//mainBusStationsList = undefined;
 /*	var color = mainBusLinesList[0].color;
 	var path = JSON.parse(mainBusLinesList[0].path);
 	var path2 = [];
@@ -99,7 +99,7 @@ function initialize() {
 	if (mainBusLinesList.length > 0) {
 		map.addBusLinesFromDb(mainBusLinesList);
 	}
-	mainBusLinesList = undefined;
+	//mainBusLinesList = undefined;
 	
 	setupCleanLines();
 	document.getElementById('suggestionListNode').nextId = 0;
