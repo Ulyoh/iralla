@@ -79,10 +79,10 @@ $count_destruct = 0;
 
 $count = 0;
 
-$bdd->query("TRUNCATE TABLE bus_stations_to_bus_stations");
-$first_id_of_bus_station_to_do = 1;
+//$bdd->query("TRUNCATE TABLE bus_stations_to_bus_stations");
+$first_id_of_bus_station_to_do = 302;
 $nbr_of_bus_station_to_do = 1;
-$stop_when_count_egal = 300;
+$stop_when_count_egal =150 ;
 //bus_stations_to_bus_station2($first_id_of_bus_station_to_do, $nbr_of_bus_station_to_do, $path_to_save);
 while((bus_stations_to_bus_station2($first_id_of_bus_station_to_do, $nbr_of_bus_station_to_do, $path_to_save))
 &&($stop_when_count_egal > $count)){
@@ -91,5 +91,5 @@ while((bus_stations_to_bus_station2($first_id_of_bus_station_to_do, $nbr_of_bus_
 	$count++;
 }
 $total_time_min = (time() - $beginning_time) / 60;
-echo "total time: $total_time minutes\n";
+echo "total time: $total_time_min minutes\n";
 ?>
