@@ -30,6 +30,23 @@
 			//BusLineOverlay(this);
 		});
 		
+		
+		/*
+		 reflexion to create a tempo before showing the table od buslines:
+		 mouseover busline =>
+		 	execute the actual showMyInfo without showing the result
+		 		(showMyInfo should be rename)
+		 	if table not already shown
+			 	if a tempo already in action and distance at the tempo from latlng > 100m 
+			 		remove the current tempo
+			 		
+			 	if not any tempo in action
+			 		execute a tempo of 500 ms
+			 			
+		 	
+		 		
+		*/
+		
 		this.showMyInfo = function(latLng){
 			var myInfo = document.getElementById('myInfo');
 			clearTimeout(myInfo.idTimeOutMyInfo);
