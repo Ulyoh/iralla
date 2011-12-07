@@ -115,9 +115,10 @@
 	
 		
 		this.listenerClick = gmap.event.addListener(this, 'click', function(){
-			if(typeof show_buslines_table == 'undefined'){
+			if(typeof map.show_buslines_table == 'undefined'){
 				var table = createTableInElt(getEltById('show_buslines_list'));
 				map.show_buslines_table = table.tbody;
+				map.show_buslines_table.setAttribute('id', 'table_show_buslines_list');
 				map.buslines_shown = [];
 			}
 			for(var i = 0; i < map.toBeShown.length; i++){
@@ -152,75 +153,112 @@
 }
 
 function createLineForShowingListTable(table, busline){
-	//create a button:
-	var button = newButton({myClass:"buslines_table_selected_button"});
-	button.innerHTML = busline.name;
-	button.setAttribute('onclick', "showUnshowBusline");
-	button.busline = busline;
-	button.shown = true;
-	
 	//create add button
-	var keepButton = document.createElement('input');
-	keepButton.className = 'keep_button_selected_busline';
-	keepButton.type = 'image';
-	keepButton.src = "data/add.png";
-	keepButton.setAttribute('onclick',"keepBuslineToSelected()");
-	keepButton.busline = busline;
-	busline.keepButton = keepButton;
+	var addButton = document.createElement('input');
+	addButton.className = 'add_button_selected_busline';
+	addButton.type = 'image';
+	addButton.src = "data/add.png";
+	addButton.setAttribute('onclick',"addBuslineToSelected(this)");
+	addButton.busline = busline;
+	busline.addButton = addButton;
+
+	//create unshow button
+	var unShowButton = document.createElement('input');
+	unShowButton.className = 'less_button_selected_busline';
+	unShowButton.type = 'image';
+	unShowButton.src = "data/eye.png";
+	unShowButton.setAttribute('onclick',"unShowSelectedBusline(this)");
+	unShowButton.busline = busline;
+	unShowButton.style.display = "none";
+	busline.unShowButton = unShowButton;
 	
-	//create less button
-	var cancelButton = document.createElement('input');
-	cancelButton.className = 'less_button_selected_busline';
-	cancelButton.type = 'image';
-	cancelButton.src = "data/cancel.png";
-	cancelButton.setAttribute('onclick',"cancelBuslineToSelected()");
-	cancelButton.busline = busline;
-	busline.cancelButton = busline;
-	
+
+	//create show button
+	var showButton = document.createElement('input');
+	showButton.className = 'less_button_selected_busline';
+	showButton.type = 'image';
+	showButton.src = "data/hided_eye.png";
+	showButton.setAttribute('onclick',"showSelectedBusline(this)");
+	showButton.busline = busline;
+	showButton.style.display = "none";
+	busline.showButton = showButton;
+		
+	//create a div with the road name:
+	var span_road_name = document.createElement('span');
+	span_road_name.className = 'span_road_name';
+	span_road_name.innerHTML = busline.name;
+	span_road_name.busline = busline;
+	span_road_name.classCell = 'td_name_showing_buslines';
+
 	//create cross
 	var cross = document.createElement('input');
-	cross.className = 'cross_button_selected_busline';
+	cross.className = 'cross_button_busline';
 	cross.type = 'image';
 	cross.src = "data/cross.png";
-	cross.setAttribute('onclick',"removeBuslineFromSelected()");
+	cross.setAttribute('onclick',"removeBusline(this)");
 	cross.busline = busline;
+	busline.cross = cross;
+	cross.classCell = 'td_showing_buslines';
+	
+	//div_buttons
+	var div_buttons = document.createElement('div');
+	div_buttons.appendChild(addButton);
+	div_buttons.appendChild(unShowButton);
+	div_buttons.appendChild(showButton);
+	div_buttons.classCell = 'td_showing_buslines';
 	
 	//add to the selected list:
-	var tableLine = addLineWithOneCellInTable(table, {childs:[button,addButton,cancelButton,cross]}).line;
-	
-	cross.tableLine = tableLine;
+	var lineAndCell = addLineInTable(table, {childsInCells:[div_buttons,span_road_name,cross]});
+	var tableLine = lineAndCell.line;
+	cross.tableLine = lineAndCell.line;
 	tableLine.busline = busline;
 	tableLine.setAttribute('mouseover', 'showBuslineOverlay()');
 	tableLine.setAttribute('mouseout', 'hideBuslineOverlay()');
-	busline.tableLine = tableLine;
+	busline.tableLine = lineAndCell.line;
 	
-	busline.keepStatus = false;
-	this.keepButton.inline = "block";
-	this.cancelButton = "none";
+	//busline.keepStatus = false;
+	busline.selected = false;
 }
-function keepBuslineToSelected(){
-	this.keepStatus = true;
-	//show unselect button:
-	this.keepButton.inline = "none";
-	this.cancelButton = "block";
+function addBuslineToSelected(button){
+	button.busline.selected = true;
+	button.busline.addButton.style.display  = "none";
+	button.busline.unShowButton.style.display = "block";
 }
 
-function cancelBuslineToSelected(){
-	this.keepStatus = false;
-	//show keep button
-	this.keepButton.inline = "block";
-	this.cancelButton = "none";	
+function unShowSelectedBusline(button){
+	button.busline.unShowButton.style.display = "none";
+	button.busline.showButton.style.display = "block";
+	button.busline.setMap(null);
 }
 
-function removeBuslineFromSelected(){
+function showSelectedBusline(button){
+	button.busline.unShowButton.style.display = "block";
+	button.busline.showButton.style.display = "none";
+	button.busline.setMap(map);
+}
+
+function removeBusline(button){
+	var busline = button.busline;
+	//handling remove from selected and from not selected
 	for(var i = 0; i < map.shownBusLines.length; i++){
-		if(map.shownBusLines[i] == this){
+		if(map.shownBusLines[i] == busline){
+			busline.tableLine.style.display = "none";
 			busline.tableLine = undefined;
+			busline.selected = null;
+			busline.unShowButton = null;
+			busline.showButton = null;
+			busline.addButton = null;
+			busline.cross = null;
 			map.shownBusLines.splice(i,1);
+			if((typeof busline.type != 'undefined') && 
+					((busline.type == "mainLine") || (busline.type == "feeder") )){
+				return;
+			}
+			busline.setMap(null);
 		};
 	}
 }
-
+/*
 function showUnshowBusline(){
 	//TODO correler with info
 	if(this.shown ==true){
@@ -230,7 +268,7 @@ function showUnshowBusline(){
 		this.shown ==true;
 		this.setMap(map);
 	}
-}
+}*/
 
 function removeBuslineFromSelected(){
 	//on the screen

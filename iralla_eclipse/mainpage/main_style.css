@@ -170,11 +170,11 @@ tr, td{
 	margin:0;
 	border:0;
 }
-
+/*
 td{
 	width: 100%;
 }
-
+*/
 table{
 	border-collapse: collapse;
 }
@@ -225,12 +225,26 @@ span {
 .buslines_table_selected_button {
     color: red;
 }
-#div_buslines_table_selected {
-   /* background-color: #AAAAAA;*/
+#show_buslines_list {
     position: fixed;
     right: 0;
     top: 0;
+	background-color: #FFFFFF;
 }
 .cross_button_selected_busline{
-	position:top;	
+	top:0;	
+}
+
+#table_show_buslines_list tr{
+	height: 10px;
+	width: 10px;
+}
+
+.td_name_showing_buslines{
+	height:8px;
+}
+
+.td_showing_buslines{
+	height:8px;
+	weigth:8px;
 }
