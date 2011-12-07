@@ -100,20 +100,25 @@
 			if(isInsideArray(this, map.toBeShown) === false){
 				map.toBeShown.push(this);
 				this.cursorPositionToBeShownList  = latLng;
+				this.setOptions({zIndex:900});
+				showBuslineOverlay(this);
 			}
 			//remove all further than 50m of the current point, removed it 
 			//from the list
 			for(var i = 0; i < map.toBeShown.length; i++){
 				if(gmap.geometry.spherical.computeDistanceBetween(latLng, map.toBeShown[i].cursorPositionToBeShownList) > 50){
-					map.toBeShown[i].setOptions({zIndex:1000});
+					if(this.selected == true){
+						map.toBeShown[i].setOptions({zIndex:950});
+					}
+					else{
+						map.toBeShown[i].setOptions({zIndex:1000});
+					}
+					hideBuslineOverlay(map.toBeShown[i]);
 					map.toBeShown.splice(i,1);
 				};
 			}
 		};
 			
-		
-	
-		
 		this.listenerClick = gmap.event.addListener(this, 'click', function(){
 			if(typeof map.show_buslines_table == 'undefined'){
 				var table = createTableInElt(getEltById('show_buslines_list'));
@@ -122,11 +127,11 @@
 				map.buslines_shown = [];
 			}
 			for(var i = 0; i < map.toBeShown.length; i++){
-				if(isInsideArray(this, map.shownBusLines) == false){
+				//if(isInsideArray(this, map.shownBusLines) == false){
 					//create a new line:
-					createLineForShowingListTable(map.show_buslines_table, this);
-					map.shownBusLines.push(this);
-				}
+					createLineForShowingListTable(map.show_buslines_table, map.toBeShown[i]);
+					map.shownBusLines.push(map.toBeShown[i]);
+				//}
 			}
 			
 		});
@@ -293,22 +298,20 @@ function showBuslineOverlay(busline){
 	var options = {
 			path: busline.getPath(),
 			map: busline.getMap(),
-			strokeColor: '#FFFFFF',
-			strokeOpacity: 0.5,
+			strokeColor: '#000000',
+			strokeOpacity: 1,
 			strokeWeight: SubMap._busLinesArray.sizeForAZoomValue[map.getZoom()] + 5,
-			zIndex: 2000
+			zIndex: 800
 		};
-	if (typeof(map.buslineOverlay) == 'undefined') {
-		map.buslineOverlay = new gmap.Polyline();
+	if (typeof(busline.buslineOverlay) == 'undefined') {
+		busline.buslineOverlay = new gmap.Polyline();
 	}
-	map.buslineOverlay.currentBusline = busline;
-	map.buslineOverlay.setOptions(options);
+	busline.buslineOverlay.setOptions(options);
 }
 
 function hideBuslineOverlay(busline){
-	if (busline == map.buslineOverlay.currentBusline){
-		map.buslineOverlay.setMap(null);
-	}
+	busline.buslineOverlay.setMap(null);
+
 }
 
 function BusLineOverlay(busLine){
