@@ -78,11 +78,11 @@ $count_destruct = 0;
 //end to debug
 
 $count = 0;
-
+//	REFAIRE 498
 //$bdd->query("TRUNCATE TABLE bus_stations_to_bus_stations");
-$first_id_of_bus_station_to_do = 302;
+$first_id_of_bus_station_to_do = 800;
 $nbr_of_bus_station_to_do = 1;
-$stop_when_count_egal =150 ;
+$stop_when_count_egal =1000 ;
 //bus_stations_to_bus_station2($first_id_of_bus_station_to_do, $nbr_of_bus_station_to_do, $path_to_save);
 while((bus_stations_to_bus_station2($first_id_of_bus_station_to_do, $nbr_of_bus_station_to_do, $path_to_save))
 &&($stop_when_count_egal > $count)){
