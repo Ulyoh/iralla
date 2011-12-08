@@ -132,6 +132,9 @@ function SubMap(canvas, opts){
 				DbList[i].path = JSON.parse(DbList[i].path);
 			}
 			
+			if (DbList[i].path == null){
+				continue;
+			}
 			var path = [];
 			
 			for (j = 0; j < DbList[i].path.length; j++) {

@@ -105,7 +105,7 @@ function showRoad(datas){
 	var nextPath;
 	var newCircle;
 	//for each bus station of the road:
-	for (i = 1; i < busStations.length-1; i++){
+/*	for (i = 1; i < busStations.length-1; i++){
 		//make a circle around:
 		if (busStations[i] !== null){
 			center = new gmap.LatLng(parseFloat(busStations[i].lat), parseFloat(busStations[i].lng));
@@ -180,7 +180,7 @@ function showRoad(datas){
 		
 		
 	}
-	
+	*/
 	if (typeof(bs2Bss) != 'undefined'){
 		for(i = 0; i < bs2Bss.length; i++ ){
 			path = [];
