@@ -9,7 +9,9 @@ $grid_path = 0.001;
 $grid_path_mult = bcmul($multipicador, $grid_path)/10;  //TODO why /10???? to check with create grid 
 $foot_speed = 0.7; //0.7 m/s ~2.5km/h
 $bus_speed = 7; //13 m/s ~30km/h
+
 $path_of_roads = "c:/roads2/";
+
 $path_of_squares = "c:/squares2/";
 
 $max_time_lost_whitout_changing_bus_line = 600;
