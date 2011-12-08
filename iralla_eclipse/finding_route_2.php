@@ -9,7 +9,7 @@ $grid_path = 0.001;
 $grid_path_mult = bcmul($multipicador, $grid_path)/10;  //TODO why /10???? to check with create grid 
 $foot_speed = 0.7; //0.7 m/s ~2.5km/h
 $bus_speed = 7; //13 m/s ~30km/h
-$path_of_roads = "c:/roads/";
+$path_of_roads = "c:/roads2/";
 $path_of_squares = "c:/squares2/";
 
 $max_time_lost_whitout_changing_bus_line = 600;
@@ -32,7 +32,7 @@ $request = $_POST['q'];
 //$request = '{"start":{"lat":-2.126771740895112,"lng":-79.90841140747068},"end":{"lat":-2.2178584157769348,"lng":-79.90068664550779}}';
 
 
-$request = '{"start":{"lat":-2.134491162419215,"lng":-79.91630783081052},"end":{"lat":-2.2072233448863363,"lng":-79.90411987304685}}';
+//$request = '{"start":{"lat":-2.134491162419215,"lng":-79.91630783081052},"end":{"lat":-2.2072233448863363,"lng":-79.90411987304685}}';
 $request = json_decode($request);
 //TO DEBUG
 /*
