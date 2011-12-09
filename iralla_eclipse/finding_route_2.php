@@ -71,17 +71,17 @@ $interval = 5;
 $ecart_min_between_d_min_and_d_max = 6;
 $max_group_size = 15;
 
-$start_squares = array(); //nearest_squares($start, $interval, "from_square", $ecart_min_between_d_min_and_d_max, $max_group_size);
-$end_squares = array(); //nearest_squares($end, $interval, "to_square", $ecart_min_between_d_min_and_d_max, $max_group_size);
+$start_squares_by_bs_id = nearest_squares($start, $interval, "from_square", $ecart_min_between_d_min_and_d_max, $max_group_size);
+$end_squares_by_bs_id = nearest_squares($end, $interval, "to_square", $ecart_min_between_d_min_and_d_max, $max_group_size);
 
 //create false start square of length = 0
-add_bus_stations_to_end_start_squares(&$start_squares, $start_nearest_bus_stations);
-add_bus_stations_to_end_start_squares(&$end_squares, $end_nearest_bus_stations);	
+//add_bus_stations_to_end_start_squares(&$start_squares, $start_nearest_bus_stations);
+//add_bus_stations_to_end_start_squares(&$end_squares, $end_nearest_bus_stations);	
 
 //end of creation of false  start and end square
 
 $first = true;
-foreach ($start_squares as $key => $start_square){
+foreach ($start_squares_by_bs_id as $bus_station_id => $start_square){
 	if($first){
 		$start_bus_stations_string = "( start_bus_station_id = ?";
 		$first = false;
@@ -89,13 +89,15 @@ foreach ($start_squares as $key => $start_square){
 	else{
 		$start_bus_stations_string .= " OR start_bus_station_id = ?" ;
 	}
-	$values_for_mysql[] = $key;
-	$bus_stations_from_square[] = $key;
+	$values_for_mysql[] = $bus_station_id;
+	$bus_stations_from_square[] = $bus_station_id;
 }
 $start_bus_stations_string .= ")";
 
+
+
 $first = true;
-foreach ($end_squares as  $key =>  $end_square){
+foreach ($end_squares_by_bs_id as  $bus_station_id =>  $end_square){
 	if($first){
 		$end_bus_stations_string = "( end_bus_station_id = ?";
 		$first = false;
@@ -103,8 +105,8 @@ foreach ($end_squares as  $key =>  $end_square){
 	else {
 		$end_bus_stations_string .= " OR end_bus_station_id = ?" ;
 	}
-	$values_for_mysql[] = $key;
-	$bus_stations_to_square[] = $key;
+	$values_for_mysql[] = $bus_station_id;
+	$bus_stations_to_square[] = $bus_station_id;
 }
 $end_bus_stations_string .= ")";
 
@@ -131,16 +133,20 @@ $shortest_road_time = +INF;
 
 
 //php my admin ; verifier si path non enregistré ds bdd pour le first and end bus line part
-
-
-foreach($start_squares as $key => $square){
-	$square = new My_square($square[id], $square[lat], $square[lng], $square[bus_line_id], $square[bus_line_name], null, $square[time_to_bus_station], $square[time_by_foot]);
-	$start_squares[$key] = $square;
+foreach($start_squares_by_bs_id as $bs_id => $squares_by_bl_id){
+	$start_squares[$bs_id] = array();
+	foreach($squares_by_bl_id as $bl_id => $square){
+		$square = new My_square($square[id], $square[lat], $square[lng], $square[bus_line_id], $square[bus_line_name], null, $square[time_to_bus_station], $square[time_by_foot]);
+		$start_squares[$bs_id][] = $square;
+	}
 }
 
-foreach($end_squares as $key => $square){
-	$square = new My_square($square[id], $square[lat], $square[lng], $square[bus_line_id], $square[bus_line_name], null, $square[time_to_bus_station], $square[time_by_foot]);
-	$end_squares[$key] = $square;
+foreach($end_squares_by_bs_id as $bs_id => $squares_by_bl_id){
+	$end_squares[$bs_id] = array();
+	foreach($squares_by_bl_id as $bl_id => $square){
+		$square = new My_square($square[id], $square[lat], $square[lng], $square[bus_line_id], $square[bus_line_name], null, $square[time_to_bus_station], $square[time_by_foot]);
+		$end_squares[$bs_id][] = $square;
+	}
 }
 
 //todebug:
