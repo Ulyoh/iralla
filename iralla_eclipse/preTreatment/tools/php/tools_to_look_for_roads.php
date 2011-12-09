@@ -51,6 +51,7 @@ function nearest_squares($from_lat_lng, $interval, $table_name, $ecart_min_betwe
 	global $bus_speed;
 	global $grid_path_mult;
 
+	//TODO add a coeff for the lng value depending of the latitude
 	$values[0] = $from_lat_lng['lat'] - $interval;
 	$values[1] = $from_lat_lng['lat'] + $interval;
 	$values[2] = $from_lat_lng['lng'] - $interval;
@@ -116,67 +117,23 @@ function nearest_squares($from_lat_lng, $interval, $table_name, $ecart_min_betwe
 	}while(($ecart_min_between_d_min_and_d_max > ((int)$further_distance - (int)$shortest_distance) )
 			||( $squares[0] == null));
 
-	//create groups of squares of maximunm size = $max_group_size
-	$nb_of_squares = count($squares);
-	$i = 0;
-	$squares_groups = array();
-	$one_group = array();
-	$group_size = 0;
-	$previous_square = null;
-	do {
-		$square = $squares[$i];
-		if(($previous_square == null)
-				|| ((($square[id] - $previous_square[id]) == 1)
-						&& ($group_size < $max_group_size))){
-			$one_group[] = $square;
-			$group_size++;
+	//found squares to get shortest time to go to a bus station
+	$selected_squares = array();
+	foreach ($squares as $square) {
+		if($selected_squares[$square['id_of_bus_station_linked']] == null){
+			$selected_squares[$square['id_of_bus_station_linked']] = array();
 		}
-		else{
-			$squares_groups[] = $one_group;
-			$one_group = array();
-			$one_group[] = $square;
-			$group_size = 1;
-		}
-		$previous_square = $square;
-		$i++;
-	} while($i < $nb_of_squares);
-
-	//save the last one:
-	$squares_groups[] = $one_group;
-
-	//for each group keep the nearest square to $from_lat_lng
-	$nearest_squares = array();
-	$nearest_squares_by_id_of_bus_station_linked = array();
-	foreach ($squares_groups as $one_group) {
-		$shortest_distance = INF;
-		foreach($one_group as $square){
-			if($square[distance]< $shortest_distance){
-				$nearest_square = $square;
-				$shortest_distance = $nearest_square[distance];
-			}
-		}
-		$id_of_bus_station_linked = $nearest_square[id_of_bus_station_linked];
-
-		$nearest_square[time_by_foot] = $nearest_square[distance] / $foot_speed ;
-		$nearest_square[time_to_bus_station] = $nearest_square[time_to_bus_line] + $nearest_square[length] / $bus_speed;
-
-		//if the bus station linked already found from/to an other square
-		if (array_key_exists($id_of_bus_station_linked, $nearest_squares_by_id_of_bus_station_linked)){
-			///////////////////////////////////////////////////////
-			//TODO get the real distance by foot to have a better result
-			///////////////////////////////////////////////////////
-			//keep the quickest way:
-			if($nearest_square[time_to_bus_station] <
-					$nearest_squares_by_id_of_bus_station_linked[$id_of_bus_station_linked][time_to_bus_station]){
-				$nearest_squares_by_id_of_bus_station_linked[$id_of_bus_station_linked] = $nearest_square;
-			}
-		}
-		else{
-			$nearest_squares_by_id_of_bus_station_linked[$id_of_bus_station_linked] = $nearest_square;
+		
+		$square['time_to_bus_station'] = $square['distance'] / $foot_speed + $nearest_square['length'] / $bus_speed;
+		
+		if(($selected_squares[$square['id_of_bus_station_linked']][$square['bus_line_id']] == null) ||
+		 ($selected_squares[$square['id_of_bus_station_linked']][$square['bus_line_id']]['time_to_bus_station'] > $square['time_to_bus_station'] ))
+		 {
+			$selected_squares[$square['id_of_bus_station_linked']][$square['bus_line_id']] = $square;
 		}
 	}
 
-	return $nearest_squares_by_id_of_bus_station_linked;
+	return $selected_squares;
 }
 
 
