@@ -25,78 +25,10 @@
     //private:
 	busLine.addListenerOnBusLine = function(){
 	
-		/*this.showMyInfo = function(latLng){
-			var myInfo = document.getElementById('myInfo');
-			clearTimeout(myInfo.idTimeOutMyInfo);
-			
-			var position = new gmap.Point();
-			position = map.convertLatLngToPixelCoord(latLng);
-			
-			//adding the line at the top of the list
-			
-			myInfo.position = '';
-			myInfo.position = new gmap.LatLng(latLng.lat(), latLng.lng());
-
-			myInfo.innerHTML == "";
-			if(typeof(myInfo.buslines_table) == 'undefined'){
-				myInfo.buslines_table = document.createElement("div");
-				createTableInElt(myInfo.buslines_table);
-			}
-			
-			if(typeof(myInfo.showingList) == 'undefined'){
-				myInfo.showingList = [];
-				appendAsFirstChild(myInfo, myInfo.buslines_table);
-			}	
-			var flag_add = true;
-			for(var j = 0; j < myInfo.showingList.length; j++){
-				if(myInfo.showingList[j] != null && myInfo.showingList[j].busline.name == this.name ){
-					flag_add = false;
-					myInfo.showingList[j].position=new gmap.LatLng(latLng.lat(), latLng.lng());
-				}
-			}
-			var button = newButton({class:'button_buslines_list'});
-			button.innerHTML = this.name;
-			button.busline = this,
-			button.setAttribute('onclick', "selectBusline(this.busline)");
-			button.setAttribute('onmouseover', "showBuslineOverlay(this.busline)");
-			button.setAttribute('onmouseout', "hideBuslineOverlay(this.busline)");
-			
-			if(flag_add == true){
-				more = {
-					lineClass: "table_busline",
-					childs: [button]
-					};
-				var newCell = addLineWithOneCellInTable(myInfo.buslines_table.childNodes[1], more);
-	
-				myInfo.showingList.push({
-					busline:this, 
-					position:new gmap.LatLng(latLng.lat(), latLng.lng()),
-					tableLine: newCell.line
-				});	
-			}
-			//remove all further than 50m of the current point, removed it 
-			//from the list
-			for(var i = 0; i < myInfo.showingList.length; i++){
-				if(gmap.geometry.spherical.computeDistanceBetween(latLng, myInfo.showingList[i].position) > 50){
-					removeNode(myInfo.showingList[i].tableLine);
-					myInfo.showingList[i].busline.setOptions({zIndex:1000});
-					myInfo.showingList.splice(i,1);
-				};
-			}
-			
-			var position  = new gmap.Point();
-			position = map.convertLatLngToPixelCoord(latLng);
-			var xx = position.x + 5;
-			var yy = position.y - 5;
-			myInfo.style.left = xx + "px";
-			myInfo.style.top = yy + "px";
-			
-			this.setOptions({zIndex:999});
-		};*/
 		map.toBeShown = [];
 		map.shownBusLines = [];
 		this.storeBuslinesToBeShown = function(latLng){
-
+			clearTimeout(map.idTimeOutOverlay);
 			if(isInsideArray(this, map.toBeShown) === false){
 				map.toBeShown.push(this);
 				this.cursorPositionToBeShownList  = latLng;
@@ -105,7 +37,7 @@
 			}
 			//remove all further than 50m of the current point, removed it 
 			//from the list
-			for(var i = 0; i < map.toBeShown.length; i++){
+			for(var i = map.toBeShown.length - 1; i >= 0 ; i--){
 				if(gmap.geometry.spherical.computeDistanceBetween(latLng, map.toBeShown[i].cursorPositionToBeShownList) > 50){
 					if(this.selected == true){
 						map.toBeShown[i].setOptions({zIndex:950});
@@ -138,20 +70,23 @@
 		
 		this.idOfListenerOfShowMyInfo = this.addFunctionsToListener('mouseover', this.storeBuslinesToBeShown, [this, "eVeNt:MouseEvent.latLng"]);
 		
-	/*
+	
 		this.listenerMouseOut = gmap.event.addListener(this, 'mouseout', function(){
-			//map.busLineOverlay.timeout = setTimeout(function(){map.busLineOverlay.setMap(null);},500);
-			
-			map.myInfoUnableForPolyline = true;
-			var myInfo = document.getElementById("myInfo");
-			clearTimeout(myInfo.idTimeOutMyInfo);
-			myInfo.idTimeOutMyInfo = setTimeout(function(){document.getElementById("myInfo").style.display = "none";},800);
-			
-			myInfo.position
-			
-			
-			
-		});*/
+			clearTimeout(map.idTimeOutOverlay);
+			map.idTimeOutOverlay = setTimeout(function(){
+				//remove all overlays:
+				for(var i = map.toBeShown.length - 1; i >= 0 ; i--){
+					if(this.selected == true){
+						map.toBeShown[i].setOptions({zIndex:950});
+					}
+					else{
+						map.toBeShown[i].setOptions({zIndex:1000});
+					}
+					hideBuslineOverlay(map.toBeShown[i]);
+					map.toBeShown.splice(i,1);
+				}
+			},2000);
+		});
 	};
        
     return busLine;
@@ -295,18 +230,22 @@ function removeBuslineFromSelected(){
  
 function showBuslineOverlay(busline){
 	
-	var options = {
-			path: busline.getPath(),
-			map: busline.getMap(),
-			strokeColor: '#000000',
-			strokeOpacity: 1,
-			strokeWeight: SubMap._busLinesArray.sizeForAZoomValue[map.getZoom()] + 5,
-			zIndex: 800
-		};
+
 	if (typeof(busline.buslineOverlay) == 'undefined') {
+		var options = {
+				path: busline.getPath(),
+				map: busline.getMap(),
+				strokeColor: '#000000',
+				strokeOpacity: 1,
+				strokeWeight: SubMap._busLinesArray.sizeForAZoomValue[map.getZoom()] + 5,
+				zIndex: 800
+			};
 		busline.buslineOverlay = new gmap.Polyline();
+		busline.buslineOverlay.setOptions(options);
 	}
-	busline.buslineOverlay.setOptions(options);
+	else{
+		busline.buslineOverlay.setMap(map);
+	}
 }
 
 function hideBuslineOverlay(busline){
