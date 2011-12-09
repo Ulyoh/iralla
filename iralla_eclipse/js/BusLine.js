@@ -34,6 +34,9 @@
 				this.cursorPositionToBeShownList  = latLng;
 				this.setOptions({zIndex:900});
 				showBuslineOverlay(this);
+				if(typeof map.toBeShown.selected == 'undefined'){
+					map.toBeShown.selected = false;
+				}
 			}
 			//remove all further than 50m of the current point, removed it 
 			//from the list
@@ -84,6 +87,18 @@ function showBusLinesInTable(){
 		map.show_buslines_table.setAttribute('id', 'table_show_buslines_list');
 		map.buslines_shown = [];
 	}
+	//remove the ones which are not in  map.toBeShown and not selected
+	for(var i = 0; i < map.shownBusLines.length ;i++){
+		if(map.shownBusLines[i].selected == true){
+			continue;
+		}
+		if( isInArray(map.shownBusLines[i], map.toBeShown) == false ){
+			removeNode(map.shownBusLines[i].tableLine);
+			map.shownBusLines.splice(i, 1);
+		}
+	}
+	
+	
 	for(var i = 0; i < map.toBeShown.length; i++){
 		//create a new line:
 		createLineForShowingListTable(map.show_buslines_table, map.toBeShown[i]);
@@ -181,6 +196,7 @@ function removeBusline(button){
 	//handling remove from selected and from not selected
 	for(var i = 0; i < map.shownBusLines.length; i++){
 		if(map.shownBusLines[i] == busline){
+			busline.selected = false;
 			busline.tableLine.style.display = "none";
 			busline.tableLine = undefined;
 			busline.selected = null;
