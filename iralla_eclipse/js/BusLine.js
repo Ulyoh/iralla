@@ -51,22 +51,7 @@
 			}
 		};
 			
-		this.listenerClick = gmap.event.addListener(this, 'click', function(){
-			if(typeof map.show_buslines_table == 'undefined'){
-				var table = createTableInElt(getEltById('show_buslines_list'));
-				map.show_buslines_table = table.tbody;
-				map.show_buslines_table.setAttribute('id', 'table_show_buslines_list');
-				map.buslines_shown = [];
-			}
-			for(var i = 0; i < map.toBeShown.length; i++){
-				//if(isInsideArray(this, map.shownBusLines) == false){
-					//create a new line:
-					createLineForShowingListTable(map.show_buslines_table, map.toBeShown[i]);
-					map.shownBusLines.push(map.toBeShown[i]);
-				//}
-			}
-			
-		});
+		this.listenerClick = gmap.event.addListener(this, 'click', showBusLinesInTable);
 		
 		this.idOfListenerOfShowMyInfo = this.addFunctionsToListener('mouseover', this.storeBuslinesToBeShown, [this, "eVeNt:MouseEvent.latLng"]);
 		
@@ -90,6 +75,20 @@
 	};
        
     return busLine;
+}
+
+function showBusLinesInTable(){
+	if(typeof map.show_buslines_table == 'undefined'){
+		var table = createTableInElt(getEltById('show_buslines_list'));
+		map.show_buslines_table = table.tbody;
+		map.show_buslines_table.setAttribute('id', 'table_show_buslines_list');
+		map.buslines_shown = [];
+	}
+	for(var i = 0; i < map.toBeShown.length; i++){
+		//create a new line:
+		createLineForShowingListTable(map.show_buslines_table, map.toBeShown[i]);
+		map.shownBusLines.push(map.toBeShown[i]);
+	}
 }
 
 function createLineForShowingListTable(table, busline){
@@ -242,6 +241,7 @@ function showBuslineOverlay(busline){
 			};
 		busline.buslineOverlay = new gmap.Polyline();
 		busline.buslineOverlay.setOptions(options);
+		busline.buslineOverlay.listenerClick = gmap.event.addListener(busline.buslineOverlay, 'click', showBusLinesInTable);
 	}
 	else{
 		busline.buslineOverlay.setMap(map);
