@@ -71,8 +71,8 @@ $interval = 5;
 $ecart_min_between_d_min_and_d_max = 6;
 $max_group_size = 15;
 
-$start_squares = nearest_squares($start, $interval, "from_square", $ecart_min_between_d_min_and_d_max, $max_group_size);
-$end_squares = nearest_squares($end, $interval, "to_square", $ecart_min_between_d_min_and_d_max, $max_group_size);
+$start_squares = array(); //nearest_squares($start, $interval, "from_square", $ecart_min_between_d_min_and_d_max, $max_group_size);
+$end_squares = array(); //nearest_squares($end, $interval, "to_square", $ecart_min_between_d_min_and_d_max, $max_group_size);
 
 //create false start square of length = 0
 add_bus_stations_to_end_start_squares(&$start_squares, $start_nearest_bus_stations);
