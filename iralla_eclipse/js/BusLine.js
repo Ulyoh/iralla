@@ -2,6 +2,64 @@
  * @author Yoh
  */
 
+
+/*
+ * idea to get better "rendu" when showing overlay on buslines.
+ * 
+ * actual pb: not always showing all the buslines as the user should wants
+ * ie: seems that some overlay does not works but it seem to be because of
+ * resolution on the screen and / or conflict with the events of mouseover
+ * and mouse out
+ * 
+ * so: the possibly solution:
+ * for each bus lines shown on the map create an invisible overlay with a
+ * z index lower than the buslines.
+ * 
+ * put a mouseover event for each bus lines
+ * 
+ * when mouseover :
+	 * random number local
+	 * if random number global = null 
+		 * random number global = random number local
+		 * textify number
+		 * setimeout("if(random number global == "+ textify number + ") mafonction();",1);
+	
+	 * else
+	 	* set repeatflag mafunction() 
+	 	 * return
+ *
+ * mafonction()
+ 	 * get mouse position 
+	 * 	pass throw all the overlay of the map to test if detected
+	 *  they are showing and saved in map.overlayShown
+	 *  removed the previous shown ones not detected
+	 *  
+	 *  setimeout("if(repeatflag == true){repeatflag = false; mafonction();}",1);
+	 * if repeatflag to true do it again with actul mouse position
+ *
+ * 
+ * 
+ * 
+	 * put a mouseover on every other things as map and bus stations
+	 * 
+	 * 
+	 * 
+	 * 
+	 * OTHER REFLEXION fire event on polyline when mouse en bus station
+	 * 
+	 * 
+	 * 
+	 * 
+	 * showing when one bus line fired by mouseover
+	 * fire all the overlay all found are shown
+	 * 
+	 * actualise if mouvement more than 2 pixels =>mousemouve on each part
+	 * save last moment of calculation at each mousemouve event remove old 
+	 * settimeout if exist and do another one
+	 * 
+	 * remove all when mouse over map
+ */
+
  function BusLine(opts){
     var busLine = new gmap.Polyline();
 
