@@ -121,7 +121,7 @@
 					else{
 						map.toBeShown[i].setOptions({zIndex:1000});
 					}
-					toBeShown[i].timeOutToRemovedOverlay  = setTimeout("hideBuslineOverlay(map.toBeShown[" +i+ "])", 500);
+					toBeShown[i].timeOutToRemovedOverlay  = setTimeout("hideBuslineOverlay(map.toBeShown[" +i+ "])", 600);
 					map.toBeShown.splice(i,1);
 				};
 			}
@@ -138,15 +138,28 @@
 				//remove all overlays:
 				for(var i = map.toBeShown.length - 1; i >= 0 ; i--){
 					if(this.selected == true){
-						map.toBeShown[i].setOptions({zIndex:950});
+						map.toBeShown[i].setOptions({zIndex:949});
 					}
 					else{
-						map.toBeShown[i].setOptions({zIndex:1000});
+						map.toBeShown[i].setOptions({zIndex: 999});
 					}
 					hideBuslineOverlay(map.toBeShown[i]);
-					map.toBeShown.splice(i,1);
+					if(typeof map.toBeReset == 'undefined'){
+						map.toBeReset = [];
+					}
+					map.toBeReset.push(map.toBeShown.splice(i,1));
 				}
-			},1000);
+				if(map.toBeShown.length == 0){
+					while(map.toBeReset.length > 0){
+						if(this.selected == true){
+							map.toBeReset[0].setOptions({zIndex:950});
+						}
+						else{
+							map.toBeReset[0].setOptions({zIndex:1000});
+						}	
+					}
+				}
+			},600);
 		});
 	};
 	
