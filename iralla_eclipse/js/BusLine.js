@@ -58,6 +58,20 @@
 	 * settimeout if exist and do another one
 	 * 
 	 * remove all when mouse over map
+	 * 
+	 *OTHER POSSIBILITY:
+	 *after the first show, calculate every second the new showing view
+	 *
+	 *
+	 *OTHER ONE:
+	 *
+	 *when mouseover of a busline
+	 *
+	 *up all the zindex of all the busline overlay upper than the busline said 1100
+	 *when mouseover one overlay :
+	 *		show the overlay
+	 *		put its zindex to 1050
+	 *
  */
 
  function BusLine(opts){
@@ -87,6 +101,7 @@
 		map.shownBusLines = [];
 		this.storeBuslinesToBeShown = function(latLng){
 			clearTimeout(map.idTimeOutOverlay);
+			clearTimeout(this.timeOutToRemovedOverlay);
 			if(isInsideArray(this, map.toBeShown) === false){
 				map.toBeShown.push(this);
 				this.cursorPositionToBeShownList  = latLng;
@@ -96,17 +111,17 @@
 					map.toBeShown.selected = false;
 				}
 			}
-			//remove all further than 50m of the current point, removed it 
+			//remove all further than 100m of the current point, removed it 
 			//from the list
 			for(var i = map.toBeShown.length - 1; i >= 0 ; i--){
-				if(gmap.geometry.spherical.computeDistanceBetween(latLng, map.toBeShown[i].cursorPositionToBeShownList) > 50){
+				if(gmap.geometry.spherical.computeDistanceBetween(latLng, map.toBeShown[i].cursorPositionToBeShownList) > 100){
 					if(this.selected == true){
 						map.toBeShown[i].setOptions({zIndex:950});
 					}
 					else{
 						map.toBeShown[i].setOptions({zIndex:1000});
 					}
-					hideBuslineOverlay(map.toBeShown[i]);
+					toBeShown[i].timeOutToRemovedOverlay  = setTimeout("hideBuslineOverlay(map.toBeShown[" +i+ "])", 500);
 					map.toBeShown.splice(i,1);
 				};
 			}
@@ -131,10 +146,23 @@
 					hideBuslineOverlay(map.toBeShown[i]);
 					map.toBeShown.splice(i,1);
 				}
-			},2000);
+			},1000);
 		});
 	};
-       
+	
+/*	//create overlay of the busline but not set on the map yet
+	var options = {
+			path: busline.getPath(),
+			strokeColor: '#000000',
+			strokeOpacity: 1,
+			strokeWeight: SubMap._busLinesArray.sizeForAZoomValue[map.getZoom()] + 5,
+			zIndex: 800
+		};
+	busline.buslineOverlay = new gmap.Polyline();
+	busline.buslineOverlay.setOptions(options);
+	busline.buslineOverlay.listenerClick = gmap.event.addListener(busline.buslineOverlay, 'click', showBusLinesInTable);
+	busline.buslineOverlay.listenerClick = gmap.event.addListener(busline.buslineOverlay, 'mouseOver', storeBuslinesToBeShown);
+	buslineOverlay.busline = busline;*/
     return busLine;
 }
 
