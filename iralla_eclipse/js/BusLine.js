@@ -111,20 +111,31 @@
 					map.toBeShown.selected = false;
 				}
 			}
+			if(typeof map.toBeRemovedFromToBeShown == 'undefined'){
+				map.toBeRemovedFromToBeShown = [];
+			}
 			//remove all further than 100m of the current point, removed it 
 			//from the list
 			for(var i = map.toBeShown.length - 1; i >= 0 ; i--){
 				if(gmap.geometry.spherical.computeDistanceBetween(latLng, map.toBeShown[i].cursorPositionToBeShownList) > 100){
-					if(this.selected == true){
+					if(map.toBeShown[i].selected == true){
 						map.toBeShown[i].setOptions({zIndex:950});
 					}
 					else{
 						map.toBeShown[i].setOptions({zIndex:1000});
 					}
-					toBeShown[i].timeOutToRemovedOverlay  = setTimeout("hideBuslineOverlay(map.toBeShown[" +i+ "])", 600);
-					map.toBeShown.splice(i,1);
+					/*var valueToEval = "*/
+					/*toBeShown[i].timeOutToRemovedOverlay  = setTimeout(valueToEval, 600);*/
+
+
+					map.toBeRemovedFromToBeShown.push( map.toBeShown[i] );
+					map.toBeReset.push(map.toBeShown[i]);
 				};
 			}
+			if(typeof map.removeFromToBeShownRunning == 'undefined'){
+				removeFromToBeShown();
+			}
+			
 		};
 			
 		this.listenerClick = gmap.event.addListener(this, 'click', showBusLinesInTable);
@@ -137,27 +148,24 @@
 			map.idTimeOutOverlay = setTimeout(function(){
 				//remove all overlays:
 				for(var i = map.toBeShown.length - 1; i >= 0 ; i--){
-					if(this.selected == true){
+					if(map.toBeShown[i].selected == true){
 						map.toBeShown[i].setOptions({zIndex:949});
 					}
 					else{
 						map.toBeShown[i].setOptions({zIndex: 999});
 					}
-					hideBuslineOverlay(map.toBeShown[i]);
+					
 					if(typeof map.toBeReset == 'undefined'){
 						map.toBeReset = [];
 					}
-					map.toBeReset.push(map.toBeShown.splice(i,1));
-				}
-				if(map.toBeShown.length == 0){
-					while(map.toBeReset.length > 0){
-						if(this.selected == true){
-							map.toBeReset[0].setOptions({zIndex:950});
-						}
-						else{
-							map.toBeReset[0].setOptions({zIndex:1000});
-						}	
+					if(typeof map.toBeRemovedFromToBeShown == 'undefined'){
+						map.toBeRemovedFromToBeShown = [];
 					}
+					map.toBeRemovedFromToBeShown.push(map.toBeShown[i]);
+					map.toBeReset.push(map.toBeShown[i]);
+				}
+				if(typeof map.removeFromToBeShownRunning == 'undefined'){
+					removeFromToBeShown();
 				}
 			},600);
 		});
@@ -179,6 +187,58 @@
     return busLine;
 }
 
+ //TODO : found why it is necessary to use relaunchIt
+ function relaunchIt(){
+	 if(typeof map.lastRandom == 'undefined'){
+		 map.lastRandom = 0;
+	 }
+	 if(map.lastRandom == map.currentRandom){
+		 setTimeout("removeFromToBeShown();",1);
+	 }
+	 map.lastRandom =  map.currentRandom;
+	 setTimeout("relaunchIt()", 5000);
+	
+ }
+ 
+function removeFromToBeShown(){
+	map.currentRandom = Math.random();
+	map.removeFromToBeShownRunning = true;
+		var toRemove = map.toBeRemovedFromToBeShown.slice(0);
+		var initialLength = toRemove.length;
+		//remive the value saved in toREmoved from map.toBeRemovedFromToBeShown:
+		for(var j = 0; j < initialLength; j++){
+			map.toBeRemovedFromToBeShown.shift();
+		}
+		while(toRemove.length > 0){
+			for(var j = map.toBeShown.length-1; j >= 0; j--){
+				if(map.toBeShown[j] == toRemove[0] ){
+					hideBuslineOverlay(map.toBeShown[j]);
+					map.toBeShown.splice(j,1);
+				}
+			}
+			toRemove.shift();
+		}
+		if(map.toBeShown.length == 0){
+			while(map.toBeReset.length > 0){
+				if(this.selected == true){
+					map.toBeReset[0].setOptions({zIndex:950});
+				}
+				else{
+					map.toBeReset[0].setOptions({zIndex:1000});
+				}
+				map.toBeReset.shift();
+			}
+		}
+		
+		
+		if(map.toBeRemovedFromToBeShown.length > 0){
+			removeFromToBeShown();
+		}
+		else{
+			setTimeout("removeFromToBeShown()", 1000);
+		}
+}
+ 
 function showBusLinesInTable(){
 	if(typeof map.show_buslines_table == 'undefined'){
 		var table = createTableInElt(getEltById('show_buslines_list'));
