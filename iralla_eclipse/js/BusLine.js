@@ -97,6 +97,30 @@
     //private:
 	busLine.addListenerOnBusLine = function(){
 	
+			//IDEA TODO: (if necesary)
+		/*
+		 * creer un overlay transparent de chaque route pour le traitement des 
+		 * events (non necessaire)
+		 * 
+		 * 
+		 * if mouseover busline: 
+		 * 		zIndex = 900
+		 * 		affiche "under overlay of the busline" (showBuslineOverlay(this);)
+		 * 		busline.timeMouseOver = date.getTime();
+		 * 		garder la busline ds map.toBeShown, if not exists
+		 * 
+		 * 
+		 * on timeout ou mouseMove:
+		 * 		couper coller les elts de map.toBeShown ds toShowList 
+		 * 		pour chaque busline de toShowList
+		 * 		remonter le zIndex (engendrera un mouseover) a 1000 ou 950
+		 * 		pour chaque busline de toShowList
+		 * 			if zIndex = 1000
+		 * 				hide the "under overlay of the busline" (unShowBuslineOverlay(this);)
+		 * 				remove it from map.toBeShown
+		 * 
+		 */
+		
 		map.toBeShown = [];
 		map.shownBusLines = [];
 		this.storeBuslinesToBeShown = function(latLng){
