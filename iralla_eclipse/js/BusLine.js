@@ -120,46 +120,22 @@
 		 * 				remove it from map.toBeShown
 		 * 
 		 */
-		
+
 		map.toBeShown = [];
 		map.shownBusLines = [];
+		//map.currentzIndex = 800;
 		this.storeBuslinesToBeShown = function(latLng){
-			clearTimeout(map.idTimeOutOverlay);
-			clearTimeout(this.timeOutToRemovedOverlay);
-			if(isInsideArray(this, map.toBeShown) === false){
+			this.setOptions({zIndex: 900});
+			showBuslineOverlay(this);
+			if(typeof this.selected == 'undefined'){
+				this.selected = false;
+			}
+			if(isInArray(this, map.toBeShown) == false){
 				map.toBeShown.push(this);
-				this.cursorPositionToBeShownList  = latLng;
-				this.setOptions({zIndex:900});
-				showBuslineOverlay(this);
-				if(typeof map.toBeShown.selected == 'undefined'){
-					map.toBeShown.selected = false;
-				}
 			}
-			if(typeof map.toBeRemovedFromToBeShown == 'undefined'){
-				map.toBeRemovedFromToBeShown = [];
+			if(typeof map.eventRemoveFromToBeShownRunning == 'undefined'){
+				map.removeFromToBeShownRunning = gmap.event.addListener(map, 'mouseover', removeFromToBeShown);
 			}
-			//remove all further than 100m of the current point, removed it 
-			//from the list
-			for(var i = map.toBeShown.length - 1; i >= 0 ; i--){
-				if(gmap.geometry.spherical.computeDistanceBetween(latLng, map.toBeShown[i].cursorPositionToBeShownList) > 100){
-					if(map.toBeShown[i].selected == true){
-						map.toBeShown[i].setOptions({zIndex:950});
-					}
-					else{
-						map.toBeShown[i].setOptions({zIndex:1000});
-					}
-					/*var valueToEval = "*/
-					/*toBeShown[i].timeOutToRemovedOverlay  = setTimeout(valueToEval, 600);*/
-
-
-					map.toBeRemovedFromToBeShown.push( map.toBeShown[i] );
-					map.toBeReset.push(map.toBeShown[i]);
-				};
-			}
-			if(typeof map.removeFromToBeShownRunning == 'undefined'){
-				removeFromToBeShown();
-			}
-			
 		};
 			
 		this.listenerClick = gmap.event.addListener(this, 'click', showBusLinesInTable);
@@ -167,32 +143,7 @@
 		this.idOfListenerOfShowMyInfo = this.addFunctionsToListener('mouseover', this.storeBuslinesToBeShown, [this, "eVeNt:MouseEvent.latLng"]);
 		
 	
-		this.listenerMouseOut = gmap.event.addListener(this, 'mouseout', function(){
-			clearTimeout(map.idTimeOutOverlay);
-			map.idTimeOutOverlay = setTimeout(function(){
-				//remove all overlays:
-				for(var i = map.toBeShown.length - 1; i >= 0 ; i--){
-					if(map.toBeShown[i].selected == true){
-						map.toBeShown[i].setOptions({zIndex:949});
-					}
-					else{
-						map.toBeShown[i].setOptions({zIndex: 999});
-					}
-					
-					if(typeof map.toBeReset == 'undefined'){
-						map.toBeReset = [];
-					}
-					if(typeof map.toBeRemovedFromToBeShown == 'undefined'){
-						map.toBeRemovedFromToBeShown = [];
-					}
-					map.toBeRemovedFromToBeShown.push(map.toBeShown[i]);
-					map.toBeReset.push(map.toBeShown[i]);
-				}
-				if(typeof map.removeFromToBeShownRunning == 'undefined'){
-					removeFromToBeShown();
-				}
-			},600);
-		});
+		
 	};
 	
 /*	//create overlay of the busline but not set on the map yet
@@ -223,44 +174,40 @@
 	 setTimeout("relaunchIt()", 5000);
 	
  }
- 
+ /*
+	 * 		couper coller les elts de map.toBeShown ds toShowList 
+	 * 		pour chaque busline de toShowList
+	 * 		remonter le zIndex a 1000 ou 950 (engendrera un mouseover)
+	 * 		pour chaque busline de toShowList
+	 * 			if zIndex = 1000
+	 * 				hide the "under overlay of the busline" (unShowBuslineOverlay(this);)
+	 * 				remove it from map.toBeShown*/
 function removeFromToBeShown(){
-	map.currentRandom = Math.random();
-	map.removeFromToBeShownRunning = true;
-		var toRemove = map.toBeRemovedFromToBeShown.slice(0);
-		var initialLength = toRemove.length;
-		//remive the value saved in toREmoved from map.toBeRemovedFromToBeShown:
-		for(var j = 0; j < initialLength; j++){
-			map.toBeRemovedFromToBeShown.shift();
-		}
-		while(toRemove.length > 0){
-			for(var j = map.toBeShown.length-1; j >= 0; j--){
-				if(map.toBeShown[j] == toRemove[0] ){
-					hideBuslineOverlay(map.toBeShown[j]);
-					map.toBeShown.splice(j,1);
-				}
-			}
-			toRemove.shift();
-		}
-		if(map.toBeShown.length == 0){
-			while(map.toBeReset.length > 0){
-				if(this.selected == true){
-					map.toBeReset[0].setOptions({zIndex:950});
-				}
-				else{
-					map.toBeReset[0].setOptions({zIndex:1000});
-				}
-				map.toBeReset.shift();
-			}
-		}
-		
-		
-		if(map.toBeRemovedFromToBeShown.length > 0){
-			removeFromToBeShown();
+	var toShowQuestion = [];
+	while( map.toBeShown.length > 0){
+		toShowQuestion.push(map.toBeShown.shift());
+	}
+	for(var i = 0; i < toShowQuestion.length; i++){
+		hideBuslineOverlay(toShowQuestion[i]);
+		if(toShowQuestion[i].selected == true){
+			toShowQuestion[i].setOptions({zIndex:950});
 		}
 		else{
-			setTimeout("removeFromToBeShown()", 1000);
+			toShowQuestion[i].setOptions({zIndex:1000});
 		}
+	}
+	
+	/*for(var i = 0; i < toShowQuestion.length; i++){
+		if(toShowQuestion[i].zIndex > 900){
+			hideBuslineOverlay(toShowQuestion[i]);
+		}
+	}*/
+	//TODO handle the map.currentzIndex this is not sufisante:
+	/*if (map.currentzIndex > 900){
+		map.currentzIndex = 0;
+	}*/
+	
+	//setTimeout("removeFromToBeShown()", 5000);
 }
  
 function showBusLinesInTable(){
@@ -434,7 +381,7 @@ function showBuslineOverlay(busline){
 				path: busline.getPath(),
 				map: busline.getMap(),
 				strokeColor: '#000000',
-				strokeOpacity: 1,
+				strokeOpacity: 0.2,
 				strokeWeight: SubMap._busLinesArray.sizeForAZoomValue[map.getZoom()] + 5,
 				zIndex: 800
 			};

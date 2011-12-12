@@ -174,7 +174,7 @@ function SubMap(canvas, opts){
 			
 			busLineBuffer.setOptions({
 				map: this,
-				strokeOpacity: 0.5,
+				strokeOpacity: 1,
 				strokeWeight: subMap.sizeDependingOnZoom[subMap.getZoom()],
 				strokeColor: color,
 				path: path,
