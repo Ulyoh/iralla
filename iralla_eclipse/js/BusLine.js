@@ -123,8 +123,10 @@
 
 		map.toBeShown = [];
 		map.shownBusLines = [];
+		map.isOnABusLine = 0;
 		//map.currentzIndex = 800;
 		this.storeBuslinesToBeShown = function(latLng){
+			map.rectForMouseOver.setMap(map);
 			this.setOptions({zIndex: 900});
 			showBuslineOverlay(this);
 			if(typeof this.selected == 'undefined'){
@@ -134,10 +136,20 @@
 				map.toBeShown.push(this);
 			}
 			if(typeof map.eventRemoveFromToBeShownRunning == 'undefined'){
-				map.removeFromToBeShownRunning = gmap.event.addListener(map, 'mouseover', removeFromToBeShown);
+				//map.removeFromToBeShownRunning = gmap.event.addListener(map, 'mouseover', removeFromToBeShown);
+				gmap.event.addListener(map.rectForMouseOver, 'mouseover', removeFromToBeShown);
 			}
+			//map.isOnABusLine++;
 		};
 			
+		/*gmap.event.addListener(this, 'mouseout', function(){
+			map.isOnABusLine--;
+			if(map.isOnABusLine == 0){
+				removeFromToBeShown();
+			}
+			});
+		*/
+		
 		this.listenerClick = gmap.event.addListener(this, 'click', showBusLinesInTable);
 		
 		this.idOfListenerOfShowMyInfo = this.addFunctionsToListener('mouseover', this.storeBuslinesToBeShown, [this, "eVeNt:MouseEvent.latLng"]);
@@ -162,18 +174,6 @@
     return busLine;
 }
 
- //TODO : found why it is necessary to use relaunchIt
- function relaunchIt(){
-	 if(typeof map.lastRandom == 'undefined'){
-		 map.lastRandom = 0;
-	 }
-	 if(map.lastRandom == map.currentRandom){
-		 setTimeout("removeFromToBeShown();",1);
-	 }
-	 map.lastRandom =  map.currentRandom;
-	 setTimeout("relaunchIt()", 5000);
-	
- }
  /*
 	 * 		couper coller les elts de map.toBeShown ds toShowList 
 	 * 		pour chaque busline de toShowList
@@ -183,6 +183,7 @@
 	 * 				hide the "under overlay of the busline" (unShowBuslineOverlay(this);)
 	 * 				remove it from map.toBeShown*/
 function removeFromToBeShown(){
+	map.rectForMouseOver.setMap(null);
 	var toShowQuestion = [];
 	while( map.toBeShown.length > 0){
 		toShowQuestion.push(map.toBeShown.shift());
