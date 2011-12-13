@@ -3,77 +3,6 @@
  */
 
 
-/*
- * idea to get better "rendu" when showing overlay on buslines.
- * 
- * actual pb: not always showing all the buslines as the user should wants
- * ie: seems that some overlay does not works but it seem to be because of
- * resolution on the screen and / or conflict with the events of mouseover
- * and mouse out
- * 
- * so: the possibly solution:
- * for each bus lines shown on the map create an invisible overlay with a
- * z index lower than the buslines.
- * 
- * put a mouseover event for each bus lines
- * 
- * when mouseover :
-	 * random number local
-	 * if random number global = null 
-		 * random number global = random number local
-		 * textify number
-		 * setimeout("if(random number global == "+ textify number + ") mafonction();",1);
-	
-	 * else
-	 	* set repeatflag mafunction() 
-	 	 * return
- *
- * mafonction()
- 	 * get mouse position 
-	 * 	pass throw all the overlay of the map to test if detected
-	 *  they are showing and saved in map.overlayShown
-	 *  removed the previous shown ones not detected
-	 *  
-	 *  setimeout("if(repeatflag == true){repeatflag = false; mafonction();}",1);
-	 * if repeatflag to true do it again with actul mouse position
- *
- * 
- * 
- * 
-	 * put a mouseover on every other things as map and bus stations
-	 * 
-	 * 
-	 * 
-	 * 
-	 * OTHER REFLEXION fire event on polyline when mouse en bus station
-	 * 
-	 * 
-	 * 
-	 * 
-	 * showing when one bus line fired by mouseover
-	 * fire all the overlay all found are shown
-	 * 
-	 * actualise if mouvement more than 2 pixels =>mousemouve on each part
-	 * save last moment of calculation at each mousemouve event remove old 
-	 * settimeout if exist and do another one
-	 * 
-	 * remove all when mouse over map
-	 * 
-	 *OTHER POSSIBILITY:
-	 *after the first show, calculate every second the new showing view
-	 *
-	 *
-	 *OTHER ONE:
-	 *
-	 *when mouseover of a busline
-	 *
-	 *up all the zindex of all the busline overlay upper than the busline said 1100
-	 *when mouseover one overlay :
-	 *		show the overlay
-	 *		put its zindex to 1050
-	 *
- */
-
  function BusLine(opts){
     var busLine = new gmap.Polyline();
 
@@ -96,30 +25,6 @@
 		
     //private:
 	busLine.addListenerOnBusLine = function(){
-	
-			//IDEA TODO: (if necesary)
-		/*
-		 * creer un overlay transparent de chaque route pour le traitement des 
-		 * events (non necessaire)
-		 * 
-		 * 
-		 * if mouseover busline: 
-		 * 		zIndex = 900
-		 * 		affiche "under overlay of the busline" (showBuslineOverlay(this);)
-		 * 		busline.timeMouseOver = date.getTime();
-		 * 		garder la busline ds map.toBeShown, if not exists
-		 * 
-		 * 
-		 * on timeout ou mouseMove:
-		 * 		couper coller les elts de map.toBeShown ds toShowList 
-		 * 		pour chaque busline de toShowList
-		 * 		remonter le zIndex (engendrera un mouseover) a 1000 ou 950
-		 * 		pour chaque busline de toShowList
-		 * 			if zIndex = 1000
-		 * 				hide the "under overlay of the busline" (unShowBuslineOverlay(this);)
-		 * 				remove it from map.toBeShown
-		 * 
-		 */
 
 		map.toBeShown = [];
 		map.shownBusLines = [];
@@ -139,49 +44,17 @@
 				//map.removeFromToBeShownRunning = gmap.event.addListener(map, 'mouseover', removeFromToBeShown);
 				gmap.event.addListener(map.rectForMouseOver, 'mouseover', removeFromToBeShown);
 			}
-			//map.isOnABusLine++;
 		};
-			
-		/*gmap.event.addListener(this, 'mouseout', function(){
-			map.isOnABusLine--;
-			if(map.isOnABusLine == 0){
-				removeFromToBeShown();
-			}
-			});
-		*/
 		
 		this.listenerClick = gmap.event.addListener(this, 'click', showBusLinesInTable);
 		
 		this.idOfListenerOfShowMyInfo = this.addFunctionsToListener('mouseover', this.storeBuslinesToBeShown, [this, "eVeNt:MouseEvent.latLng"]);
 		
-	
-		
 	};
 	
-/*	//create overlay of the busline but not set on the map yet
-	var options = {
-			path: busline.getPath(),
-			strokeColor: '#000000',
-			strokeOpacity: 1,
-			strokeWeight: SubMap._busLinesArray.sizeForAZoomValue[map.getZoom()] + 5,
-			zIndex: 800
-		};
-	busline.buslineOverlay = new gmap.Polyline();
-	busline.buslineOverlay.setOptions(options);
-	busline.buslineOverlay.listenerClick = gmap.event.addListener(busline.buslineOverlay, 'click', showBusLinesInTable);
-	busline.buslineOverlay.listenerClick = gmap.event.addListener(busline.buslineOverlay, 'mouseOver', storeBuslinesToBeShown);
-	buslineOverlay.busline = busline;*/
     return busLine;
 }
 
- /*
-	 * 		couper coller les elts de map.toBeShown ds toShowList 
-	 * 		pour chaque busline de toShowList
-	 * 		remonter le zIndex a 1000 ou 950 (engendrera un mouseover)
-	 * 		pour chaque busline de toShowList
-	 * 			if zIndex = 1000
-	 * 				hide the "under overlay of the busline" (unShowBuslineOverlay(this);)
-	 * 				remove it from map.toBeShown*/
 function removeFromToBeShown(){
 	map.rectForMouseOver.setMap(null);
 	var toShowQuestion = [];
@@ -197,18 +70,6 @@ function removeFromToBeShown(){
 			toShowQuestion[i].setOptions({zIndex:1000});
 		}
 	}
-	
-	/*for(var i = 0; i < toShowQuestion.length; i++){
-		if(toShowQuestion[i].zIndex > 900){
-			hideBuslineOverlay(toShowQuestion[i]);
-		}
-	}*/
-	//TODO handle the map.currentzIndex this is not sufisante:
-	/*if (map.currentzIndex > 900){
-		map.currentzIndex = 0;
-	}*/
-	
-	//setTimeout("removeFromToBeShown()", 5000);
 }
  
 function showBusLinesInTable(){
@@ -375,7 +236,6 @@ function removeBuslineFromSelected(){
 }
  
 function showBuslineOverlay(busline){
-	
 
 	if (typeof(busline.buslineOverlay) == 'undefined') {
 		var options = {
@@ -398,52 +258,4 @@ function showBuslineOverlay(busline){
 function hideBuslineOverlay(busline){
 	busline.buslineOverlay.setMap(null);
 
-}
-
-function BusLineOverlay(busLine){
-
-	var options = {
-		path: busLine.getPath(),
-		map: busLine.getMap(),
-		strokeColor: '#FFFFFF',
-		strokeOpacity: 0.5,
-		strokeWeight: SubMap._busLinesArray.sizeForAZoomValue[map.getZoom()] + 5,
-		zIndex: 2000
-	};
-	
-	if (typeof(map.busLineOverlay) == 'undefined') {
-		map.busLineOverlay = new gmap.Polyline(options);
-		
-		map.busLineOverlay.listenerClick = google.maps.event.addListener(map.busLineOverlay, 'click', function(MouseEvent){
-		
-			var position = new gmap.Point();
-			position = map.convertLatLngToPixelCoord(MouseEvent.latLng);
-			var myInfo = document.getElementById('myInfo');
-			myInfo.innerHTML = map.busLineOverlay.busLine.name;
-			myInfo.style.display = "block";
-			var xx = position.x + 5;
-			var yy = position.y - 5;
-			myInfo.style.left = xx + "px";
-			myInfo.style.top = yy + "px";
-		});
-		
-		map.busLineOverlay.listenerMouseOut = google.maps.event.addListener(map.busLineOverlay, 'mouseout', function(MouseEvent){
-			map.busLineOverlay.timeout = setTimeout(function(){map.busLineOverlay.setMap(null);},500);			
-			
-			map.myInfoUnableForPolyline = true;
-			var myInfo = document.getElementById("myInfo");
-			clearTimeout(myInfo.idTimeOutMyInfo);
-			myInfo.idTimeOutMyInfo = setTimeout(function(){document.getElementById("myInfo").style.display = "none";},2000);
-		});
-		
-		map.busLineOverlay.listenerMouseOver = google.maps.event.addListener(map.busLineOverlay, 'mouseover', function(MouseEvent){
-			clearTimeout(map.busLineOverlay.timeout);
-		});
-	}
-	else {
-		clearTimeout(map.busLineOverlay.timeout);
-		clearTimeout(getEltById("myInfo") .idTimeOutMyInfo);
-		map.busLineOverlay.setOptions(options);
-	}
-	map.busLineOverlay.busLine = busLine;
 }
