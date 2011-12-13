@@ -25,23 +25,34 @@
 		
     //private:
 	busLine.addListenerOnBusLine = function(){
-
-		//map.currentzIndex = 800;
-		this.storeBuslinesToBeShown = function(latLng){
+		
+		//create a polyline copy of the busline to handle the events:
+		
+		this.overlayForEvent = new gmap.Polyline({
+			path: this.getPath(),
+			clickable: true,
+			map: map,
+			strokeColor: "#FFFFFF",
+			strokeOpacity: 0,
+			strokeWeight: SubMap._busLinesArray.sizeForAZoomValue[map.getZoom()],
+			zIndex: 1000
+		});
+		
+		this.overlayForEvent.storeBuslinesToBeShown = function(latLng, that){
 			map.rectForMouseOver.setMap(map);
-			this.setOptions({zIndex: 900});
-			showBuslineOverlay(this);
+			that.overlayForEvent.setOptions({zIndex: 900});
+			showBuslineOverlay(that);
 			if(typeof this.selected == 'undefined'){
-				this.selected = false;
+				that.selected = false;
 			}
-			if(isInArray(this, map.toBeShown) == false){
-				map.toBeShown.push(this);
+			if(isInArray(that, map.toBeShown) == false){
+				map.toBeShown.push(that);
 			}
 		};
 		
-		this.listenerClick = gmap.event.addListener(this, 'click', showBusLinesInTable);
+		this.overlayForEvent.listenerClick = gmap.event.addListener(this.overlayForEvent, 'click', showBusLinesInTable);
 		
-		this.idOfListenerOfShowMyInfo = this.addFunctionsToListener('mouseover', this.storeBuslinesToBeShown, [this, "eVeNt:MouseEvent.latLng"]);
+		this.idOfListenerOfShowMyInfo = this.overlayForEvent.addFunctionsToListener('mouseover', this.overlayForEvent.storeBuslinesToBeShown, [this.overlayForEvent, "eVeNt:MouseEvent.latLng", this]);
 		
 	};
 	
@@ -57,10 +68,10 @@ function removeFromToBeShown(){
 	for(var i = 0; i < toShowQuestion.length; i++){
 		hideBuslineOverlay(toShowQuestion[i]);
 		if(toShowQuestion[i].selected == true){
-			toShowQuestion[i].setOptions({zIndex:950});
+			toShowQuestion[i].overlayForEvent.setOptions({zIndex:950});
 		}
 		else{
-			toShowQuestion[i].setOptions({zIndex:1000});
+			toShowQuestion[i].overlayForEvent.setOptions({zIndex:1000});
 		}
 	}
 }
@@ -237,7 +248,7 @@ function showBuslineOverlay(busline){
 				strokeColor: '#000000',
 				strokeOpacity: 0.5,
 				strokeWeight: Math.abs(SubMap._busLinesArray.sizeForAZoomValue[map.getZoom()]/2),
-				zIndex: 1100
+				zIndex: 800
 			};
 		busline.buslineOverlay = new gmap.Polyline();
 		busline.buslineOverlay.setOptions(options);

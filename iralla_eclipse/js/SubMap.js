@@ -183,7 +183,7 @@ function SubMap(canvas, opts){
 				strokeWeight: subMap.sizeDependingOnZoom[subMap.getZoom()],
 				strokeColor: color,
 				path: path,
-				zIndex: 1000
+				zIndex: 100
 			});
 			
 			busLineBuffer.DbList = DbList[i];
