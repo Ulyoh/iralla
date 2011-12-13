@@ -150,7 +150,7 @@ function createLineForShowingListTable(table, busline){
 	trash.className = 'trash_button_busline';
 	trash.type = 'image';
 	trash.src = "data/trash.png";
-	trash.setAttribute('onclick',"removeBusline(this)");
+	trash.setAttribute('onclick',"removeBuslineFromButton(this)");
 	trash.busline = busline;
 	busline.trash = trash;
 	trash.classCell = 'td_showing_buslines';
@@ -192,8 +192,7 @@ function showSelectedBusline(button){
 	button.busline.setMap(map);
 }
 
-function removeBusline(button){
-	var busline = button.busline;
+function removeBusline(busline){
 	//handling remove from selected and from not selected
 	for(var i = 0; i < map.shownBusLines.length; i++){
 		if(map.shownBusLines[i] == busline){
@@ -215,6 +214,11 @@ function removeBusline(button){
 			busline.setMap(null);
 		};
 	}
+}
+
+function removeBuslineFromButton(button){
+	var busline = button.busline;
+	removeBusline(busline);
 }
 /*
 function showUnshowBusline(){
