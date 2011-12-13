@@ -277,3 +277,5 @@ function isInsideArray(elt, array){
 	}
 	return false;
 }
+
+isInArray = isInsideArray;

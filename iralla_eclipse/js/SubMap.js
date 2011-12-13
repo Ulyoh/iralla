@@ -117,6 +117,16 @@ function SubMap(canvas, opts){
 		var j = 0;
 		var nameList = [];
 		var latAndLng;
+
+		subMap.setSizeOfBusLinesDependingOnZoomLevel({
+			11: 7,
+			12: 8,
+			13: 9,
+			14: 10,
+			15: 11,
+			16: 14,
+			17: 16
+		});
 		
 		for (var i = 0; i < DbList.length; i++) {
 			/*	
@@ -167,11 +177,11 @@ function SubMap(canvas, opts){
 			
 			busLineBuffer.setOptions({
 				map: this,
-				strokeOpacity: 0.5,
-				strokeWeight: 3,
+				strokeOpacity: 1,
+				strokeWeight: subMap.sizeDependingOnZoom[subMap.getZoom()],
 				strokeColor: color,
 				path: path,
-				zIndex: 10
+				zIndex: 1000
 			});
 			
 			busLineBuffer.DbList = DbList[i];
@@ -191,15 +201,7 @@ function SubMap(canvas, opts){
 			}
 		}
 		
-		subMap.setSizeOfBusLinesDependingOnZoomLevel({
-			11: 3,
-			12: 4,
-			13: 5,
-			14: 6,
-			15: 7,
-			16: 10,
-			17: 12
-		});
+
 		
 		subMap.enableSizeDependingOnZoom(true);
 	};
