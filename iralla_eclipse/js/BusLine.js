@@ -26,9 +26,6 @@
     //private:
 	busLine.addListenerOnBusLine = function(){
 
-		map.toBeShown = [];
-		map.shownBusLines = [];
-		map.isOnABusLine = 0;
 		//map.currentzIndex = 800;
 		this.storeBuslinesToBeShown = function(latLng){
 			map.rectForMouseOver.setMap(map);
@@ -39,10 +36,6 @@
 			}
 			if(isInArray(this, map.toBeShown) == false){
 				map.toBeShown.push(this);
-			}
-			if(typeof map.eventRemoveFromToBeShownRunning == 'undefined'){
-				//map.removeFromToBeShownRunning = gmap.event.addListener(map, 'mouseover', removeFromToBeShown);
-				gmap.event.addListener(map.rectForMouseOver, 'mouseover', removeFromToBeShown);
 			}
 		};
 		

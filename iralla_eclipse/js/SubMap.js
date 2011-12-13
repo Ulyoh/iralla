@@ -111,6 +111,11 @@ function SubMap(canvas, opts){
 		}
 	};
 	
+	//init for handling overlays on buslines:
+	subMap.toBeShown = [];
+	subMap.shownBusLines = [];
+	subMap.isOnABusLine = 0;
+	
 	subMap.addBusLinesFromDb = function(DbList){
 
 		var busLineBuffer;

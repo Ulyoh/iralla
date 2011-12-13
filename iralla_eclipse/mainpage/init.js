@@ -33,7 +33,7 @@ function initialize() {
     
     map = new SubMap(document.getElementById("map_canvas"), myOptions);
 	
-    //set rectangle on the map to get the mouse over event for showing overlays on bulsines:
+    //set rectangle on the map to get the mouse over event for showing overlays on buslines:
     map.rectForMouseOver = new gmap.Rectangle({
     	bounds: new gmap.LatLngBounds(new gmap.LatLng(-3,-81), new gmap.LatLng(-1,-78)),
     	clickable: true,
@@ -42,7 +42,8 @@ function initialize() {
     	strokeWeight: 1,
     	zIndex:1
     });
-    
+
+	gmap.event.addListener(map.rectForMouseOver, 'mouseover', removeFromToBeShown);
     
 	//center the map for the zoomMin
 	
