@@ -242,16 +242,17 @@ function showBuslineOverlay(busline){
 				path: busline.getPath(),
 				map: busline.getMap(),
 				strokeColor: '#000000',
-				strokeOpacity: 0.2,
-				strokeWeight: SubMap._busLinesArray.sizeForAZoomValue[map.getZoom()] + 5,
-				zIndex: 800
+				strokeOpacity: 0.5,
+				strokeWeight: Math.abs(SubMap._busLinesArray.sizeForAZoomValue[map.getZoom()]/2),
+				zIndex: 1100
 			};
 		busline.buslineOverlay = new gmap.Polyline();
 		busline.buslineOverlay.setOptions(options);
 		busline.buslineOverlay.listenerClick = gmap.event.addListener(busline.buslineOverlay, 'click', showBusLinesInTable);
 	}
 	else{
-		busline.buslineOverlay.setMap(map);
+		busline.buslineOverlay.setOptions({map:map, strokeWeight: Math.abs(SubMap._busLinesArray.sizeForAZoomValue[map.getZoom()]/2)});
+		//busline.buslineOverlay.setMap(map);
 	}
 }
 

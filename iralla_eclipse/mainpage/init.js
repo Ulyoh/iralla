@@ -38,7 +38,7 @@ function initialize() {
     	bounds: new gmap.LatLngBounds(new gmap.LatLng(-3,-81), new gmap.LatLng(-1,-78)),
     	clickable: true,
     	fillColor: "#DDDDDD",
-    	fillOpacity: 0.5,
+    	fillOpacity: 0,
     	strokeWeight: 1,
     	zIndex:1
     });
