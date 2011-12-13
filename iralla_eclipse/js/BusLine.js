@@ -94,6 +94,7 @@ function showBusLinesInTable(){
 		}
 	}
 	
+	//add the ones in map.toBeShown
 	for(var i = 0; i < map.toBeShown.length; i++){
 		if( isInArray(map.toBeShown[i], map.shownBusLines) == false ){
 			//create a new line:
@@ -101,6 +102,9 @@ function showBusLinesInTable(){
 			map.shownBusLines.push(map.toBeShown[i]);
 		}
 	}
+	
+	//add a line to remove the others rutas if necessary:
+	
 }
 
 function createLineForShowingListTable(table, busline){
@@ -193,6 +197,8 @@ function removeBusline(button){
 	//handling remove from selected and from not selected
 	for(var i = 0; i < map.shownBusLines.length; i++){
 		if(map.shownBusLines[i] == busline){
+			busline.overlayForEvent.setMap(null);
+			hideBuslineOverlay(busline);
 			busline.selected = false;
 			busline.tableLine.style.display = "none";
 			busline.tableLine = undefined;
