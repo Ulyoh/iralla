@@ -56,6 +56,30 @@
 		
 	};
 	
+	busLine.removeBusline = function(){
+		//handling remove from selected and from not selected
+		for(var i = 0; i < map.shownBusLines.length; i++){
+			if(map.shownBusLines[i] == this){
+				this.overlayForEvent.setMap(null);
+				hideBuslineOverlay(this);
+				this.selected = false;
+				this.tableLine.style.display = "none";
+				this.tableLine = undefined;
+				this.selected = null;
+				this.unShowButton = null;
+				this.showButton = null;
+				this.addButton = null;
+				this.trash = null;
+				map.shownBusLines.splice(i,1);
+				if((typeof this.type != 'undefined') && 
+						((this.type == "mainLine") || (this.type == "feeder") )){
+					return;
+				}
+				this.setMap(null);
+			};
+		}
+	};
+	
     return busLine;
 }
 
@@ -192,33 +216,8 @@ function showSelectedBusline(button){
 	button.busline.setMap(map);
 }
 
-function removeBusline(busline){
-	//handling remove from selected and from not selected
-	for(var i = 0; i < map.shownBusLines.length; i++){
-		if(map.shownBusLines[i] == busline){
-			busline.overlayForEvent.setMap(null);
-			hideBuslineOverlay(busline);
-			busline.selected = false;
-			busline.tableLine.style.display = "none";
-			busline.tableLine = undefined;
-			busline.selected = null;
-			busline.unShowButton = null;
-			busline.showButton = null;
-			busline.addButton = null;
-			busline.trash = null;
-			map.shownBusLines.splice(i,1);
-			if((typeof busline.type != 'undefined') && 
-					((busline.type == "mainLine") || (busline.type == "feeder") )){
-				return;
-			}
-			busline.setMap(null);
-		};
-	}
-}
-
 function removeBuslineFromButton(button){
-	var busline = button.busline;
-	removeBusline(busline);
+	button.busline.removeBusline();
 }
 /*
 function showUnshowBusline(){

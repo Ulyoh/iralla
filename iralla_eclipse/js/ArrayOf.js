@@ -143,7 +143,7 @@ ArrayOfPolylines = function(){
 		mainLoop: for(var i = 0; i < arrayOfPolylines.length; i++){
 			for(var j = 0; j < idsArray.length; j++){
 				if (arrayOfPolylines[i].id == idsArray[j]) {
-					arrayOfPolylines[i].setMap(null);
+					arrayOfPolylines[i].removeBusline();
 					arrayOfPolylines.splice(i, 0);
 					if(idsArray.length <= 0){
 						break mainLoop;

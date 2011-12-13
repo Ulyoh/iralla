@@ -367,6 +367,8 @@ function showNearestRoads(roadsList){
 		}
 		else {
 			busLine.setMap(map);
+			busLine.overlayForEvent.setMap(map);
+			showBuslineOverlay(this);
 		}
 		SubMap._busLinesArray.setOptionsToAll({
 			strokeColor: 'default'
