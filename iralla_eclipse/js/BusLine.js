@@ -84,7 +84,7 @@ function showBusLinesInTable(){
 		map.buslines_shown = [];
 	}
 	//remove the ones which are not in  map.toBeShown and not selected
-	for(var i = 0; i < map.shownBusLines.length ;i++){
+	for(var i = map.shownBusLines.length-1; i >= 0 ;i--){
 		if(map.shownBusLines[i].selected == true){
 			continue;
 		}
@@ -94,11 +94,12 @@ function showBusLinesInTable(){
 		}
 	}
 	
-	
 	for(var i = 0; i < map.toBeShown.length; i++){
-		//create a new line:
-		createLineForShowingListTable(map.show_buslines_table, map.toBeShown[i]);
-		map.shownBusLines.push(map.toBeShown[i]);
+		if( isInArray(map.toBeShown[i], map.shownBusLines) == false ){
+			//create a new line:
+			createLineForShowingListTable(map.show_buslines_table, map.toBeShown[i]);
+			map.shownBusLines.push(map.toBeShown[i]);
+		}
 	}
 }
 
@@ -140,15 +141,15 @@ function createLineForShowingListTable(table, busline){
 	span_road_name.busline = busline;
 	span_road_name.classCell = 'td_name_showing_buslines';
 
-	//create cross
-	var cross = document.createElement('input');
-	cross.className = 'cross_button_busline';
-	cross.type = 'image';
-	cross.src = "data/cross.png";
-	cross.setAttribute('onclick',"removeBusline(this)");
-	cross.busline = busline;
-	busline.cross = cross;
-	cross.classCell = 'td_showing_buslines';
+	//create trash
+	var trash = document.createElement('input');
+	trash.className = 'trash_button_busline';
+	trash.type = 'image';
+	trash.src = "data/trash.png";
+	trash.setAttribute('onclick',"removeBusline(this)");
+	trash.busline = busline;
+	busline.trash = trash;
+	trash.classCell = 'td_showing_buslines';
 	
 	//div_buttons
 	var div_buttons = document.createElement('div');
@@ -158,9 +159,9 @@ function createLineForShowingListTable(table, busline){
 	div_buttons.classCell = 'td_showing_buslines';
 	
 	//add to the selected list:
-	var lineAndCell = addLineInTable(table, {childsInCells:[div_buttons,span_road_name,cross]});
+	var lineAndCell = addLineInTable(table, {childsInCells:[div_buttons,span_road_name,trash]});
 	var tableLine = lineAndCell.line;
-	cross.tableLine = lineAndCell.line;
+	trash.tableLine = lineAndCell.line;
 	tableLine.busline = busline;
 	tableLine.setAttribute('mouseover', 'showBuslineOverlay()');
 	tableLine.setAttribute('mouseout', 'hideBuslineOverlay()');
@@ -199,7 +200,7 @@ function removeBusline(button){
 			busline.unShowButton = null;
 			busline.showButton = null;
 			busline.addButton = null;
-			busline.cross = null;
+			busline.trash = null;
 			map.shownBusLines.splice(i,1);
 			if((typeof busline.type != 'undefined') && 
 					((busline.type == "mainLine") || (busline.type == "feeder") )){
