@@ -74,6 +74,7 @@ function showChoosenRuta(){
 	}
 	else {
 		busLine.setMap(map);
+		busLine.overlayForEvent.setMap(map);
 	}
 	SubMap._busLinesArray.setOptionsToAll({
 		strokeColor: 'default'
