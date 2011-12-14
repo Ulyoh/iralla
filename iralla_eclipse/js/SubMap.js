@@ -115,6 +115,11 @@ function SubMap(canvas, opts){
 	subMap.toBeShown = [];
 	subMap.shownBusLines = [];
 	subMap.isOnABusLine = 0;
+	var table = createTableInElt(getEltById('show_buslines_list'));
+	subMap.show_buslines_table = table.tbody;
+	subMap.show_buslines_table.setAttribute('id', 'table_show_buslines_list');
+	subMap.buslines_shown = [];
+	setupCleanLines(subMap.show_buslines_table);
 	
 	subMap.addBusLinesFromDb = function(DbList){
 

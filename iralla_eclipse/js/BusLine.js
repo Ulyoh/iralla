@@ -111,12 +111,6 @@ function removeFromToBeShown(){
 }
  
 function showBusLinesInTable(){
-	if(typeof map.show_buslines_table == 'undefined'){
-		var table = createTableInElt(getEltById('show_buslines_list'));
-		map.show_buslines_table = table.tbody;
-		map.show_buslines_table.setAttribute('id', 'table_show_buslines_list');
-		map.buslines_shown = [];
-	}
 	//remove the ones which are not in  map.toBeShown and not selected
 	for(var i = map.shownBusLines.length-1; i >= 0 ;i--){
 		if(map.shownBusLines[i].selected == true){
@@ -214,6 +208,10 @@ function addBuslineToSelected(button){
 	button.busline.unShowButton.style.display = "block";
 }
 
+function addAllBuslineToSelected(){
+	
+}
+
 function unShowSelectedBusline(button){
 	button.busline.unShowButton.style.display = "none";
 	button.busline.showButton.style.display = "block";
@@ -266,5 +264,86 @@ function showBuslineOverlay(busline){
 
 function hideBuslineOverlay(busline){
 	busline.buslineOverlay.setMap(null);
+}
 
+function setupCleanLines(table){
+/*
+	//create add button
+	var addButton = document.createElement('input');
+	addButton.className = 'add_button_selected_busline';
+	addButton.type = 'image';
+	addButton.src = "data/add.png";
+	addButton.setAttribute('onclick',"addAllBuslinesToSelected(this)");
+	addButton.busline = busline;
+	busline.addButton = addButton;
+
+	//create unshow button
+	var unShowButton = document.createElement('input');
+	unShowButton.className = 'less_button_selected_busline';
+	unShowButton.type = 'image';
+	unShowButton.src = "data/eye.png";
+	unShowButton.setAttribute('onclick',"unShowAllBuslinesNotInList(this)");
+	unShowButton.busline = busline;
+	unShowButton.style.display = "none";
+	busline.unShowButton = unShowButton;
+
+	//create show button
+	var showButton = document.createElement('input');
+	showButton.className = 'less_button_selected_busline';
+	showButton.type = 'image';
+	showButton.src = "data/hided_eye.png";
+	showButton.setAttribute('onclick',"showAllBuslinesNotInList(this)");
+	showButton.busline = busline;
+	showButton.style.display = "none";
+	busline.showButton = showButton;*/
+
+	//create trash left
+	var trashLeft = document.createElement('input');
+	trashLeft.className = 'trash_button_busline';
+	trashLeft.type = 'image';
+	trashLeft.src = "data/trash.png";
+	trashLeft.setAttribute('onclick',"removeAllBusLinesNotSelected()");
+	trashLeft.classCell = 'td_showing_buslines';
+	
+	//create a div with the name:
+	var span_road_name = document.createElement('span');
+	span_road_name.className = 'span_road_name';
+	span_road_name.id = 'text_remove_roads_not_selected';
+	span_road_name.innerHTML = 'borrar rutas no seleccionadas';
+	span_road_name.classCell = 'td_name_showing_buslines';
+	span_road_name.setAttribute('onclick',"removeAllBusLinesNotSelected()");
+	span_road_name.style.cursor = 'pointer';
+
+	//create trash right
+	var trashRight = document.createElement('input');
+	trashRight.className = 'trash_button_busline';
+	trashRight.type = 'image';
+	trashRight.src = "data/trash.png";
+	trashRight.setAttribute('onclick',"removeAllBusLinesNotSelected()");
+	trashRight.classCell = 'td_showing_buslines';
+	
+	//div_buttons
+	var div_buttons = document.createElement('div');
+	div_buttons.appendChild(trashLeft);
+	/*div_buttons.appendChild(unShowButton);
+	div_buttons.appendChild(showButton);*/
+	div_buttons.classCell = 'td_showing_buslines';
+	
+	//add to the selected list:
+	var lineAndCell = addLineInTable(table, {childsInCells:[div_buttons, span_road_name,trashRight]});
+	var tableLine = lineAndCell.line;
+	tableLine.id = 'button_clean_lines';
+	tableLine.linesIdAdded = [];
+	tableLine.setAttribute('mouseover', 'showBuslineOverlay()');
+	tableLine.setAttribute('mouseout', 'hideBuslineOverlay()');
+	tableLine.style.display = 'none';
+	
+
+}
+function removeAllBusLinesNotSelected(){
+	var button_clean_lines = getEltById('button_clean_lines');
+	SubMap._busLinesArray.removePolylinesFromIds(button_clean_lines.linesIdAdded); 
+	button_clean_lines.linesIdAdded = []; 
+	button_clean_lines.style.display = "none";
+		
 }

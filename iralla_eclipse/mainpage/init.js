@@ -113,7 +113,6 @@ function initialize() {
 	}
 	//mainBusLinesList = undefined;
 	
-	setupCleanLines();
 	document.getElementById('suggestionListNode').nextId = 0;
 	
 	//set style:
