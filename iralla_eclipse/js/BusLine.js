@@ -136,6 +136,8 @@ function createLineForShowingListTable(table, busline){
 	addButton.src = "data/add.png";
 	addButton.setAttribute('onclick',"addBuslineToSelected(this)");
 	addButton.busline = busline;
+	addButton.setAttribute('onmouseover', 'showBuslineOverlay(this.busline)');
+	addButton.setAttribute('onmouseout', 'hideBuslineOverlay(this.busline)');
 	busline.addButton = addButton;
 
 	//create unshow button
@@ -146,6 +148,8 @@ function createLineForShowingListTable(table, busline){
 	unShowButton.setAttribute('onclick',"unShowSelectedBusline(this)");
 	unShowButton.busline = busline;
 	unShowButton.style.display = "none";
+	unShowButton.setAttribute('onmouseover', 'showBuslineOverlay(this.busline)');
+	unShowButton.setAttribute('onmouseout', 'hideBuslineOverlay(this.busline)');
 	busline.unShowButton = unShowButton;
 	
 	//create show button
@@ -156,14 +160,19 @@ function createLineForShowingListTable(table, busline){
 	showButton.setAttribute('onclick',"showSelectedBusline(this)");
 	showButton.busline = busline;
 	showButton.style.display = "none";
+	showButton.setAttribute('onmouseover', 'showBuslineOverlay(this.busline)');
+	showButton.setAttribute('onmouseout', 'hideBuslineOverlay(this.busline)');
 	busline.showButton = showButton;
 		
 	//create a div with the road name:
 	var span_road_name = document.createElement('span');
 	span_road_name.className = 'span_road_name';
 	span_road_name.innerHTML = busline.name;
-	span_road_name.busline = busline;
 	span_road_name.classCell = 'td_name_showing_buslines';
+	span_road_name.style.cursor = 'pointer';
+	span_road_name.setAttribute('onmouseover', 'showBuslineOverlay(this.busline)');
+	span_road_name.setAttribute('onmouseout', 'hideBuslineOverlay(this.busline)');
+	span_road_name.busline = busline;
 
 	//create trash
 	var trash = document.createElement('input');
@@ -171,9 +180,11 @@ function createLineForShowingListTable(table, busline){
 	trash.type = 'image';
 	trash.src = "data/trash.png";
 	trash.setAttribute('onclick',"removeBuslineFromButton(this)");
+	trash.classCell = 'td_showing_buslines';
+	trash.setAttribute('onmouseover', 'showBuslineOverlay(this.busline)');
+	trash.setAttribute('onmouseout', 'hideBuslineOverlay(this.busline)');
 	trash.busline = busline;
 	busline.trash = trash;
-	trash.classCell = 'td_showing_buslines';
 	
 	//div_buttons
 	var div_buttons = document.createElement('div');
@@ -187,8 +198,6 @@ function createLineForShowingListTable(table, busline){
 	var tableLine = lineAndCell.line;
 	trash.tableLine = lineAndCell.line;
 	tableLine.busline = busline;
-	tableLine.setAttribute('mouseover', 'showBuslineOverlay()');
-	tableLine.setAttribute('mouseout', 'hideBuslineOverlay()');
 	busline.tableLine = lineAndCell.line;
 	
 	//busline.keepStatus = false;
