@@ -88,8 +88,6 @@
 		hideBuslineOverlay(this);
 		this.setMap(null);
 	};
-	
-
     return busLine;
 }
 
@@ -130,9 +128,6 @@ function showBusLinesInTable(){
 			map.shownBusLines.push(map.toBeShown[i]);
 		}
 	}
-	
-	//add a line to remove the others rutas if necessary:
-	
 }
 
 function createLineForShowingListTable(table, busline){
@@ -155,7 +150,6 @@ function createLineForShowingListTable(table, busline){
 	unShowButton.style.display = "none";
 	busline.unShowButton = unShowButton;
 	
-
 	//create show button
 	var showButton = document.createElement('input');
 	showButton.className = 'less_button_selected_busline';
@@ -337,13 +331,11 @@ function setupCleanLines(table){
 	tableLine.setAttribute('mouseover', 'showBuslineOverlay()');
 	tableLine.setAttribute('mouseout', 'hideBuslineOverlay()');
 	tableLine.style.display = 'none';
-	
-
 }
+
 function removeAllBusLinesNotSelected(){
 	var button_clean_lines = getEltById('button_clean_lines');
 	SubMap._busLinesArray.removePolylinesFromIds(button_clean_lines.linesIdAdded); 
 	button_clean_lines.linesIdAdded = []; 
-	button_clean_lines.style.display = "none";
-		
+	button_clean_lines.style.display = "none";		
 }
