@@ -62,9 +62,7 @@
 				zIndex: 800
 				};				
 		this.buslineOverlay = new gmap.Polyline();
-		this.buslineOverlay.setOptions(overlayOptions);
-		this.buslineOverlay.listenerClick = gmap.event.addListener(this.buslineOverlay, 'click', showBusLinesInTable);
-			
+		this.buslineOverlay.setOptions(overlayOptions);	
 	};
 	
 	busLine.removeBusline = function(){
