@@ -141,18 +141,25 @@ ArrayOfPolylines = function(){
 	
 	arrayOfPolylines.removePolylinesFromIds = function(idsArray){
 		mainLoop: for(var i = arrayOfPolylines.length-1; i >= 0 ; i--){
-			for(var j = 0; j < idsArray.length; j++){
-				if (arrayOfPolylines[i].id == idsArray[j]) {
-					if (arrayOfPolylines[i].selected != true){
-						arrayOfPolylines[i].removeBusline();
-						arrayOfPolylines.splice(i, 0);
-					}
-					if(idsArray.length <= 0){
-						break mainLoop;
-					}
-					break;
+			if (arrayOfPolylines[i].selected != true){
+				if ((arrayOfPolylines[i].type == 'mainLine') || (arrayOfPolylines[i].type == 'feeder')){
+					arrayOfPolylines[i].removeBusline();
+				}
+				else{
+					for(var j = 0; j < idsArray.length; j++){
+						if (arrayOfPolylines[i].id == idsArray[j]) {
+							arrayOfPolylines[i].removeBusline();
+							arrayOfPolylines.splice(i, 0);
+							/*if(idsArray.length <= 0){
+								break mainLoop;
+							}*/
+							break;
+						}
+				}
 				}
 			}
+			
+			
 		}
 	};
 
