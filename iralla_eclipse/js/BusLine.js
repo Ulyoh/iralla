@@ -126,6 +126,10 @@ function showBusLinesInTable(){
 			map.shownBusLines.push(map.toBeShown[i]);
 		}
 	}
+	
+	//show the row to remove:
+	var cleanLinesNode = document.getElementById('button_clean_lines');
+	cleanLinesNode.style.display = 'table-row';
 }
 
 function createLineForShowingListTable(table, busline){
