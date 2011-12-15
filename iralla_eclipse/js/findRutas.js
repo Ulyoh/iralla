@@ -74,6 +74,7 @@ function showChoosenRuta(){
 	}
 	else {
 		busLine.setMap(map);
+		busLine.overlayForEvent.setMap(map);
 	}
 	SubMap._busLinesArray.setOptionsToAll({
 		strokeColor: 'default'
@@ -86,7 +87,7 @@ function showChoosenRuta(){
 	///////////////////
 	
 	var cleanLinesNode = document.getElementById('button_clean_lines');
-	cleanLinesNode.style.display = 'inline';
+	cleanLinesNode.style.display = 'table-row';
 	cleanLinesNode.linesIdAdded.push(busLine.id);
 	this.parentNode.style.display = 'none';
 	if (this.parentNode.parentNode.childNodes.length <= 1) {
@@ -94,17 +95,6 @@ function showChoosenRuta(){
 	}
 	this.parentNode.parentNode.removeChild(this.parentNode);
 	document.getElementById('address').value = "";
-}
-
-function setupCleanLines(){
-
-	//add a button to remove the lines on the map
-	var cleanLinesNode = document.createElement('button');
-	cleanLinesNode.setAttribute('id', 'button_clean_lines');
-	cleanLinesNode.innerHTML = 'borrar rutas';
-	cleanLinesNode.setAttribute('onclick', 'SubMap._busLinesArray.removePolylinesFromIds(this.linesIdAdded); this.linesIdAdded = []; this.style.display = "none"');
-	document.getElementById('direction').appendChild(cleanLinesNode);
-	cleanLinesNode.linesIdAdded =[];
 }
 
 

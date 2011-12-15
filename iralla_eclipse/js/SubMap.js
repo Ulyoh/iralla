@@ -111,6 +111,16 @@ function SubMap(canvas, opts){
 		}
 	};
 	
+	//init for handling overlays on buslines:
+	subMap.toBeShown = [];
+	subMap.shownBusLines = [];
+	subMap.isOnABusLine = 0;
+	var table = createTableInElt(getEltById('show_buslines_list'));
+	subMap.show_buslines_table = table.tbody;
+	subMap.show_buslines_table.setAttribute('id', 'table_show_buslines_list');
+	subMap.buslines_shown = [];
+	setupCleanLines(subMap.show_buslines_table);
+	
 	subMap.addBusLinesFromDb = function(DbList){
 
 		var busLineBuffer;
@@ -177,11 +187,11 @@ function SubMap(canvas, opts){
 			
 			busLineBuffer.setOptions({
 				map: this,
-				strokeOpacity: 1,
+				strokeOpacity: 0.5,
 				strokeWeight: subMap.sizeDependingOnZoom[subMap.getZoom()],
 				strokeColor: color,
 				path: path,
-				zIndex: 1000
+				zIndex: 100
 			});
 			
 			busLineBuffer.DbList = DbList[i];

@@ -351,7 +351,7 @@ function find_nearest_roads(){
 function showNearestRoads(roadsList){
 	roadsList = JSON.parse(roadsList);
 	var cleanLinesNode = document.getElementById('button_clean_lines');
-	cleanLinesNode.style.display = 'inline';
+	cleanLinesNode.style.display = 'table-row';
 
 	SubMap._busLinesArray.removePolylinesFromIds(cleanLinesNode.linesIdAdded); 
 	cleanLinesNode.linesIdAdded = [];	
@@ -367,6 +367,7 @@ function showNearestRoads(roadsList){
 		}
 		else {
 			busLine.setMap(map);
+			busLine.overlayForEvent.setMap(map);
 		}
 		SubMap._busLinesArray.setOptionsToAll({
 			strokeColor: 'default'

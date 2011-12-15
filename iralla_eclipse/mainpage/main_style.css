@@ -109,19 +109,6 @@ body {
 	z-index:5;
 }
 
-#button_clean_lines{
-	position:absolute;
-	display:none;
-	top:22px;
-	left:2px;
-	width:90px;
-	border: 2px solid #0060DA;
-	background-color:#0090DA;
-	padding: 0px;
-	color: white;
-	z-index:5;
-}
-
 #itinerario{
 	position:fixed;
 	display:none;
