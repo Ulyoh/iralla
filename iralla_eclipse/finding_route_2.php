@@ -196,8 +196,8 @@ while($bs2bss = $req->fetch()){
 	$to_squares = $end_squares[$bs2bss['end_bus_station_id']];
 	
 	//calculate the time by foot to reach the beginning of the path in the squares:
-	path_by_foot_calculation(&$from_squares, $start_bus_station);
-	path_by_foot_calculation(&$to_squares, $end_bus_station);
+	time_by_foot_calculation(&$from_squares, $start_bus_station);
+	time_by_foot_calculation(&$to_squares, $end_bus_station);
 	
 	//look for same bus line in $bs2bss than in from square and to square
 	//$bus_lines_parts_length = count($road->bus_lines_parts);

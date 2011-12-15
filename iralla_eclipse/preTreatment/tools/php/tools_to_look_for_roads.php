@@ -293,3 +293,21 @@ return $nearest_point;
 }
 
 */
+
+function time_by_foot_calculation(&$squares, $start_bus_station){
+	global $foot_speed;
+	global $grid_path_mult;
+	//TODO improve it to get the 
+	$calculation_coord = array();
+	foreach($squares as $square){
+		$calculation_coord['lat'] = $square['lat'] / $grid_path_mult;
+		$calculation_coord['lng'] = $square['lng'] / $grid_path_mult;
+		$square->time_by_foot = real_distance_between_2_vertex($calculation_coord, $start_bus_station) / $foot_speed;
+	}
+}
+
+
+
+
+
+
