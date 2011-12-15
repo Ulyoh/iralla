@@ -68,9 +68,9 @@ function create_grid(){
 		//to debug
 		//if(($bus_line[type] == 'feeder') || ($bus_line[bus_line_id] == 164)){
 			
-			echo 'processing grid creation for bus line : ' . $bus_line[bus_line_id] . "<br \> \n";
+			echo 'processing grid creation for bus line : ' . $bus_line[bus_line_id] . "<br \\> \n";
 			$last_id = treatment($bus_line, $last_id);
-			echo ' grid creation for bus line : ' . $bus_line[bus_line_id] . " done <br \> \n";
+			echo ' grid creation for bus line : ' . $bus_line[bus_line_id] . " done <br \\> \n";
 			
 		}
 	}
