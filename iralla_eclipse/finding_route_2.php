@@ -11,7 +11,6 @@ $foot_speed = 0.7; //0.7 m/s ~2.5km/h
 $bus_speed = 7; //13 m/s ~30km/h
 
 $path_of_roads = "c:/roads2/";
-
 $path_of_squares = "c:/squares2/";
 
 $max_time_lost_whitout_changing_bus_line = 600;
@@ -165,8 +164,17 @@ while($bs2bss = $req->fetch()){
 	$bus_stations = /*&*/$road->bus_stations;
 	
 	//find the start square and the end square matching
+	
+	//MODIFIED:
+	
 	$from_square = $start_squares[$bs2bss[start_bus_station_id]];
 	$to_square = $end_squares[$bs2bss[end_bus_station_id]];
+	
+	//===============
+	$from_squares = $start_squares[$bs2bss[start_bus_station_id]];
+	$to_squares = $end_squares[$bs2bss[end_bus_station_id]];
+	
+	//END MODIFIED
 	
 	//look for same bus line in $bs2bss than in from square and to square
 	//$bus_lines_parts_length = count($road->bus_lines_parts);
@@ -174,25 +182,36 @@ while($bs2bss = $req->fetch()){
 	$added_time_first_bus_line_part = 0;
 	$first_bus_line_part_selected = $road->first_and_last_bstobss_to_mysql[0][0];
 	$merged_first_bus_line_part_with_from_square = false;
+	$shortest_time_lost = $max_time_lost_whitout_changing_bus_line;
 	//from square
 	if(is_array($road->first_and_last_bstobss_to_mysql[0])){
 		if($road->first_and_last_bstobss_to_mysql[0][0] != null){
+			/*TODO : improve the execution speed using bus_line_id like:
+			 * $road->first_and_last_bstobss_to_mysql[0]['bus_line_id']
+			 * must modify bus_station_2_bus_station first
+			*/
+			
+			//TODO: keep the differents from squares similar to the one selected
+
 			foreach ($road->first_and_last_bstobss_to_mysql[0] as $key => $bus_line_part){
-				if($bus_line_part->name == $from_square->name){
-					//calculate the added time necesary than take the
-					//shortest $bus_line_part:
-					$time_lost = $road->first_and_last_bstobss_to_mysql[0][$key]->time
-						- $road->first_and_last_bstobss_to_mysql[0][0]->time;
-					
-					//if lost of time less than 10 minutes do not stay in the same bus
-					//record the bus line part which can be join to from_square 
-					//and how much time more than to use the shortest bus line part
-					if($time_lost < $max_time_lost_whitout_changing_bus_line){
-						$first_bus_line_part_selected = $bus_line_part;
-						$added_time_first_bus_line_part = $time_lost;
-						$merged_first_bus_line_part_with_from_square = true;
+				foreach($from_squares as $from_square){
+					if($bus_line_part->name == $from_square->name){
+						//calculate the added time necesary than to take the
+						//shortest $bus_line_part:
+						$time_lost = $road->first_and_last_bstobss_to_mysql[0][$key]->time
+							- $road->first_and_last_bstobss_to_mysql[0][0]->time;
+						
+						//if lost of time less than 10 minutes do not stay in the same bus
+						//record the bus line part which can be join to from_square 
+						//and how much time more than to use the shortest bus line part
+						if($time_lost < $shortest_time_lost){
+							$first_bus_line_part_selected = $bus_line_part;
+							$added_time_first_bus_line_part = $time_lost;
+							$merged_first_bus_line_part_with_from_square = true;
+							$shortest_time_lost = $time_lost;
+							$selected_from_square = $from_square;
+						}
 					}
-					break;
 				}
 			}
 		}
@@ -201,6 +220,7 @@ while($bs2bss = $req->fetch()){
 	$added_time_last_bus_line_part = 0;
 	$last_bus_line_part_selected = null;
 	$merged_last_bus_line_part_with_to_square = false;
+	$shortest_time_lost = $max_time_lost_whitout_changing_bus_line;
 	//to square
 	if(is_array($road->first_and_last_bstobss_to_mysql[0])){
 		if($road->first_and_last_bstobss_to_mysql[1][0] != null){
@@ -212,21 +232,25 @@ while($bs2bss = $req->fetch()){
 		$last_bus_line_part_selected = $road->first_and_last_bstobss_to_mysql[$first_or_last][0];
 			
 		foreach ($road->first_and_last_bstobss_to_mysql[$first_or_last] as $key => $bus_line_part){
-			if($bus_line_part->name == $to_square->name){
-				//calculate the added time necesary than take the
-				//shortest $bus_lin_part:
-				$time_lost = $road->first_and_last_bstobss_to_mysql[$first_or_last][$key]->time
-				- $road->first_and_last_bstobss_to_mysql[$first_or_last][0]->time;
-				
-				//if lost of time less than 10 minutes do not stay in the same bus
-				//record the bus line part which can be join to to_square 
-				//and how much time more than to use the shortest bus line part
-				if($time_lost < $max_time_lost_whitout_changing_bus_line){
-					$last_bus_line_part_selected = $bus_line_part;
-					$added_time_last_bus_line_part = $time_lost;
-					$merged_last_bus_line_part_with_to_square = true;
+			foreach($to_squares as $to_square){
+				if($bus_line_part->name == $to_square->name){
+					//calculate the added time necesary than take the
+					//shortest $bus_lin_part:
+					$time_lost = $road->first_and_last_bstobss_to_mysql[$first_or_last][$key]->time
+					- $road->first_and_last_bstobss_to_mysql[$first_or_last][0]->time;
+					
+					//if lost of time less than 10 minutes do not stay in the same bus
+					//record the bus line part which can be join to to_square 
+					//and how much time more than to use the shortest bus line part
+					if($time_lost < $max_time_lost_whitout_changing_bus_line){
+						$last_bus_line_part_selected = $bus_line_part;
+						$added_time_last_bus_line_part = $time_lost;
+						$merged_last_bus_line_part_with_to_square = true;
+						$shortest_time_lost = $time_lost;
+						$selected_to_square = $to_square;
+					}
+					break;
 				}
-				break;
 			}
 		}
 	}
@@ -264,16 +288,16 @@ while($bs2bss = $req->fetch()){
 	
 	//keep the shortest road:
 	$total_time = $bs2bss[time] + $added_time_first_bus_line_part + $added_time_last_bus_line_part
-		+ $to_square->time + $to_square->time_by_foot
-		+ $from_square->time + $from_square->time_by_foot;
+		+ $selected_to_square->time + $selected_to_square->time_by_foot
+		+ $selected_from_square->time + $selected_from_square->time_by_foot;
 		
 	if( $total_time < $shortest_road->total_time){
 		$shortest_road->bs2bss = $bs2bss;
 		$shortest_road->first_bus_line_part = $first_bus_line_part_selected;
 		$shortest_road->last_bus_line_part = $last_bus_line_part_selected;
 		$shortest_road->total_time = $total_time;
-		$shortest_road->from_square = $from_square;
-		$shortest_road->to_square = $to_square;
+		$shortest_road->from_square = $selected_from_square;
+		$shortest_road->to_square = $selected_to_square;
 		$shortest_road->merged_last_bus_line_part_with_to_square = $merged_last_bus_line_part_with_to_square;
 		$shortest_road->merged_first_bus_line_part_with_from_square = $merged_first_bus_line_part_with_from_square;
 	}
