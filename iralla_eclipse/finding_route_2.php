@@ -13,16 +13,16 @@ $bus_speed = 7; //13 m/s ~30km/h
 $path_of_roads = "c:/roads2/";
 $path_of_squares = "c:/squares2/";
 
-$max_time_lost_whitout_changing_bus_line = 600;
+$time_lost_when_changing_bus_line = 600;
 
 $request = $_POST['q'];
-$request = '{"start":{"lat":-2.172744609908308,"lng":-79.80077972412107},"end":{"lat":-2.210482487616563,"lng":-79.90377655029295}}';
+//$request = '{"start":{"lat":-2.172744609908308,"lng":-79.80077972412107},"end":{"lat":-2.210482487616563,"lng":-79.90377655029295}}';
 
 //$request ='{"start":{"lat":-2.0907472653611823,"lng":-79.94669189453127},"end":{"lat":-2.1210250353406597,"lng":-79.95574703216555}}';
 //$request = '{"start":{"lat":-2.076423017151715,"lng":-79.91639366149904},"end":{"lat":-2.0957221234194163,"lng":-79.91124382019045}}';
 
 //from square is not a bus station
-//$request = '{"start":{"lat":-2.1142490416697988,"lng":-79.9559616088867},"end":{"lat":-2.0950359370399525,"lng":-79.90446319580076}}';
+$request = '{"start":{"lat":-2.1142490416697988,"lng":-79.9559616088867},"end":{"lat":-2.0950359370399525,"lng":-79.90446319580076}}';
 
 //to square and from square are first and end bus station
 //$request = '{"start":{"lat":-2.119738456543628,"lng":-79.97192611694334},"end":{"lat":-2.126257111418689,"lng":-79.87510910034177}}';	
@@ -49,16 +49,16 @@ $request[end][lat] = -2.2325;
 $request[end][lng] = -79.890;*/
 //END TO DEBUG
 
-$start['lat'] = $request->start->lat;
-$start['lng'] = $request->start->lng;
-$end['lat'] = $request->end->lat;
-$end['lng'] = $request->end->lng;
+$start_real['lat'] = $request->start->lat;
+$start_real['lng'] = $request->start->lng;
+$end_real['lat'] = $request->end->lat;
+$end_real['lng'] = $request->end->lng;
 
 //find nearst bus stations :
 $interval = 0.005;
 
-$start_nearest_bus_stations = nearest_bus_stations($start, $interval, "bus_stations");
-$end_nearest_bus_stations = nearest_bus_stations($end, $interval, "bus_stations");
+//$start_nearest_bus_stations = nearest_bus_stations($start, $interval, "bus_stations");
+//$end_nearest_bus_stations = nearest_bus_stations($end, $interval, "bus_stations");
 //end find nearest bus stations
 
 //change start and end calcul to fit with to square and end square coordinates
@@ -150,6 +150,8 @@ foreach($end_squares_by_bs_id as $bs_id => $squares_by_bl_id){
 	}
 }
 
+$start_bus_stations_list = array();
+$end_bus_stations_list = array();
 //todebug:
 $count = 0;
 //end to debug
@@ -164,19 +166,38 @@ while($bs2bss = $req->fetch()){
 	
 	$road = json_decode($bs2bss['road_datas']);
 	$bus_stations = /*&*/$road->bus_stations;
+		
+	//init $selected_to_square and $selected_from_square
+	if(!key_exists($bs2bss['start_bus_station_id'], $start_bus_stations_list)){
+		$start_bus_station = array();
+		$start_bus_station['lat'] = $bs2bss['start_lat'];
+		$start_bus_station['lng'] = $bs2bss['start_lng'];
+		$start_bus_station['time_by_foot'] = real_distance_between_2_vertex($start_real, $start_bus_station) / $foot_speed;
+		$start_bus_stations_list[$bs2bss['start_bus_station_id']] = $start_bus_station;
+	}
+	$selected_to_square = new stdClass();
+	$selected_to_square->time_by_foot = $start_bus_stations_list[$bs2bss['start_bus_station_id']]['time_by_foot'];
+	$selected_to_square->time = 0;
+	
+	if(!key_exists($bs2bss['end_bus_station_id'], $end_bus_stations_list)){
+		$end_bus_station = array();
+		$end_bus_station['lat'] = $bs2bss['start_lat'];
+		$end_bus_station['lng'] = $bs2bss['start_lng'];
+		$end_bus_station['time_by_foot'] = real_distance_between_2_vertex($end_real, $end_bus_station) / $foot_speed;
+		$end_bus_stations_list[$bs2bss['end_bus_station_id']] = $end_bus_station;
+	}
+	$selected_from_square = new stdClass();
+	$selected_from_square->time_by_foot = $end_bus_stations_list[$bs2bss['end_bus_station_id']]['time_by_foot'];
+	$selected_from_square->time = 0;
 	
 	//find the start square and the end square matching
 	
-	//MODIFIED:
-	
-	$from_square = $start_squares[$bs2bss['start_bus_station_id']];
-	$to_square = $end_squares[$bs2bss['end_bus_station_id']];
-	
-	//===============
 	$from_squares = $start_squares[$bs2bss['start_bus_station_id']];
 	$to_squares = $end_squares[$bs2bss['end_bus_station_id']];
 	
-	//END MODIFIED
+	//calculate the time by foot to reach the beginning of the path in the squares:
+	path_by_foot_calculation(&$from_squares, $start_bus_station);
+	path_by_foot_calculation(&$to_squares, $end_bus_station);
 	
 	//look for same bus line in $bs2bss than in from square and to square
 	//$bus_lines_parts_length = count($road->bus_lines_parts);
@@ -184,7 +205,7 @@ while($bs2bss = $req->fetch()){
 	$added_time_first_bus_line_part = 0;
 	$first_bus_line_part_selected = $road->first_and_last_bstobss_to_mysql[0][0];
 	$merged_first_bus_line_part_with_from_square = false;
-	$shortest_time_lost = $max_time_lost_whitout_changing_bus_line;
+	
 	//from square
 	if(is_array($road->first_and_last_bstobss_to_mysql[0])){
 		if($road->first_and_last_bstobss_to_mysql[0][0] != null){
@@ -198,20 +219,30 @@ while($bs2bss = $req->fetch()){
 			foreach ($road->first_and_last_bstobss_to_mysql[0] as $key => $bus_line_part){
 				foreach($from_squares as $from_square){
 					if($bus_line_part->name == $from_square->name){
-						//calculate the added time necesary than to take the
-						//shortest $bus_line_part:
+						//calculate the difference time necesary than to take the current
+						//$selected_to_square
 						$time_lost = $road->first_and_last_bstobss_to_mysql[0][$key]->time
 							- $road->first_and_last_bstobss_to_mysql[0][0]->time;
 						
-						//if lost of time less than 10 minutes do not stay in the same bus
-						//record the bus line part which can be join to from_square 
-						//and how much time more than to use the shortest bus line part
-						if($time_lost < $shortest_time_lost){
+						$time_diff = $selected_from_square->time + $selected_from_square->time_by_foot -
+						$from_square->time + $from_square->time_by_foot + $time_lost;
+						
+						if($time_diff < 0){
 							$first_bus_line_part_selected = $bus_line_part;
-							$added_time_first_bus_line_part = $time_lost;
 							$merged_first_bus_line_part_with_from_square = true;
-							$shortest_time_lost = $time_lost;
 							$selected_from_square = $from_square;
+							$selected_from_square->time_lost = $time_lost;
+						}
+					}
+					else{
+						$time_diff = $selected_from_square->time + $selected_from_square->time_by_foot -
+						$from_square->time + $from_square->time_by_foot + $time_lost_when_changing_bus_line;
+
+						if($time_diff < 0){
+							$first_bus_line_part_selected = $bus_line_part;
+							$merged_first_bus_line_part_with_from_square = false;
+							$selected_from_square = $from_square;
+							$selected_from_square->time_lost = 0;
 						}
 					}
 				}
@@ -219,13 +250,15 @@ while($bs2bss = $req->fetch()){
 		}
 	}
 	
+	real_distance_between_2_vertex($end_real, $end_bus_station) / $foot_speed;
+	
 	$added_time_last_bus_line_part = 0;
 	$last_bus_line_part_selected = null;
 	$merged_last_bus_line_part_with_to_square = false;
-	$shortest_time_lost = $max_time_lost_whitout_changing_bus_line;
 	//to square
 	if(is_array($road->first_and_last_bstobss_to_mysql[0])){
-		if($road->first_and_last_bstobss_to_mysql[1][0] != null){
+		if((isset($road->first_and_last_bstobss_to_mysql[1]))&&
+		isset($road->first_and_last_bstobss_to_mysql[1][0])){
 			$first_or_last = 1;
 		}
 		else{
@@ -241,22 +274,30 @@ while($bs2bss = $req->fetch()){
 					$time_lost = $road->first_and_last_bstobss_to_mysql[$first_or_last][$key]->time
 					- $road->first_and_last_bstobss_to_mysql[$first_or_last][0]->time;
 					
-					//if lost of time less than 10 minutes do not stay in the same bus
-					//record the bus line part which can be join to to_square 
-					//and how much time more than to use the shortest bus line part
-					if($time_lost < $max_time_lost_whitout_changing_bus_line){
+					$time_diff = $selected_to_square->time + $selected_to_square->time_by_foot -
+					$to_square->time + $to_square->time_by_foot + $time_lost;
+					
+					if($time_diff < 0){
 						$last_bus_line_part_selected = $bus_line_part;
-						$added_time_last_bus_line_part = $time_lost;
 						$merged_last_bus_line_part_with_to_square = true;
-						$shortest_time_lost = $time_lost;
 						$selected_to_square = $to_square;
+						$selected_to_square->time_lost = $time_lost;
 					}
-					break;
+					else{
+						$time_diff = $selected_to_square->time + $selected_to_square->time_by_foot -
+						$to_square->time + $to_square->time_by_foot + $time_lost_when_changing_bus_line;
+					
+						if($time_diff < 0){
+							$last_bus_line_part_selected = $bus_line_part;
+							$merged_last_bus_line_part_with_to_square = false;
+							$selected_to_square = $to_square;
+							$selected_to_square->time_lost = 0;
+						}
+					}
 				}
 			}
 		}
 	}
-	
 	
 	//if the last and first bus_line_part is the same one:
 	if($first_or_last == 0){
