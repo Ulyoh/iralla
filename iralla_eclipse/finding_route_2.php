@@ -16,6 +16,8 @@ $path_of_squares = "c:/squares2/";
 $max_time_lost_whitout_changing_bus_line = 600;
 
 $request = $_POST['q'];
+$request = '{"start":{"lat":-2.172744609908308,"lng":-79.80077972412107},"end":{"lat":-2.210482487616563,"lng":-79.90377655029295}}';
+
 //$request ='{"start":{"lat":-2.0907472653611823,"lng":-79.94669189453127},"end":{"lat":-2.1210250353406597,"lng":-79.95574703216555}}';
 //$request = '{"start":{"lat":-2.076423017151715,"lng":-79.91639366149904},"end":{"lat":-2.0957221234194163,"lng":-79.91124382019045}}';
 
@@ -135,7 +137,7 @@ $shortest_road_time = +INF;
 foreach($start_squares_by_bs_id as $bs_id => $squares_by_bl_id){
 	$start_squares[$bs_id] = array();
 	foreach($squares_by_bl_id as $bl_id => $square){
-		$square = new My_square($square[id], $square[lat], $square[lng], $square[bus_line_id], $square[bus_line_name], null, $square[time_to_bus_station], $square[time_by_foot]);
+		$square = new My_square($square['id'], $square['lat'], $square['lng'], $square['bus_line_id'], $square['bus_line_name'], null, $square['time_to_bus_station'], 0);
 		$start_squares[$bs_id][] = $square;
 	}
 }
@@ -143,7 +145,7 @@ foreach($start_squares_by_bs_id as $bs_id => $squares_by_bl_id){
 foreach($end_squares_by_bs_id as $bs_id => $squares_by_bl_id){
 	$end_squares[$bs_id] = array();
 	foreach($squares_by_bl_id as $bl_id => $square){
-		$square = new My_square($square[id], $square[lat], $square[lng], $square[bus_line_id], $square[bus_line_name], null, $square[time_to_bus_station], $square[time_by_foot]);
+		$square = new My_square($square['id'], $square['lat'], $square['lng'], $square['bus_line_id'], $square['bus_line_name'], null, $square['time_to_bus_station'], 0);
 		$end_squares[$bs_id][] = $square;
 	}
 }
@@ -160,19 +162,19 @@ while($bs2bss = $req->fetch()){
 	$count++;
 	//end to debug
 	
-	$road = json_decode($bs2bss[road_datas]);
+	$road = json_decode($bs2bss['road_datas']);
 	$bus_stations = /*&*/$road->bus_stations;
 	
 	//find the start square and the end square matching
 	
 	//MODIFIED:
 	
-	$from_square = $start_squares[$bs2bss[start_bus_station_id]];
-	$to_square = $end_squares[$bs2bss[end_bus_station_id]];
+	$from_square = $start_squares[$bs2bss['start_bus_station_id']];
+	$to_square = $end_squares[$bs2bss['end_bus_station_id']];
 	
 	//===============
-	$from_squares = $start_squares[$bs2bss[start_bus_station_id]];
-	$to_squares = $end_squares[$bs2bss[end_bus_station_id]];
+	$from_squares = $start_squares[$bs2bss['start_bus_station_id']];
+	$to_squares = $end_squares[$bs2bss['end_bus_station_id']];
 	
 	//END MODIFIED
 	
@@ -287,7 +289,7 @@ while($bs2bss = $req->fetch()){
 	}
 	
 	//keep the shortest road:
-	$total_time = $bs2bss[time] + $added_time_first_bus_line_part + $added_time_last_bus_line_part
+	$total_time = $bs2bss['time'] + $added_time_first_bus_line_part + $added_time_last_bus_line_part
 		+ $selected_to_square->time + $selected_to_square->time_by_foot
 		+ $selected_from_square->time + $selected_from_square->time_by_foot;
 		
@@ -305,7 +307,7 @@ while($bs2bss = $req->fetch()){
 
 
 $road_to_send = $shortest_road->bs2bss;
-$road_datas = json_decode($road_to_send[road_datas]);
+$road_datas = json_decode($road_to_send['road_datas']);
 $bus_stations = $road_datas->bus_stations;
 
 //exctracts the complete datas of the selected road:
