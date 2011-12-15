@@ -16,7 +16,7 @@ $path_of_squares = "c:/squares2/";
 $time_lost_when_changing_bus_line = 600;
 
 $request = $_POST['q'];
-//$request = '{"start":{"lat":-2.172744609908308,"lng":-79.80077972412107},"end":{"lat":-2.210482487616563,"lng":-79.90377655029295}}';
+$request = '{"start":{"lat":-2.172744609908308,"lng":-79.80077972412107},"end":{"lat":-2.210482487616563,"lng":-79.90377655029295}}';
 
 //$request ='{"start":{"lat":-2.0907472653611823,"lng":-79.94669189453127},"end":{"lat":-2.1210250353406597,"lng":-79.95574703216555}}';
 //$request = '{"start":{"lat":-2.076423017151715,"lng":-79.91639366149904},"end":{"lat":-2.0957221234194163,"lng":-79.91124382019045}}';
@@ -53,6 +53,20 @@ $start_real['lat'] = $request->start->lat;
 $start_real['lng'] = $request->start->lng;
 $end_real['lat'] = $request->end->lat;
 $end_real['lng'] = $request->end->lng;
+
+//test if start point and end point are possible:
+if(!isset($start_real['lat']) || !is_numeric($start_real['lat']) || ($start_real['lat'] < -3) || ( -1 < $start_real['lat'])){
+	return;
+}
+if(!isset($start_real['lng']) || !is_numeric($start_real['lng']) || ($start_real['lng'] < -80) || ( -78 < $start_real['lng'])){
+	return;
+}
+if(!isset($end_real['lat']) || !is_numeric($end_real['lat']) || ($end_real['lat'] < -3) || ( -1 < $end_real['lat'])){
+	return;
+}
+if(!isset($end_real['lng']) || !is_numeric($end_real['lng']) || ($end_real['lng'] < -80) || ( -78 < $end_real['lng'])){
+	return;
+}
 
 //find nearst bus stations :
 $interval = 0.005;
@@ -362,7 +376,7 @@ $nbr_of_bus_lines_part = count($road);
 //(it s not only in case the road has only one bus line part
 //and when the last bus line part is selected instead)
 if($shortest_road->first_bus_line_part != null){
-	$bus_line_to_keep = array();
+	$bus_line_to_keep = null;
 	///keep that one as the first bus line part:
 	foreach ($road[0] as $bus_line_part) {
 		if($bus_line_part->name == $shortest_road->first_bus_line_part->name){
@@ -375,8 +389,6 @@ if($shortest_road->first_bus_line_part != null){
 	}
 	$road[0] = $bus_line_to_keep;
 }
-
-$bus_line_to_keep = null;
 
 //if the last bus line part is selected
 //(it s not only in case the road has only one bus line part
