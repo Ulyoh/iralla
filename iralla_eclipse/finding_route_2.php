@@ -16,7 +16,7 @@ $path_of_squares = "c:/squares2/";
 $time_lost_when_changing_bus_line = 600;
 
 $request = $_POST['q'];
-$request = '{"start":{"lat":-2.172744609908308,"lng":-79.80077972412107},"end":{"lat":-2.210482487616563,"lng":-79.90377655029295}}';
+//$request = '{"start":{"lat":-2.172744609908308,"lng":-79.80077972412107},"end":{"lat":-2.210482487616563,"lng":-79.90377655029295}}';
 
 //$request ='{"start":{"lat":-2.0907472653611823,"lng":-79.94669189453127},"end":{"lat":-2.1210250353406597,"lng":-79.95574703216555}}';
 //$request = '{"start":{"lat":-2.076423017151715,"lng":-79.91639366149904},"end":{"lat":-2.0957221234194163,"lng":-79.91124382019045}}';
@@ -36,6 +36,13 @@ $request = '{"start":{"lat":-2.172744609908308,"lng":-79.80077972412107},"end":{
 
 
 //$request = '{"start":{"lat":-2.134491162419215,"lng":-79.91630783081052},"end":{"lat":-2.2072233448863363,"lng":-79.90411987304685}}';
+$request = '
+{
+	"start":{
+		"lat":-2.192814417860611,"lng":-79.8878120422363},"end":{
+			"lat":-2.1142490416697988,"lng":-79.91373291015623}
+}
+';
 $request = json_decode($request);
 //TO DEBUG
 /*
@@ -181,7 +188,7 @@ while($bs2bss = $req->fetch()){
 	$road = json_decode($bs2bss['road_datas']);
 	$bus_stations = /*&*/$road->bus_stations;
 		
-	//init $selected_to_square and $selected_from_square
+	//init $selected_from_square and $selected_to_square
 	if(!key_exists($bs2bss['start_bus_station_id'], $start_bus_stations_list)){
 		$start_bus_station = array();
 		$start_bus_station['lat'] = $bs2bss['start_lat'];
@@ -189,9 +196,9 @@ while($bs2bss = $req->fetch()){
 		$start_bus_station['time_by_foot'] = real_distance_between_2_vertex($start_real, $start_bus_station) / $foot_speed;
 		$start_bus_stations_list[$bs2bss['start_bus_station_id']] = $start_bus_station;
 	}
-	$selected_to_square = new stdClass();
-	$selected_to_square->time_by_foot = $start_bus_stations_list[$bs2bss['start_bus_station_id']]['time_by_foot'];
-	$selected_to_square->time = 0;
+	$selected_from_square = new stdClass();
+	$selected_from_square->time_by_foot = $start_bus_stations_list[$bs2bss['start_bus_station_id']]['time_by_foot'];
+	$selected_from_square->time = 0;
 	
 	if(!key_exists($bs2bss['end_bus_station_id'], $end_bus_stations_list)){
 		$end_bus_station = array();
@@ -200,9 +207,9 @@ while($bs2bss = $req->fetch()){
 		$end_bus_station['time_by_foot'] = real_distance_between_2_vertex($end_real, $end_bus_station) / $foot_speed;
 		$end_bus_stations_list[$bs2bss['end_bus_station_id']] = $end_bus_station;
 	}
-	$selected_from_square = new stdClass();
-	$selected_from_square->time_by_foot = $end_bus_stations_list[$bs2bss['end_bus_station_id']]['time_by_foot'];
-	$selected_from_square->time = 0;
+	$selected_to_square = new stdClass();
+	$selected_to_square->time_by_foot = $end_bus_stations_list[$bs2bss['end_bus_station_id']]['time_by_foot'];
+	$selected_to_square->time = 0;
 	
 	//find the start square and the end square matching
 	
@@ -416,14 +423,16 @@ $to_square = $shortest_road->to_square;
 if($from_square->id > 0){
 	$file_to_open = $path_of_squares . "$from_square->lat/$from_square->lng/$from_square->id";
 	$path = file_get_contents($file_to_open) or die("can't open file\n");
-	$from_square->path = json_decode($path);
+	$path = json_decode($path);
+	$from_square->path = $path;
 	//divide_all_coordinates_of_path($from_square->path, $denominator_to_get_real_values);
 }
 
 if($to_square->id > 0){
 	$file_to_open = $path_of_squares . "$to_square->lat/$to_square->lng/$to_square->id";
 	$path = file_get_contents($file_to_open) or die("can't open file\n");
-	$to_square->path = json_decode($path);
+	$path = json_decode($path);
+	$to_square->path = $path;
 	//divide_all_coordinates_of_path($to_square->path, $denominator_to_get_real_values);
 }
 
@@ -496,10 +505,6 @@ $to_send->from_square = $from_square;
 $to_send->to_square = $to_square;
 
 //end to debug
-
 echo json_encode($to_send);
 
-
-
- 
 ?>
