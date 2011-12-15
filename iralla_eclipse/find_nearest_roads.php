@@ -8,6 +8,8 @@ $denominator_to_get_real_values = 10000000;
 $grid_path = 0.001;
 $grid_path_mult = bcmul($multipicador, $grid_path)/10;  //TODO why /10???? to check with create grid
 $path_of_squares = "c:/squares2/";
+$foot_speed = 0.7;
+$bus_speed = 7;
 
 $request = $_POST['q'];
 //$request = '{"lat":-2.1561053360208935,"lng":-79.91647949218748}';
@@ -34,18 +36,26 @@ $max_group_size = 15;
 $position_squares = nearest_squares($position, $interval, "from_square", $ecart_min_between_d_min_and_d_max, $max_group_size);
 
 //create false start square of length = 0
-add_bus_stations_to_position_squares(&$position_squares, $position_nearest_bus_stations);
+//add_bus_stations_to_position_squares(&$position_squares, $position_nearest_bus_stations);
 
 //end of creation of false  start and end square
 
 
-//extract the bus stations path:
-foreach ($position_squares as $square){
-	$values[] = $square[bus_line_id];
-	$test .= 'OR id = ? ';
+//extract the bus lines path:
+$values = array();
+foreach ($position_squares as $squares_by_bus_line_id){
+	foreach($squares_by_bus_line_id as $bus_line_id => $square){
+		if(!in_array($bus_line_id, $values)){
+			if(isset($test)){
+				$test .= 'OR id = ? ';
+			}
+			else{
+				$test = 'id = ? ';
+			}
+			$values[] = $bus_line_id;
+		}
+	}
 }
-
-$test = substr($test,2);
 
 $req = $bdd->prepare("
 		SELECT name, path, id

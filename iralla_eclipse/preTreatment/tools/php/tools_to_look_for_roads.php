@@ -80,10 +80,10 @@ function nearest_squares($from_lat_lng, $interval, $table_name, $ecart_min_betwe
 
 			$vertex_1 = array();
 			$vertex_2 = array();
-			$vertex_1[lat] = $square[lat] / $grid_path_mult;
-			$vertex_1[lng] = $square[lng] / $grid_path_mult;
-			$vertex_2[lat] = $from_lat_lng[lat] / $grid_path_mult;
-			$vertex_2[lng] = $from_lat_lng[lng] / $grid_path_mult;
+			$vertex_1['lat'] = $square['lat'] / $grid_path_mult;
+			$vertex_1['lng'] = $square['lng'] / $grid_path_mult;
+			$vertex_2['lat'] = $from_lat_lng['lat'] / $grid_path_mult;
+			$vertex_2['lng'] = $from_lat_lng['lng'] / $grid_path_mult;
 
 			$distance = real_distance_between_2_vertex($vertex_1, $vertex_2);
 			//$distance = distanceBetweenTwoVertex($vertex_1, $vertex_2);
@@ -94,7 +94,7 @@ function nearest_squares($from_lat_lng, $interval, $table_name, $ecart_min_betwe
 			if ($distance > $further_distance){
 				$further_distance = $distance;
 			}
-			$square[distance] = $distance;
+			$square['distance'] = $distance;
 			$squares[] = $square;
 		}
 
@@ -120,13 +120,14 @@ function nearest_squares($from_lat_lng, $interval, $table_name, $ecart_min_betwe
 	//found squares to get shortest time to go to a bus station
 	$selected_squares = array();
 	foreach ($squares as $square) {
-		if($selected_squares[$square['id_of_bus_station_linked']] == null){
+		//if($selected_squares[] == null){
+		if(!array_key_exists($square['id_of_bus_station_linked'], $selected_squares)){
 			$selected_squares[$square['id_of_bus_station_linked']] = array();
 		}
 		
-		$square['time_to_bus_station'] = $square['distance'] / $foot_speed + $nearest_square['length'] / $bus_speed;
+		$square['time_to_bus_station'] = $square['distance'] / $foot_speed + $square['length'] / $bus_speed;
 		
-		if(($selected_squares[$square['id_of_bus_station_linked']][$square['bus_line_id']] == null) ||
+		if((!array_key_exists($square['bus_line_id'], $selected_squares[$square['id_of_bus_station_linked']])) ||
 		 ($selected_squares[$square['id_of_bus_station_linked']][$square['bus_line_id']]['time_to_bus_station'] > $square['time_to_bus_station'] ))
 		 {
 			$selected_squares[$square['id_of_bus_station_linked']][$square['bus_line_id']] = $square;
@@ -216,9 +217,9 @@ return $path;
 function add_bus_stations_to_end_start_squares(&$start_or_end_squares, $start_or_end_nearest_bus_stations){
 	foreach ($start_or_end_nearest_bus_stations as $start_bus_station) {
 		foreach (array_keys($start_or_end_squares) as $bus_station_id_of_start_square) {
-			if($bus_station_id_of_start_square == $start_bus_station[id]){
-				if($start_bus_station[time_by_foot]
-						< $start_or_end_squares[$bus_station_id_of_start_square][time_to_bus_station]){
+			if($bus_station_id_of_start_square == $start_bus_station['id']){
+				if($start_bus_station['time_by_foot']
+						< $start_or_end_squares[$bus_station_id_of_start_square]['time_to_bus_station']){
 					//the time to go to the bus station by foot is quicker than by the "$start square"
 					//create a false start square with the bus station:
 					break;
@@ -231,14 +232,14 @@ function add_bus_stations_to_end_start_squares(&$start_or_end_squares, $start_or
 			}
 		}
 		//create a false start square with the bus station:
-		$start_or_end_squares[$start_bus_station[id]]= array();
-		$start_or_end_squares[$start_bus_station[id]][id]= 0;
-		$start_or_end_squares[$start_bus_station[id]][lat]= 0;
-		$start_or_end_squares[$start_bus_station[id]][lng]= 0;
-		$start_or_end_squares[$start_bus_station[id]][time_by_foot] = $start_bus_station[time_by_foot];
-		$start_or_end_squares[$start_bus_station[id]][time_to_bus_station] = 0;
-		$start_or_end_squares[$start_bus_station[id]][path] = json_encode(array());
-		$start_or_end_squares[$start_bus_station[id]][bus_line_name] = null;
+		$start_or_end_squares[$start_bus_station['id']]= array();
+		$start_or_end_squares[$start_bus_station['id']]['id']= 0;
+		$start_or_end_squares[$start_bus_station['id']]['lat']= 0;
+		$start_or_end_squares[$start_bus_station['id']]['lng']= 0;
+		$start_or_end_squares[$start_bus_station['id']]['time_by_foot'] = $start_bus_station['time_by_foot'];
+		$start_or_end_squares[$start_bus_station['id']]['time_to_bus_station'] = 0;
+		$start_or_end_squares[$start_bus_station['id']]['path'] = json_encode(array());
+		$start_or_end_squares[$start_bus_station['id']]['bus_line_name'] = null;
 	}
 }
 
