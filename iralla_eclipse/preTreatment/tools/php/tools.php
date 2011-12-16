@@ -395,6 +395,13 @@
 			$vertex_2 = $buffer;
 		}
 		
+		if (!is_numeric($vertex_1['lat']) 
+				|| !is_numeric($vertex_1['lng']) 
+				|| !is_numeric($vertex_2['lat']) 
+				|| !is_numeric($vertex_2['lng'])){
+			return false;
+		}
+		
 		//if $vertex1 == $vertex_2:
 		if($vertex_1 == $vertex_2){
 			return 0;
