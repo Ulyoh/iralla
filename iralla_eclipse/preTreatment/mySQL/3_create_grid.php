@@ -4,8 +4,6 @@ require_once 'saveToDb.php';
 require_once 'tools.php';
 require_once 'Vertex.php';
 require_once 'Bus_line_part.php';
-
-
 bcscale(0);
 	
 $multipicador = 10000000; //if it needs to be mayor, lat and lng in to_square and from_square must be resetting
@@ -37,46 +35,20 @@ function create_grid(){
 	//access to the database:
 	global $bdd;
 	global $bus_lines_list;
-	
 
 	extract_datas_from_db();
 	$last_id = 0;
 	//for each bus lines
 	foreach ($bus_lines_list as $bus_line) {
-		//to debug
-		//$bus_line = $bus_lines_list[47];
-		//end to debug
-		
-		//to debug
-		/*if(  $bus_line[bus_line_id] != 5){
-			continue;
-		}
-		*/
 		$square_list = array();
 
-		//to debug
-		/*if($bus_line[bus_line_id] != 35){
-			continue;
-		}
-		else{
-			$last_id = 121590;
-		}*/
-		//end to debug
-		
-		
 		if($bus_line[type] != 'mainLine'){
-		//to debug
-		//if(($bus_line[type] == 'feeder') || ($bus_line[bus_line_id] == 164)){
-			
 			echo 'processing grid creation for bus line : ' . $bus_line[bus_line_id] . "<br \\> \n";
 			$last_id = treatment($bus_line, $last_id);
 			echo ' grid creation for bus line : ' . $bus_line[bus_line_id] . " done <br \\> \n";
-			
 		}
 	}
-	
-	
-	
+
 	echo 'all done';
 }
 		
