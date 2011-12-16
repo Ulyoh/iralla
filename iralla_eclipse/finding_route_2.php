@@ -199,6 +199,7 @@ while($bs2bss = $req->fetch()){
 	$selected_from_square = new stdClass();
 	$selected_from_square->time_by_foot = $start_bus_stations_list[$bs2bss['start_bus_station_id']]['time_by_foot'];
 	$selected_from_square->time = 0;
+	$selected_from_square->time_lost = 0;
 	
 	if(!key_exists($bs2bss['end_bus_station_id'], $end_bus_stations_list)){
 		$end_bus_station = array();
@@ -210,6 +211,7 @@ while($bs2bss = $req->fetch()){
 	$selected_to_square = new stdClass();
 	$selected_to_square->time_by_foot = $end_bus_stations_list[$bs2bss['end_bus_station_id']]['time_by_foot'];
 	$selected_to_square->time = 0;
+	$selected_to_square->time_lost = 0;
 	
 	//find the start square and the end square matching
 	
@@ -420,7 +422,7 @@ $from_square = $shortest_road->from_square;
 $to_square = $shortest_road->to_square;
 
 //found the path if exists
-if($from_square->id > 0){
+if(isset($from_square->id) && ($from_square->id > 0)){
 	$file_to_open = $path_of_squares . "$from_square->lat/$from_square->lng/$from_square->id";
 	$path = file_get_contents($file_to_open) or die("can't open file\n");
 	$path = json_decode($path);
@@ -428,7 +430,7 @@ if($from_square->id > 0){
 	//divide_all_coordinates_of_path($from_square->path, $denominator_to_get_real_values);
 }
 
-if($to_square->id > 0){
+if(isset($to_square->id) && ($to_square->id > 0)){
 	$file_to_open = $path_of_squares . "$to_square->lat/$to_square->lng/$to_square->id";
 	$path = file_get_contents($file_to_open) or die("can't open file\n");
 	$path = json_decode($path);
