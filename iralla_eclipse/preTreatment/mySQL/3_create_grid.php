@@ -19,7 +19,7 @@ if(!is_dir($path_to_save)){
 	}
 }
 
-ini_set(memory_limit, "1000M");
+ini_set('memory_limit', "1000M");
 set_time_limit(30000);
 
 create_grid();
@@ -120,7 +120,7 @@ function create_grid(){
 		
 		
 		while($bus_line = $bus_lines_list_db->fetch()){
-			$bus_lines_list[$bus_line[bus_line_id]] = $bus_line;
+			$bus_lines_list[$bus_line['bus_line_id']] = $bus_line;
 		}
 		
 		//make list of connection and distance between them
@@ -128,10 +128,10 @@ function create_grid(){
 		$previous_bus_line_id = NULL;
 	
 		while($one_link = $links_by_bus_lines_db->fetch()){
-			$bus_line_id = $one_link[busLineId];
+			$bus_line_id = $one_link['busLineId'];
 				
 			if(($bus_line_id != $previous_bus_line_id) 
-			&& ($bus_lines_list[$previous_bus_line_id][type] != 'mainLine')){
+			&& ($bus_lines_list[$previous_bus_line_id]['type'] != 'mainLine')){
 				if($previous_bus_line_id != NULL)
 				{
 					//if the path of the previous bus line is a loop:
@@ -149,32 +149,32 @@ function create_grid(){
 					}*/
 					
 					//save the links list:
-					$bus_lines_list[$previous_bus_line_id][links_list] = $links_list;
+					$bus_lines_list[$previous_bus_line_id]['links_list'] = $links_list;
 					$links_list = NULL;
 				}
-				$path = extarct_path($bus_lines_list[$bus_line_id][path_string]);
+				$path = extarct_path($bus_lines_list[$bus_line_id]['path_string']);
 				$path_length = count($path);
-				$one_link[distance_from_first_vertex] =
-					distanceFromFirstVertex($path, $one_link[prevIndex])
-					+ $one_link[distanceToPrevIndex];
+				$one_link['distance_from_first_vertex'] =
+					distanceFromFirstVertex($path, $one_link['prevIndex'])
+					+ $one_link['distanceToPrevIndex'];
 				$bus_line_length = distanceFromFirstVertex($path, $path_length-1);
 				$distance_to_last_vertex = $bus_line_length - $distance_from_first_vertex;
 					
 			}
 			else if (($bus_line_id == $previous_bus_line_id) 
-			&& ($bus_lines_list[$bus_line_id][type] != 'mainLine')){
-				$one_link[distance_from_first_vertex] = 
-					distanceFromFirstVertex($path, $one_link[prevIndex])
-					+ $one_link[distanceToPrevIndex];
+			&& ($bus_lines_list[$bus_line_id]['type'] != 'mainLine')){
+				$one_link['distance_from_first_vertex'] = 
+					distanceFromFirstVertex($path, $one_link['prevIndex'])
+					+ $one_link['distanceToPrevIndex'];
 				
 				$links_list_length = count($links_list);
-				$one_link[previous_link_distance] = 
-					$one_link[distance_from_first_vertex]
-					- $links_list[$links_list_length-1][distance_from_first_vertex];
+				$one_link['previous_link_distance'] = 
+					$one_link['distance_from_first_vertex']
+					- $links_list[$links_list_length-1]['distance_from_first_vertex'];
 				
-				$links_list[$links_list_length-1][next_link_distance] = $one_link[previous_link_distance];
+				$links_list[$links_list_length-1]['next_link_distance'] = $one_link['previous_link_distance'];
 			}
-			if($bus_lines_list[$bus_line_id][type] != 'mainLine'){
+			if($bus_lines_list[$bus_line_id]['type'] != 'mainLine'){
 				$links_list[] = $one_link;
 			}
 			$previous_bus_line_id = $bus_line_id;
@@ -189,7 +189,7 @@ function create_grid(){
 	
 		//last bus line links to save:
 		//if the path of the previous bus line is a loop:
-		if($bus_lines_list[$previous_bus_line_id][type] != 'mainLine'){
+		if($bus_lines_list[$previous_bus_line_id]['type'] != 'mainLine'){
 			/*if(($path[0][0] == $path[$path_length-1][0])
 			&& ($path[0][1] == $path[$path_length-1][1])){
 				$links_list_length = count($links_list);
@@ -202,7 +202,7 @@ function create_grid(){
 				$links_list[$links_list_length-1][next_link_distance];
 			}*/
 			//save the links list:
-			$bus_lines_list[$previous_bus_line_id][links_list] = $links_list;
+			$bus_lines_list[$previous_bus_line_id]['links_list'] = $links_list;
 			$links_list = NULL;
 		}
 	}
@@ -288,7 +288,7 @@ function treatment($bus_line, $last_id){
 					$area_opposite->enter = $area_only_bus_station->out;
 									
 					if (($key == $areaOnlyBusStations_length - 1)
-					&& ($bus_line[areaOnlyBusStations][$key]->out != $path_length - 1 ))
+					&& ($bus_line['areaOnlyBusStations'][$key]->out != $path_length - 1 ))
 					{
 						$area_opposite->out = $path_length - 1;
 						$areas_opposite[] = clone $area_opposite;
@@ -323,21 +323,21 @@ function treatment($bus_line, $last_id){
 			$next_link_index++;
 		}while( 
 		($next_link_index < $links_list_length)
-		&& ($bus_line[links_list][$next_link_index][prevIndex] < $area_opposite->enter )
+		&& ($bus_line['links_list'][$next_link_index]['prevIndex'] < $area_opposite->enter )
 		);
 		
 		//is there a link on the index $area_opposite->enter:
 		$area_opposite_is_a_link = false;
 		
-		if (($bus_line[links_list][$next_link_index - 1][distanceToPrevIndex] == 0) &&
-		($area_opposite->enter == $bus_line[links_list][$next_link_index - 1][prevIndex]))
+		if (($bus_line['links_list'][$next_link_index - 1]['distanceToPrevIndex'] == 0) &&
+		($area_opposite->enter == $bus_line['links_list'][$next_link_index - 1]['prevIndex']))
 		{
 			$area_opposite_is_a_link = true;
 		}
 		
 		//from the previous link:
-		$previous_link = $bus_line[links_list][$next_link_index - 1];
-		$previous_link[vertex] = new Vertex($previous_link[lat], $previous_link[lng]);
+		$previous_link = $bus_line['links_list'][$next_link_index - 1];
+		$previous_link['vertex'] = new Vertex($previous_link['lat'], $previous_link['lng']);
 		
 		$path_to_next_link = array();
 		$path_from_previous_link = array();
@@ -345,19 +345,19 @@ function treatment($bus_line, $last_id){
 		//if $area_opposite->enter is a link:
 		if ($area_opposite_is_a_link == true){
 			//set the path from previous link
-			$path_from_previous_link[path] = array($previous_link[vertex]);
-			$path_from_previous_link[link_lat] = $previous_link[vertex]->lat;
-			$path_from_previous_link[link_lng] = $previous_link[vertex]->lng;
-			$path_from_previous_link[from_index] = null;
-			$path_from_previous_link[to_index] = null;
+			$path_from_previous_link['path'] = array($previous_link['vertex']);
+			$path_from_previous_link['link_lat'] = $previous_link['vertex']->lat;
+			$path_from_previous_link['link_lng'] = $previous_link['vertex']->lng;
+			$path_from_previous_link['from_index'] = null;
+			$path_from_previous_link['to_index'] = null;
 			
 			//to the next link wihch is the same as previous link:
 			$next_link = $previous_link;
-			$path_to_next_link[path] = $path_from_previous_link[path];
-			$path_to_next_link[link_lat] = $next_link[vertex]->lat;
-			$path_to_next_link[link_lng] = $next_link[vertex]->lng;
-			$path_to_next_link[from_index] = null;
-			$path_to_next_link[to_index] = null;
+			$path_to_next_link['path'] = $path_from_previous_link['path'];
+			$path_to_next_link['link_lat'] = $next_link['vertex']->lat;
+			$path_to_next_link['link_lng'] = $next_link['vertex']->lng;
+			$path_to_next_link['from_index'] = null;
+			$path_to_next_link['to_index'] = null;
 			
 			//set $current_next_link_index:
 			$current_next_link_index = $next_link_index;
@@ -365,30 +365,30 @@ function treatment($bus_line, $last_id){
 		else{
 			//we enter in an area so the current index is = $area_opposite->enter
 			//set the path from previous link
-			$extract_lenght = $area_opposite->enter - $previous_link[prevIndex];
-			$path_from_previous_link[path] = array_merge(
-				array($previous_link[vertex]),
-				array_slice($path, $previous_link[prevIndex] + 1, $extract_lenght)
+			$extract_lenght = $area_opposite->enter - $previous_link['prevIndex'];
+			$path_from_previous_link['path'] = array_merge(
+				array($previous_link['vertex']),
+				array_slice($path, $previous_link['prevIndex'] + 1, $extract_lenght)
 			);
-			$path_from_previous_link[link_lat] = $previous_link[vertex]->lat;
-			$path_from_previous_link[link_lng] = $previous_link[vertex]->lng;
-			$path_from_previous_link[from_index] = $previous_link[prevIndex];
-			$path_from_previous_link[to_index] = $area_opposite->enter;
+			$path_from_previous_link['link_lat'] = $previous_link['vertex']->lat;
+			$path_from_previous_link['link_lng'] = $previous_link['vertex']->lng;
+			$path_from_previous_link['from_index'] = $previous_link['prevIndex'];
+			$path_from_previous_link['to_index'] = $area_opposite->enter;
 		
 			// to next link
-			$next_link = $bus_line[links_list][$next_link_index];
-			$next_link[vertex] = new Vertex($next_link[lat], $next_link[lng]);
+			$next_link = $bus_line['links_list'][$next_link_index];
+			$next_link['vertex'] = new Vertex($next_link['lat'], $next_link['lng']);
 		
 			//set the path of next link
-			$extract_lenght = $next_link[prevIndex] - $area_opposite->enter;
-			$path_to_next_link[path] = array_merge(
+			$extract_lenght = $next_link['prevIndex'] - $area_opposite->enter;
+			$path_to_next_link['path'] = array_merge(
 				array_slice($path, $area_opposite->enter+1, $extract_lenght),
-				array($next_link[vertex])
+				array($next_link['vertex'])
 			);
-			$path_to_next_link[link_lat] = $next_link[vertex]->lat;
-			$path_to_next_link[link_lng] = $next_link[vertex]->lng;
-			$path_to_next_link[from_index] = $area_opposite->enter;
-			$path_to_next_link[to_index] = $next_link[prevIndex];
+			$path_to_next_link['link_lat'] = $next_link['vertex']->lat;
+			$path_to_next_link['link_lng'] = $next_link['vertex']->lng;
+			$path_to_next_link['from_index'] = $area_opposite->enter;
+			$path_to_next_link['to_index'] = $next_link['prevIndex'];
 			//set $current_next_link_index:
 			$current_next_link_index = $next_link_index;
 		}
@@ -437,23 +437,23 @@ function treatment($bus_line, $last_id){
 					$lat = strval(abs(bcdiv($current_square->lat,$grid_path)));
 					$lng = strval(abs(bcdiv($current_square->lng,$grid_path)));
 					$square_to_save = array();
-					$square_to_save[bus_line_id] = $bus_line_part->id;
-					$square_to_save[bus_line_name] = $bus_line_part->name;
-					$square_to_save[lat] = $lat;
-					$square_to_save[lng] = $lng;
+					$square_to_save['bus_line_id'] = $bus_line_part->id;
+					$square_to_save['bus_line_name'] = $bus_line_part->name;
+					$square_to_save['lat'] = $lat;
+					$square_to_save['lng'] = $lng;
 		
 		////////////////////////////////////////////////////////////////////
 		//to save square and path from previous link
 		
 					//handling of previous and next links:
 					$bus_line_part->previous_link = $previous_link;
-					$bus_line_part->path_to_previous_link = $path_from_previous_link[path];
+					$bus_line_part->path_to_previous_link = $path_from_previous_link['path'];
 
-					$square_to_save_path = $path_from_previous_link[path];
+					$square_to_save_path = $path_from_previous_link['path'];
 					
 					//add 'go in' to the end of the path:
 					//path from the square to the previous link
-					if ($path_from_previous_link[path] != $path_to_next_link[path]){
+					if ($path_from_previous_link['path'] != $path_to_next_link['path']){
 						$square_to_save_path[] = clone $bus_line_part->go_in;
 					}
 						
@@ -462,11 +462,11 @@ function treatment($bus_line, $last_id){
 						$lat_vertex = bcdiv($square_to_save_path[$key]->lat, $multipicador, 8);
 						$lng_vertex = bcdiv($square_to_save_path[$key]->lng, $multipicador, 8);
 						$square_to_save_path[$key] = array();
-						$square_to_save_path[$key][lat] = $lat_vertex;
-						$square_to_save_path[$key][lng] = $lng_vertex;
+						$square_to_save_path[$key]['lat'] = $lat_vertex;
+						$square_to_save_path[$key]['lng'] = $lng_vertex;
 					}
 					//calculate the length of the path:
-					$square_to_save[length] = real_path_length($square_to_save_path);
+					$square_to_save['length'] = real_path_length($square_to_save_path);
 					
 					//rq: the path is at the opposite way for 'from_square' datas
 					$square_to_save_path_reverse = array_reverse($square_to_save_path);
@@ -478,45 +478,45 @@ function treatment($bus_line, $last_id){
 					//save square with path from previous link to the square
 						
 						//create data to save in "to_square" db
-						$square_to_save[go_in_point_lat] = $bus_line_part->go_in->lat;
-						$square_to_save[go_in_point_lng] = $bus_line_part->go_in->lng;
-						$square_to_save[id_of_bus_station_linked] = $previous_link[busStationId];
-						$square_to_save[path] = json_encode($square_to_save_path);
+						$square_to_save['go_in_point_lat'] = $bus_line_part->go_in->lat;
+						$square_to_save['go_in_point_lng'] = $bus_line_part->go_in->lng;
+						$square_to_save['id_of_bus_station_linked'] = $previous_link['busStationId'];
+						$square_to_save['path'] = json_encode($square_to_save_path);
 						
-						$square_to_save[from_index] = $path_from_previous_link[from_index];
-						$square_to_save[to_index] = $path_from_previous_link[to_index];
-						$square_to_save[from_link_lat] = $path_from_previous_link[link_lat];
-						$square_to_save[from_link_lng] = $path_from_previous_link[link_lng];
+						$square_to_save['from_index'] = $path_from_previous_link['from_index'];
+						$square_to_save['to_index'] = $path_from_previous_link['to_index'];
+						$square_to_save['from_link_lat'] = $path_from_previous_link['link_lat'];
+						$square_to_save['from_link_lng'] = $path_from_previous_link['link_lng'];
 						
 						$to_squares[] = $square_to_save;
 						
-						unset($square_to_save[from_link_lat]);
-						unset($square_to_save[from_link_lng]);
-						unset($square_to_save[go_in_point_lat]);
-						unset($square_to_save[go_in_point_lng]);
+						unset($square_to_save['from_link_lat']);
+						unset($square_to_save['from_link_lng']);
+						unset($square_to_save['go_in_point_lat']);
+						unset($square_to_save['go_in_point_lng']);
 					}
 					
 					if(($flows_list[0] == 'reverse') ||
-					(($flows_list[0] == 'both') && ($path_from_previous_link[path] != $path_to_next_link[path]))){
+					(($flows_list[0] == 'both') && ($path_from_previous_link['path'] != $path_to_next_link['path']))){
 					//save square with path from square to previous link (the flow is reversed)
 							
 						//create data to save in "from_square" db
-						$square_to_save[go_out_point_lat] = $bus_line_part->go_in->lat;
-						$square_to_save[go_out_point_lng] = $bus_line_part->go_in->lng;
-						$square_to_save[id_of_bus_station_linked] = $previous_link[busStationId];
-						$square_to_save[path] = json_encode($square_to_save_path_reverse);
+						$square_to_save['go_out_point_lat'] = $bus_line_part->go_in->lat;
+						$square_to_save['go_out_point_lng'] = $bus_line_part->go_in->lng;
+						$square_to_save['id_of_bus_station_linked'] = $previous_link[busStationId];
+						$square_to_save['path'] = json_encode($square_to_save_path_reverse);
 						
-						$square_to_save[from_index] = $path_from_previous_link[to_index];
-						$square_to_save[to_index] = $path_from_previous_link[from_index];
-						$square_to_save[to_link_lat] = $path_from_previous_link[link_lat];
-						$square_to_save[to_link_lng] = $path_from_previous_link[link_lng];
+						$square_to_save['from_index'] = $path_from_previous_link[to_index];
+						$square_to_save['to_index'] = $path_from_previous_link[from_index];
+						$square_to_save['to_link_lat'] = $path_from_previous_link[link_lat];
+						$square_to_save['to_link_lng'] = $path_from_previous_link[link_lng];
 						
 						$from_squares[] = $square_to_save;	
 						
-						unset($square_to_save[to_link_lat]);
-						unset($square_to_save[to_link_lng]);
-						unset($square_to_save[go_out_point_lat]);
-						unset($square_to_save[go_out_point_lng]);
+						unset($square_to_save['to_link_lat']);
+						unset($square_to_save['to_link_lng']);
+						unset($square_to_save['go_out_point_lat']);
+						unset($square_to_save['go_out_point_lng']);
 					}
 
 		////////////////////////////////////////////////////////////////////
@@ -524,12 +524,12 @@ function treatment($bus_line, $last_id){
 		
 					$bus_line_part->next_link = $next_link;
 					//$extract_lenght = $next_link[prevIndex] - $next_index + 1;
-					$bus_line_part->path_to_next_link = $path_to_next_link[path];
+					$bus_line_part->path_to_next_link = $path_to_next_link['path'];
 					
-					$square_to_save_path = $path_to_next_link[path];
+					$square_to_save_path = $path_to_next_link['path'];
 				
 					//add 'go out' to the begin of the path:
-					if ($path_from_previous_link[path] != $path_to_next_link[path]){
+					if ($path_from_previous_link['path'] != $path_to_next_link['path']){
 						array_unshift(
 							$square_to_save_path, clone $bus_line_part->go_out);
 					}
@@ -541,38 +541,38 @@ function treatment($bus_line, $last_id){
 						$lat_vertex = bcdiv($square_to_save_path[$key]->lat, $multipicador, 8);
 						$lng_vertex = bcdiv($square_to_save_path[$key]->lng, $multipicador, 8);
 						$square_to_save_path[$key] = array();
-						$square_to_save_path[$key][lat] = $lat_vertex;
-						$square_to_save_path[$key][lng] = $lng_vertex;
+						$square_to_save_path[$key]['lat'] = $lat_vertex;
+						$square_to_save_path[$key]['lng'] = $lng_vertex;
 					}
 					
 					//calculate the length of the path:
-					$square_to_save[length] = real_path_length($square_to_save_path);
+					$square_to_save['length'] = real_path_length($square_to_save_path);
 					
 					//rq: the path is at the opposite way for 'from_square' datas
 					$square_to_save_path_reverse = array_reverse($square_to_save_path);
 						
 					//TODO: modify to work with changing flows:
 					if(($flows_list[0] == 'normal') ||
-					(($flows_list[0] == 'both') && ($path_from_previous_link[path] != $path_to_next_link[path]))){
+					(($flows_list[0] == 'both') && ($path_from_previous_link['path'] != $path_to_next_link['path']))){
 					//save square with path from square to next link
 					
 						//create data to save in "from_square" db
-						$square_to_save[go_out_point_lat] = $bus_line_part->go_out->lat;
-						$square_to_save[go_out_point_lng] = $bus_line_part->go_out->lng;
-						$square_to_save[id_of_bus_station_linked] = $next_link[busStationId];
-						$square_to_save[path] = json_encode($square_to_save_path);
+						$square_to_save['go_out_point_lat'] = $bus_line_part->go_out->lat;
+						$square_to_save['go_out_point_lng'] = $bus_line_part->go_out->lng;
+						$square_to_save['id_of_bus_station_linked'] = $next_link['busStationId'];
+						$square_to_save['path'] = json_encode($square_to_save_path);
 						
-						$square_to_save[from_index] = $path_to_next_link[from_index];
-						$square_to_save[to_index] = $path_to_next_link[to_index];
-						$square_to_save[to_link_lat] = $path_to_next_link[link_lat];
-						$square_to_save[to_link_lng] = $path_to_next_link[link_lng];
+						$square_to_save['from_index'] = $path_to_next_link['from_index'];
+						$square_to_save['to_index'] = $path_to_next_link['to_index'];
+						$square_to_save['to_link_lat'] = $path_to_next_link['link_lat'];
+						$square_to_save['to_link_lng'] = $path_to_next_link['link_lng'];
 						
 						$from_squares[] = $square_to_save;	
 
-						unset($square_to_save[to_link_lat]);
-						unset($square_to_save[to_link_lng]);
-						unset($square_to_save[go_out_point_lat]);
-						unset($square_to_save[go_out_point_lng]);
+						unset($square_to_save['to_link_lat']);
+						unset($square_to_save['to_link_lng']);
+						unset($square_to_save['go_out_point_lat']);
+						unset($square_to_save['go_out_point_lng']);
 					}
 					
 					if(($flows_list[0] == 'reverse') || 
@@ -580,15 +580,15 @@ function treatment($bus_line, $last_id){
 					//save square with path from next link to square (the flow is reversed)
 					
 						//create data to save in "to_square" db
-						$square_to_save[go_in_point_lat] = $bus_line_part->go_out->lat;
-						$square_to_save[go_in_point_lng] = $bus_line_part->go_out->lng;
-						$square_to_save[id_of_bus_station_linked] = $next_link[busStationId];
-						$square_to_save[path] = json_encode($square_to_save_path_reverse);
+						$square_to_save['go_in_point_lat'] = $bus_line_part->go_out->lat;
+						$square_to_save['go_in_point_lng'] = $bus_line_part->go_out->lng;
+						$square_to_save['id_of_bus_station_linked'] = $next_link[busStationId];
+						$square_to_save['path'] = json_encode($square_to_save_path_reverse);
 						
-						$square_to_save[from_index] = $path_to_next_link[to_index];
-						$square_to_save[to_index] = $path_to_next_link[from_index];
-						$square_to_save[from_link_lat] = $path_to_next_link[link_lat];
-						$square_to_save[from_link_lng] = $path_to_next_link[link_lng];
+						$square_to_save['from_index'] = $path_to_next_link[to_index];
+						$square_to_save['to_index'] = $path_to_next_link[from_index];
+						$square_to_save['from_link_lat'] = $path_to_next_link[link_lat];
+						$square_to_save['from_link_lng'] = $path_to_next_link[link_lng];
 						
 						$to_squares[] = $square_to_save;
 					}
@@ -600,7 +600,7 @@ function treatment($bus_line, $last_id){
 		//////////////////////////////////////////////////////////////////
 		// reinit $bus_line_part
 					$bus_line_part = new Bus_line_part($bus_line);
-					$bus_line_part->go_in = $out_coords[intersection];
+					$bus_line_part->go_in = $out_coords['intersection'];
 					$bus_line_part->go_out = null;
 					//$bus_line_part->vertex_list = array();
 				
@@ -612,7 +612,7 @@ function treatment($bus_line, $last_id){
 					}
 				
 					//coordinates of next square:
-					$next_square = $out_coords[next_square];
+					$next_square = $out_coords['next_square'];
 				
 					//EVOLUTION OF PREVIOUS AND NEXT LINKS
 
@@ -626,35 +626,35 @@ function treatment($bus_line, $last_id){
 							$previous_next_link = $next_link;
 							
 							//end to debug
-							$next_link = $bus_line[links_list][$current_next_link_index];
+							$next_link = $bus_line['links_list'][$current_next_link_index];
 							$current_next_link_index++;
 							if($next_link == null){
 								echo "ERROR:\n\tdoes not find the next link\n";
 							}
-							$next_link[vertex] = new Vertex($next_link[lat], $next_link[lng]);
+							$next_link['vertex'] = new Vertex($next_link['lat'], $next_link['lng']);
 						} while(is_link_in_square($next_link, $current_square) == true);
 						
-						$extract_lenght = $next_link[prevIndex] - $next_index + 1;
+						$extract_lenght = $next_link['prevIndex'] - $next_index + 1;
 			
-						$path_to_next_link[path] = array_merge(
+						$path_to_next_link['path'] = array_merge(
 						///////////////////possibliy $next index +1 instead of $next_index:
 							array_slice($path, $next_index, $extract_lenght),
-							array($next_link[vertex])
+							array($next_link['vertex'])
 						);
-						$path_to_next_link[link_lat] = $next_link[vertex]->lat;
-						$path_to_next_link[link_lng] = $next_link[vertex]->lng;
-						$path_to_next_link[from_index] = $next_index;
-						$path_to_next_link[to_index] = $next_link[prevIndex];
+						$path_to_next_link['link_lat'] = $next_link['vertex']->lat;
+						$path_to_next_link['link_lng'] = $next_link['vertex']->lng;
+						$path_to_next_link['from_index'] = $next_index;
+						$path_to_next_link['to_index'] = $next_link['prevIndex'];
 						
 						//previous link must be the last link in the next square before to go out
 						//which is the link before $next_link
-						$previous_link = $bus_line[links_list][$current_next_link_index - 2];
-						$previous_link[vertex] = new Vertex($previous_link[lat], $previous_link[lng]);
-						$path_from_previous_link[path] = array($previous_link[vertex]);
-						$path_from_previous_link[link_lat] = $previous_link[vertex]->lat;
-						$path_from_previous_link[link_lng] = $previous_link[vertex]->lng;
-						$path_from_previous_link[from_index] = null;
-						$path_from_previous_link[to_index] = null;
+						$previous_link = $bus_line['links_list'][$current_next_link_index - 2];
+						$previous_link['vertex'] = new Vertex($previous_link['lat'], $previous_link['lng']);
+						$path_from_previous_link['path'] = array($previous_link['vertex']);
+						$path_from_previous_link['link_lat'] = $previous_link['vertex']->lat;
+						$path_from_previous_link['link_lng'] = $previous_link['vertex']->lng;
+						$path_from_previous_link['from_index'] = null;
+						$path_from_previous_link['to_index'] = null;
 						
 						if(is_link_in_square($next_link, $next_square) == true){
 							$previous_link = $next_link;
@@ -667,7 +667,7 @@ function treatment($bus_line, $last_id){
 						
 						//if exists vertex between the vertex design by the index 
 						//and the link
-						if($next_link[prevIndex] > $index){
+						if($next_link['prevIndex'] > $index){
 							
 							//get the right value for $last_index_in_square
 							$last_index_in_square = $next_index;
@@ -688,18 +688,18 @@ function treatment($bus_line, $last_id){
 								$previous_link = $next_link;
 								
 								//set the path from previous link
-								$path_from_previous_link[path] = array($previous_link[vertex]);
-								$path_from_previous_link[link_lat] = $previous_link[vertex]->lat;
-								$path_from_previous_link[link_lng] = $previous_link[vertex]->lng;
-								$path_from_previous_link[from_index] = null;
-								$path_from_previous_link[to_index] = null;
+								$path_from_previous_link['path'] = array($previous_link[vertex]);
+								$path_from_previous_link['link_lat'] = $previous_link[vertex]->lat;
+								$path_from_previous_link['link_lng'] = $previous_link[vertex]->lng;
+								$path_from_previous_link['from_index'] = null;
+								$path_from_previous_link['to_index'] = null;
 								
 								//to the next link:
-								$path_to_next_link[path] = $path_from_previous_link[path];
-								$path_to_next_link[link_lat] = $next_link[vertex]->lat;
-								$path_to_next_link[link_lng] = $next_link[vertex]->lng;
-								$path_to_next_link[from_index] = null;
-								$path_to_next_link[to_index] = null;
+								$path_to_next_link['path'] = $path_from_previous_link['path'];
+								$path_to_next_link['link_lat'] = $next_link['vertex']->lat;
+								$path_to_next_link['link_lng'] = $next_link['vertex']->lng;
+								$path_to_next_link['from_index'] = null;
+								$path_to_next_link['to_index'] = null;
 								
 								//reinit of index
 								//to get the good index after the $index++ of the beginning of the loop
@@ -721,18 +721,18 @@ function treatment($bus_line, $last_id){
 							$previous_link = $next_link;
 							
 							//set the path from previous link
-							$path_from_previous_link[path] = array($previous_link[vertex]);
-							$path_from_previous_link[link_lat] = $previous_link[vertex]->lat;
-							$path_from_previous_link[link_lng] = $previous_link[vertex]->lng;
-							$path_from_previous_link[from_index] = null;
-							$path_from_previous_link[to_index] = null;
+							$path_from_previous_link['path'] = array($previous_link['vertex']);
+							$path_from_previous_link['link_lat'] = $previous_link['vertex']->lat;
+							$path_from_previous_link['link_lng'] = $previous_link['vertex']->lng;
+							$path_from_previous_link['from_index'] = null;
+							$path_from_previous_link['to_index'] = null;
 							
 							//to the next link:
-							$path_to_next_link[path] = $path_from_previous_link[path];
-							$path_to_next_link[link_lat] = $next_link[vertex]->lat;
-							$path_to_next_link[link_lng] = $next_link[vertex]->lng;
-							$path_to_next_link[from_index] = null;
-							$path_to_next_link[to_index] = null;
+							$path_to_next_link['path'] = $path_from_previous_link['path'];
+							$path_to_next_link['link_lat'] = $next_link['vertex']->lat;
+							$path_to_next_link['link_lng'] = $next_link['vertex']->lng;
+							$path_to_next_link['from_index'] = null;
+							$path_to_next_link['to_index'] = null;
 						}
 					}
 					
@@ -748,35 +748,35 @@ function treatment($bus_line, $last_id){
 					
 					//TODO make a verification of concordance between last index coord and 
 					//last link
-					$last_link = $bus_line[links_list][count($bus_line[links_list]) - 1];
-					$last_link[vertex] = new Vertex($last_link[lat], $last_link[lng]);
+					$last_link = $bus_line['links_list'][count($bus_line['links_list']) - 1];
+					$last_link['vertex'] = new Vertex($last_link['lat'], $last_link['lng']);
 					$lat = strval(abs(bcdiv($current_square->lat,$grid_path)));
 					$lng = strval(abs(bcdiv($current_square->lng,$grid_path)));
 					
 					$square_to_save = array();
-					$square_to_save[bus_line_id] = $bus_line_part->id;
-					$square_to_save[bus_line_name] = $bus_line_part->name;
-					$square_to_save[lat] = $lat;
-					$square_to_save[lng] = $lng;
-					$square_to_save[length] = 0;
-					$square_to_save[id_of_bus_station_linked] = $last_link[busStationId];
-					$square_to_save[path][0][lat] = $last_link[lat]; //verify
-					$square_to_save[path][0][lng] = $last_link[lng]; //verify
+					$square_to_save['bus_line_id'] = $bus_line_part->id;
+					$square_to_save['bus_line_name'] = $bus_line_part->name;
+					$square_to_save['lat'] = $lat;
+					$square_to_save['lng'] = $lng;
+					$square_to_save['length'] = 0;
+					$square_to_save['id_of_bus_station_linked'] = $last_link[busStationId];
+					$square_to_save['path'][0]['lat'] = $last_link[lat]; //verify
+					$square_to_save['path'][0]['lng'] = $last_link[lng]; //verify
 					
-					$square_to_save[path] = json_encode($square_to_save[path]);
+					$square_to_save['path'] = json_encode($square_to_save['path']);
 					//from_index not used
 					//to_index not used
 					
 					//go_in_point_lat not used
 					//go_in_point_ln not used
-					$square_to_save[from_link_lat] = $last_link[vertex]->lat;
-					$square_to_save[from_link_lng] = $last_link[vertex]->lng;
-					$to_squares[to_link_lng] = $square_to_save;
+					$square_to_save['from_link_lat'] = $last_link['vertex']->lat;
+					$square_to_save['from_link_lng'] = $last_link['vertex']->lng;
+					$to_squares['to_link_lng'] = $square_to_save;
 					
-					$square_to_save[to_link_lat] = $square_to_save[from_link_lat];
-					$square_to_save[to_link_lng] = $square_to_save[from_link_lng];
-					unset ($square_to_save[from_link_lat]);
-					unset ($square_to_save[from_link_lng]);
+					$square_to_save['to_link_lat'] = $square_to_save['from_link_lat'];
+					$square_to_save['to_link_lng'] = $square_to_save['from_link_lng'];
+					unset ($square_to_save['from_link_lat']);
+					unset ($square_to_save['from_link_lng']);
 					//go_out_point_lat not used
 					//go_out_point_ln not used
 					
@@ -788,8 +788,8 @@ function treatment($bus_line, $last_id){
 			//if the current index = the next link = the previous link
 			if($next_link != $previous_link){
 				//if next link == index == previous link
-				array_splice($path_to_next_link[path], 0, 1);
-				$path_from_previous_link[path][] = $next_vertex;
+				array_splice($path_to_next_link['path'], 0, 1);
+				$path_from_previous_link['path'][] = $next_vertex;
 			}
 			/*else{
 				echo "is it working? \n";
@@ -832,15 +832,15 @@ function treatment($bus_line, $last_id){
 		//create file and save path in file
 		$file_to_save = "$lng_directory/$to_square[id]";
 		$fh = fopen($file_to_save, 'w') or die("can't open file\n");
-		fwrite($fh, $to_square[path]);
+		fwrite($fh, $to_square['path']);
 		fclose($fh);
 		
-		unset($to_square[path]);
+		unset($to_square['path']);
 	}
 	
 	foreach( $from_squares as &$from_square){
 		$last_id++;
-		$from_square[id] = $last_id;
+		$from_square['id'] = $last_id;
 		//create directories:
 		//create folder if do not exists:
 		$lat_directory = "$path_to_save/$from_square[lat]";
@@ -859,10 +859,10 @@ function treatment($bus_line, $last_id){
 		//create file and save path in file
 		$file_to_save = "$lng_directory/$from_square[id]";
 		$fh = fopen($file_to_save, 'w') or die("can't open file\n");
-		fwrite($fh, $from_square[path]);
+		fwrite($fh, $from_square['path']);
 		fclose($fh);
 		
-		unset($from_square[path]);
+		unset($from_square['path']);
 	}
 	
 	
@@ -883,9 +883,9 @@ function treatment($bus_line, $last_id){
 
 function is_link_in_square($link, $square){
 	global $grid_path;
-	if((( $square->lat - $grid_path ) < $link[vertex]->lat) 
+	if((( $square->lat - $grid_path ) < $link['vertex']->lat) 
 	&& ($link[vertex]->lat <= $square->lat)
-	&& (( $square->lng - $grid_path ) < $link[vertex]->lng) 
+	&& (( $square->lng - $grid_path ) < $link['vertex']->lng) 
 	&& ($link[vertex]->lng <= $square->lng))
 	{
 		return true;
@@ -916,7 +916,7 @@ function verify_squares($to_square_list, $from_square_list){
 		
 		$from_square_path = json_decode($from_square[path]);
 		$length_of_from_square_path = count($from_square_path);
-		$to_square_path = json_decode($to_square[path]);
+		$to_square_path = json_decode($to_square['path']);
 		
 		$previous_link = $to_square_path[0];
 		$next_link = $from_square_path[$length_of_from_square_path - 1];
