@@ -42,8 +42,8 @@ function create_grid(){
 	foreach ($bus_lines_list as $bus_line) {
 		$square_list = array();
 
-		if($bus_line[type] != 'mainLine'){
-			echo 'processing grid creation for bus line : ' . $bus_line[bus_line_id] . "<br \\> \n";
+		if($bus_line['type'] != 'mainLine'){
+			echo 'processing grid creation for bus line : ' . $bus_line['bus_line_id'] . "<br \\> \n";
 			$last_id = treatment($bus_line, $last_id);
 			echo ' grid creation for bus line : ' . $bus_line[bus_line_id] . " done <br \\> \n";
 		}
@@ -98,6 +98,7 @@ function extract_datas_from_db(){
 	
 		//if the begining of a busline:
 		if(($previous_bus_line_id == NULL) || ($bus_line_id != $previous_bus_line_id)){
+			//save the links list of the previous bus line:
 			if(($previous_bus_line_id != NULL)
 				&& ($bus_lines_list[$previous_bus_line_id]['type'] != 'mainLine'))
 			{
@@ -152,7 +153,6 @@ function extract_datas_from_db(){
 	
 	unset($bus_line_id, $bus_line_length, $distance_to_last_vertex);
 	
-	
 	//last bus line links to save:
 	if($bus_lines_list[$previous_bus_line_id]['type'] != 'mainLine'){
 		//if the path of the previous bus line is a loop:
@@ -182,12 +182,12 @@ function treatment($bus_line, $last_id){
 	global $path_to_save;
 	
 	$bus_line_part = new Bus_line_part($bus_line);
-	$path = extract_path_from_string($bus_line[path_string]);
+	$path = extract_path_from_string($bus_line['path_string']);
 	$path_length = count($path);
 	$next_index = 0;
 	$previous_link = NULL;
 	$next_link = NULL;
-	$links_list_length = count($bus_line[links_list]);
+	$links_list_length = count($bus_line['links_list']);
 	
 	$areas_opposite = array();
 	$area_opposite = new Enter_and_out;
@@ -200,45 +200,45 @@ function treatment($bus_line, $last_id){
 			
 		//FOUND AREAS BETWEEN VERTEX OF THE LINE WHERE FOUND THE SQUARES:
 			
-		$bus_line[areaOnlyBusStations] = json_decode($bus_line[areaOnlyBusStations]);
-		$areaOnlyBusStations_length = count($bus_line[areaOnlyBusStations]);
+		$bus_line['areaOnlyBusStations'] = json_decode($bus_line['areaOnlyBusStations']);
+		$areaOnlyBusStations_length = count($bus_line['areaOnlyBusStations']);
 	
-		//converte string to object in $bus_line[areaOnlyBusStations]:
+		//converte string to object in $bus_line['areaOnlyBusStations']:
 		if ($areaOnlyBusStations_length > 0 ){
 			//reinit $areas_opposite to remove the default value
 			$areas_opposite = array();
 				
-			foreach ($bus_line[areaOnlyBusStations] as $key => $enter_and_out) 
+			foreach ($bus_line['areaOnlyBusStations'] as $key => $enter_and_out) 
 			{
 				$looking_for_vertex = new Vertex($enter_and_out->enter->lat, $enter_and_out->enter->lng);
-				$bus_line[areaOnlyBusStations][$key]->enter = 
+				$bus_line['areaOnlyBusStations'][$key]->enter = 
 					found_vertex_index_from_coordinates(
 					$looking_for_vertex,
 					$path);
 				
 				$looking_for_vertex = new Vertex($enter_and_out->out->lat, $enter_and_out->out->lng);
-				$bus_line[areaOnlyBusStations][$key]->out = 
+				$bus_line['areaOnlyBusStations'][$key]->out = 
 					found_vertex_index_from_coordinates(
 					$looking_for_vertex,
 					$path);
 					
-				if(($key == $areaOnlyBusStations_length -1) && ( $bus_line[areaOnlyBusStations][$key]->out == 0 )){
-					$bus_line[areaOnlyBusStations][$key]->out = $path_length - 1;
+				if(($key == $areaOnlyBusStations_length -1) && ( $bus_line['areaOnlyBusStations'][$key]->out == 0 )){
+					$bus_line['areaOnlyBusStations'][$key]->out = $path_length - 1;
 				}
 			}
 			
 			//if a unique area only bus station and at the beginning of 
 			//the path:
-			if ( ($areaOnlyBusStations_length == 1) && ($bus_line[areaOnlyBusStations][0]->enter == 0)){
-				$area_opposite->enter = $bus_line[areaOnlyBusStations][0]->out;
+			if ( ($areaOnlyBusStations_length == 1) && ($bus_line['areaOnlyBusStations'][0]->enter == 0)){
+				$area_opposite->enter = $bus_line['areaOnlyBusStations'][0]->out;
 				$area_opposite->out = $path_length-1;
 				$areas_opposite[] = clone $area_opposite;
 			}
 			else{
-				foreach ($bus_line[areaOnlyBusStations] as $key => $area_only_bus_station) 
+				foreach ($bus_line['areaOnlyBusStations'] as $key => $area_only_bus_station) 
 				{
 					if($key == 0){
-						if($bus_line[areaOnlyBusStations][0]->enter == 0)
+						if($bus_line['areaOnlyBusStations'][0]->enter == 0)
 						{
 							$area_opposite->enter = $area_only_bus_station->out;
 							continue;
@@ -398,7 +398,7 @@ function treatment($bus_line, $last_id){
 				do{
 					//calculate the out coordinates of the current square:
 					$out_coords = found_out_point($current_vertex, $next_vertex, $current_square);
-					$bus_line_part->go_out = $out_coords[intersection];
+					$bus_line_part->go_out = $out_coords['intersection'];
 					
 					$lat = strval(abs(bcdiv($current_square->lat,$grid_path)));
 					$lng = strval(abs(bcdiv($current_square->lng,$grid_path)));
@@ -654,9 +654,9 @@ function treatment($bus_line, $last_id){
 								$previous_link = $next_link;
 								
 								//set the path from previous link
-								$path_from_previous_link['path'] = array($previous_link[vertex]);
-								$path_from_previous_link['link_lat'] = $previous_link[vertex]->lat;
-								$path_from_previous_link['link_lng'] = $previous_link[vertex]->lng;
+								$path_from_previous_link['path'] = array($previous_link['vertex']);
+								$path_from_previous_link['link_lat'] = $previous_link['vertex']->lat;
+								$path_from_previous_link['link_lng'] = $previous_link['vertex']->lng;
 								$path_from_previous_link['from_index'] = null;
 								$path_from_previous_link['to_index'] = null;
 								
@@ -850,9 +850,9 @@ function treatment($bus_line, $last_id){
 function is_link_in_square($link, $square){
 	global $grid_path;
 	if((( $square->lat - $grid_path ) < $link['vertex']->lat) 
-	&& ($link[vertex]->lat <= $square->lat)
+	&& ($link['vertex']->lat <= $square->lat)
 	&& (( $square->lng - $grid_path ) < $link['vertex']->lng) 
-	&& ($link[vertex]->lng <= $square->lng))
+	&& ($link['vertex']->lng <= $square->lng))
 	{
 		return true;
 	}

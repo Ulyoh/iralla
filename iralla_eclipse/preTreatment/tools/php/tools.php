@@ -253,8 +253,8 @@
 			}
 		}
 		
-		$where[intersection] = $intersection;
-		$where[next_square] = $next_square;
+		$where['intersection'] = $intersection;
+		$where['next_square'] = $next_square;
 		return $where;
 	}
 	
