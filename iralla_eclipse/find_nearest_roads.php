@@ -28,18 +28,12 @@ $position_nearest_bus_stations = nearest_bus_stations($position, $interval, "bus
 $position['lat'] =abs( bcmul($position['lat'], $grid_path_mult));
 $position['lng'] =abs( bcmul($position['lng'], $grid_path_mult));
 
-//from square and to square
+//from square
 $interval = 5;
 $ecart_min_between_d_min_and_d_max = 6;
 $max_group_size = 15;
 
 $position_squares = nearest_squares($position, $interval, "from_square", $ecart_min_between_d_min_and_d_max, $max_group_size);
-
-//create false start square of length = 0
-//add_bus_stations_to_position_squares(&$position_squares, $position_nearest_bus_stations);
-
-//end of creation of false  start and end square
-
 
 //extract the bus lines path:
 $values = array();

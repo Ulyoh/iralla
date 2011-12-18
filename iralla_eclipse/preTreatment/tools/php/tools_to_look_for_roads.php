@@ -45,7 +45,7 @@ class Shortest_road{
 
 
 
-function nearest_squares($from_lat_lng, $interval, $table_name, $ecart_min_between_d_min_and_d_max, $max_group_size){
+function nearest_squares($from_lat_lng, $interval, $table_name, $ecart_min_between_d_min_and_d_max){
 	global $bdd;
 	global $foot_speed;
 	global $bus_speed;
