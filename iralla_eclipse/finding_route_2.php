@@ -11,7 +11,7 @@ $foot_speed = 0.7; //0.7 m/s ~2.5km/h
 $bus_speed = 7; //13 m/s ~30km/h
 
 $path_of_roads = "c:/roads2/";
-$path_of_squares = "c:/squares2/";
+$path_of_squares = "c:/squares3/";
 
 $time_lost_when_changing_bus_line = 600;
 
@@ -36,13 +36,13 @@ $request = $_POST['q'];
 
 
 //$request = '{"start":{"lat":-2.134491162419215,"lng":-79.91630783081052},"end":{"lat":-2.2072233448863363,"lng":-79.90411987304685}}';
-$request = '
+/*$request = '
 {
 	"start":{
 		"lat":-2.192814417860611,"lng":-79.8878120422363},"end":{
 			"lat":-2.1142490416697988,"lng":-79.91373291015623}
 }
-';
+';*/
 $request = json_decode($request);
 //TO DEBUG
 /*

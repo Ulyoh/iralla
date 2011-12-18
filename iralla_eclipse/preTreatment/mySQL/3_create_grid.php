@@ -1,4 +1,16 @@
 <?php
+/*to_square
+	Object { id="93547", lat="2114", lng="79912", más...}	
+id	"93547"
+lat	"2114"
+lng	"79912"
+bus_line_id	"137"
+name	"RUTA 71 P.O. 2009"
+path	[Object { lat="-2.11436700", lng="-79.91200000"}]
+time	158.92587354303
+time_by_foot	278.22547990243
+time_lost	47*/
+
 require_once 'access_to_db.php';
 require_once 'saveToDb.php';
 require_once 'tools.php';
@@ -9,7 +21,7 @@ bcscale(0);
 $multipicador = 10000000; //if it needs to be mayor, lat and lng in to_square and from_square must be resetting
 $grid_path = bcmul($multipicador, 0.001);
 $precision = - substr_count($grid_path, '0');
-$path_to_save = "c:/squares2";
+$path_to_save = "c:/squares3";
 
 if(!is_dir($path_to_save)){
 	if (!mkdir($path_to_save)) {
@@ -40,6 +52,10 @@ function create_grid(){
 	$last_id = 0;
 	//for each bus lines
 	foreach ($bus_lines_list as $bus_line) {
+		//to run
+		//if ($bus_line['bus_line_id'] <= 60)
+		//		continue;
+		//end to run
 		$square_list = array();
 
 		if($bus_line['type'] != 'mainLine'){
@@ -58,31 +74,32 @@ function extract_datas_from_db(){
 	
 	//todebug, removing the truncates:
 	////////////////////////////////////////////////////////////////////// SEGURE
-	//$bdd->query("TRUNCATE TABLE to_square");
-	//$bdd->query("TRUNCATE TABLE from_square");
+	$bdd->query("TRUNCATE TABLE to_square");
+	$bdd->query("TRUNCATE TABLE from_square");
 	
 	//extract the links by bus lines and in order:
 	$links_by_bus_lines_db = $bdd->query("
 			SELECT
 			*
 			FROM
-			links
+				links
+			
 			ORDER BY
-			busLineId, prevIndex, distanceToPrevIndex
+				busLineId, prevIndex, distanceToPrevIndex
 			");
 	
 	//extract the bus lines of the database
 	$bus_lines_list_db = $bdd->query("
 			SELECT
-			bus_lines.id AS bus_line_id,
-			name AS bus_line_name,
-			path AS path_string,
-			type,
-			flows,
-			areaOnlyBusStations
-	
+				bus_lines.id AS bus_line_id,
+				name AS bus_line_name,
+				path AS path_string,
+				type,
+				flows,
+				areaOnlyBusStations
+			
 			FROM
-			bus_lines
+				bus_lines
 			");
 	
 	while($bus_line = $bus_lines_list_db->fetch()){
@@ -835,10 +852,6 @@ function treatment($bus_line, $last_id){
 	saveToDb($to_squares, 'to_square');
 	saveToDb($from_squares, 'from_square');
 	
-
-	
-	
-	
 	/*unset($to_square, $from_square);
 	$to_square = array();
 	$from_square = array();*/
@@ -950,13 +963,13 @@ function verify_squares($to_square_list, $from_square_list){
 	//store the results:
 	//id, lat, lng, type: busline o bus station, element_id, name, next_link, path_to_next_link, previous_link, path_to_previous_link, go in, go out, vertex_list
 
-	/*
-	$bdd->query("TRUNCATE TABLE to_square");
-	saveToDb($to_square, 'to_square');
+	
+	//$bdd->query("TRUNCATE TABLE to_square");
+	//saveToDb($to_square, 'to_square');
 
-	$bdd->query("TRUNCATE TABLE from_square");
-	saveToDb($from_square, 'from_square');
-	*/
+	//$bdd->query("TRUNCATE TABLE from_square");
+	//saveToDb($from_square, 'from_square');
+	
 
 
 ?>
