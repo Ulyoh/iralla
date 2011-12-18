@@ -40,25 +40,29 @@ function find_route($start, $end){
 	$communs_lines = find_communs_lines($start_lines, $end_lines);
 	
 	if(is_array($communs_lines)){
+		$bus_lines_path = attach_bus_lines_path(&$communs_lines);
+		
+		$results = array();
+		$results_part = array();
 		foreach($communs_lines as $bus_line_id => $communs_line){
-			//calcutate the time :
-			
-			
-			
-			
+			//calcutate :
+			$results_part = calculate_shortest_time_from_starts_to_ends_on_one_line($communs_line, $start, $end);
+			$results = array_merge($results, $results_part);
 		}
 		
+		//sort by time:
+		//TODO
 		
-		$communs_lines[$bus_line_id][] = extract_part_line($path, $first_vertex_to_extract, $end_vertex_to_extract);
 		
-		
-		
-		return $results;
+		return json_encode($results);
 	}
 	
+	//if there is not a commun route:
+	//find if one start road and one end road have a comun bus station:
 	
+	find_roads_with_commun_bus_station($start_lines, $end_lines);
 	
-	
+	//test if commun links roads 
 	
 	
 }
