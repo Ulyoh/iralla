@@ -124,8 +124,9 @@ function nearest_squares($from_lat_lng, $interval, $table_name, $ecart_min_betwe
 		if(!array_key_exists($square['id_of_bus_station_linked'], $selected_squares)){
 			$selected_squares[$square['id_of_bus_station_linked']] = array();
 		}
-		
-		$square['time_to_bus_station'] = $square['distance'] / $foot_speed + $square['length'] / $bus_speed;
+		$result['time_by_foot'] = $square['distance'] / $foot_speed;
+		$result['time_by_bus'] = $square['length'] / $bus_speed;
+		$square['time_to_bus_station'] = $result['time_by_foot'] + $result['time_by_bus'];
 		
 		if((!array_key_exists($square['bus_line_id'], $selected_squares[$square['id_of_bus_station_linked']])) ||
 		 ($selected_squares[$square['id_of_bus_station_linked']][$square['bus_line_id']]['time_to_bus_station'] > $square['time_to_bus_station'] ))
