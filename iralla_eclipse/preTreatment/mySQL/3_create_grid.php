@@ -664,7 +664,8 @@ function treatment($bus_line, $last_id){
 							//todo : use is_vertex_in_square instead of found_main_square_coords_of_vertex
 							do {
 								$last_index_in_square++;
-							} while (found_main_square_coords_of_vertex($last_index_in_square) == $next_square);
+							} while (($last_index_in_square < $path_length)
+							&& (found_main_square_coords_of_vertex($path[$last_index_in_square]) == $next_square));
 							
 							$last_index_in_square--;
 							
