@@ -61,7 +61,7 @@ function create_grid(){
 		if($bus_line['type'] != 'mainLine'){
 			echo 'processing grid creation for bus line : ' . $bus_line['bus_line_id'] . "<br \\> \n";
 			$last_id = treatment($bus_line, $last_id);
-			echo ' grid creation for bus line : ' . $bus_line[bus_line_id] . " done <br \\> \n";
+			echo ' grid creation for bus line : ' . $bus_line['bus_line_id'] . " done <br \\> \n";
 		}
 	}
 
@@ -213,7 +213,7 @@ function treatment($bus_line, $last_id){
 	$areas_opposite[] = clone $area_opposite;
 	
 	//if the line is a feeder:
-	if($bus_line[type] == 'feeder'){
+	if($bus_line['type'] == 'feeder'){
 			
 		//FOUND AREAS BETWEEN VERTEX OF THE LINE WHERE FOUND THE SQUARES:
 			
@@ -286,7 +286,7 @@ function treatment($bus_line, $last_id){
 			 // => done to work with multiple flows, have to be tested
 			 
 	//set the previous and next current link:
-	$flows_list = explode(" ", $bus_line[flows]);
+	$flows_list = explode(" ", $bus_line['flows']);
 	$vertex_is_link = false;
 	
 	
@@ -486,13 +486,13 @@ function treatment($bus_line, $last_id){
 						//create data to save in "from_square" db
 						$square_to_save['go_out_point_lat'] = $bus_line_part->go_in->lat;
 						$square_to_save['go_out_point_lng'] = $bus_line_part->go_in->lng;
-						$square_to_save['id_of_bus_station_linked'] = $previous_link[busStationId];
+						$square_to_save['id_of_bus_station_linked'] = $previous_link['busStationId'];
 						$square_to_save['path'] = json_encode($square_to_save_path_reverse);
 						
-						$square_to_save['from_index'] = $path_from_previous_link[to_index];
-						$square_to_save['to_index'] = $path_from_previous_link[from_index];
-						$square_to_save['to_link_lat'] = $path_from_previous_link[link_lat];
-						$square_to_save['to_link_lng'] = $path_from_previous_link[link_lng];
+						$square_to_save['from_index'] = $path_from_previous_link['to_index'];
+						$square_to_save['to_index'] = $path_from_previous_link['from_index'];
+						$square_to_save['to_link_lat'] = $path_from_previous_link['link_lat'];
+						$square_to_save['to_link_lng'] = $path_from_previous_link['link_lng'];
 						
 						$from_squares[] = $square_to_save;	
 						
@@ -565,13 +565,13 @@ function treatment($bus_line, $last_id){
 						//create data to save in "to_square" db
 						$square_to_save['go_in_point_lat'] = $bus_line_part->go_out->lat;
 						$square_to_save['go_in_point_lng'] = $bus_line_part->go_out->lng;
-						$square_to_save['id_of_bus_station_linked'] = $next_link[busStationId];
+						$square_to_save['id_of_bus_station_linked'] = $next_link['busStationId'];
 						$square_to_save['path'] = json_encode($square_to_save_path_reverse);
 						
-						$square_to_save['from_index'] = $path_to_next_link[to_index];
-						$square_to_save['to_index'] = $path_to_next_link[from_index];
-						$square_to_save['from_link_lat'] = $path_to_next_link[link_lat];
-						$square_to_save['from_link_lng'] = $path_to_next_link[link_lng];
+						$square_to_save['from_index'] = $path_to_next_link['to_index'];
+						$square_to_save['to_index'] = $path_to_next_link['from_index'];
+						$square_to_save['from_link_lat'] = $path_to_next_link['link_lat'];
+						$square_to_save['from_link_lng'] = $path_to_next_link['link_lng'];
 						
 						$to_squares[] = $square_to_save;
 					}
@@ -669,7 +669,7 @@ function treatment($bus_line, $last_id){
 							$last_index_in_square--;
 							
 							//if all the vertex to go to the link are inside the next square
-							if ($last_index_in_square >= $next_link[prevIndex]){
+							if ($last_index_in_square >= $next_link['prevIndex']){
 								//modify the previous link and the next link:
 								
 								//$current_next_link_index++;
@@ -768,9 +768,9 @@ function treatment($bus_line, $last_id){
 					$square_to_save['lat'] = $lat;
 					$square_to_save['lng'] = $lng;
 					$square_to_save['length'] = 0;
-					$square_to_save['id_of_bus_station_linked'] = $last_link[busStationId];
-					$square_to_save['path'][0]['lat'] = $last_link[lat]; //verify
-					$square_to_save['path'][0]['lng'] = $last_link[lng]; //verify
+					$square_to_save['id_of_bus_station_linked'] = $last_link['busStationId'];
+					$square_to_save['path'][0]['lat'] = $last_link['lat']; //verify
+					$square_to_save['path'][0]['lng'] = $last_link['lng']; //verify
 					
 					$square_to_save['path'] = json_encode($square_to_save['path']);
 					//from_index not used
@@ -822,7 +822,7 @@ function treatment($bus_line, $last_id){
 //save paths in file:
 	foreach( $to_squares as &$to_square){
 		$last_id++;
-		$to_square[id] = $last_id;
+		$to_square['id'] = $last_id;
 		//create directories:
 		//create folder if do not exists:
 		$lat_directory = "$path_to_save/$to_square[lat]";
