@@ -331,16 +331,16 @@ function treatment($bus_line, $last_id){
 			$path_from_previous_link['path'] = array($previous_link['vertex']);
 			$path_from_previous_link['link_lat'] = $previous_link['vertex']->lat;
 			$path_from_previous_link['link_lng'] = $previous_link['vertex']->lng;
-			$path_from_previous_link['from_index'] = null;
-			$path_from_previous_link['to_index'] = null;
+			$path_from_previous_link['from_index'] = $area_opposite->enter;
+			$path_from_previous_link['to_index'] = $area_opposite->enter;
 			
 			//to the next link wihch is the same as previous link:
 			$next_link = $previous_link;
 			$path_to_next_link['path'] = $path_from_previous_link['path'];
 			$path_to_next_link['link_lat'] = $next_link['vertex']->lat;
 			$path_to_next_link['link_lng'] = $next_link['vertex']->lng;
-			$path_to_next_link['from_index'] = null;
-			$path_to_next_link['to_index'] = null;
+			$path_to_next_link['from_index'] = $area_opposite->enter;
+			$path_to_next_link['to_index'] = $area_opposite->enter;
 			
 			//set $current_next_link_index:
 			$current_next_link_index = $next_link_index;
@@ -636,9 +636,15 @@ function treatment($bus_line, $last_id){
 						$path_from_previous_link['path'] = array($previous_link['vertex']);
 						$path_from_previous_link['link_lat'] = $previous_link['vertex']->lat;
 						$path_from_previous_link['link_lng'] = $previous_link['vertex']->lng;
-						$path_from_previous_link['from_index'] = null;
-						$path_from_previous_link['to_index'] = null;
+						$path_from_previous_link['from_index'] = $previous_link['prevIndex'];
+						if($previous_link['distanceToPrevIndex'] > 0){
+							$path_from_previous_link['to_index'] = $previous_link['prevIndex'] + 1;
+						}
+						else{
+							$path_from_previous_link['to_index'] = $previous_link['prevIndex'];
+						}
 						
+
 						if(is_link_in_square($next_link, $next_square) == true){
 							$previous_link = $next_link;
 						}
@@ -674,15 +680,26 @@ function treatment($bus_line, $last_id){
 								$path_from_previous_link['path'] = array($previous_link['vertex']);
 								$path_from_previous_link['link_lat'] = $previous_link['vertex']->lat;
 								$path_from_previous_link['link_lng'] = $previous_link['vertex']->lng;
-								$path_from_previous_link['from_index'] = null;
-								$path_from_previous_link['to_index'] = null;
+								$path_from_previous_link['from_index'] = $previous_link['prevIndex'];
+								if($previous_link['distanceToPrevIndex'] > 0){
+									$path_from_previous_link['to_index'] = $previous_link['prevIndex'] + 1;
+								}
+								else{
+									$path_from_previous_link['to_index'] = $previous_link['prevIndex'];
+								}
+						
 								
 								//to the next link:
 								$path_to_next_link['path'] = $path_from_previous_link['path'];
 								$path_to_next_link['link_lat'] = $next_link['vertex']->lat;
 								$path_to_next_link['link_lng'] = $next_link['vertex']->lng;
-								$path_to_next_link['from_index'] = null;
-								$path_to_next_link['to_index'] = null;
+								$path_to_next_link['from_index'] = $next_link['prevIndex'];
+								if($previous_link['distanceToPrevIndex'] > 0){
+									$path_to_next_link['to_index'] = $next_link['prevIndex'] + 1;
+								}
+								else{
+									$path_to_next_link['to_index'] = $next_link['prevIndex'];
+								}
 								
 								//reinit of index
 								//to get the good index after the $index++ of the beginning of the loop
@@ -707,15 +724,24 @@ function treatment($bus_line, $last_id){
 							$path_from_previous_link['path'] = array($previous_link['vertex']);
 							$path_from_previous_link['link_lat'] = $previous_link['vertex']->lat;
 							$path_from_previous_link['link_lng'] = $previous_link['vertex']->lng;
-							$path_from_previous_link['from_index'] = null;
-							$path_from_previous_link['to_index'] = null;
+							$path_from_previous_link['from_index'] = $previous_link['prevIndex'];
+							if($previous_link['distanceToPrevIndex'] > 0){
+								$path_from_previous_link['to_index'] = $previous_link['prevIndex'] + 1;
+							}
+							else{
+								$path_from_previous_link['to_index'] = $previous_link['prevIndex'];
+							}
 							
 							//to the next link:
 							$path_to_next_link['path'] = $path_from_previous_link['path'];
 							$path_to_next_link['link_lat'] = $next_link['vertex']->lat;
 							$path_to_next_link['link_lng'] = $next_link['vertex']->lng;
-							$path_to_next_link['from_index'] = null;
-							$path_to_next_link['to_index'] = null;
+							if($previous_link['distanceToPrevIndex'] > 0){
+								$path_to_next_link['to_index'] = $next_link['prevIndex'] + 1;
+							}
+							else{
+								$path_to_next_link['to_index'] = $next_link['prevIndex'];
+							}
 						}
 					}
 					
