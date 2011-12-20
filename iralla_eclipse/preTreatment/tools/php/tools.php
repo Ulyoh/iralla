@@ -1,13 +1,13 @@
 <?php
 	require_once 'Vertex.php';
-	function extract_path_from_string($path_as_string){
+	function extract_path_from_string($path_as_string, $with_multiplicador = true){
 		
 		$path = array();
 
 		$path_lat_lngs = json_decode($path_as_string);
 			
 		foreach ($path_lat_lngs as $lat_lng){
-			$path[] = new Vertex($lat_lng->lat, $lat_lng->lng);
+			$path[] = new Vertex($lat_lng->lat, $lat_lng->lng, $with_multiplicador);
 		}
 		return $path;
 
