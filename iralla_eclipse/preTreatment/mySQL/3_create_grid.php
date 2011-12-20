@@ -754,7 +754,7 @@ function treatment($bus_line, $last_id){
 					
 					//TODO HANDLING THE END VERY IMPORTANT: NOT SURE
 					//$square_list[$lat][$lng][] =  //clone $bus_line_part;
-				if($next_index == $path_length - 1){
+				if($next_index == $area_opposite->out){
 					
 					//TODO make a verification of concordance between last index coord and 
 					//last link
@@ -774,19 +774,27 @@ function treatment($bus_line, $last_id){
 					$square_to_save['path'][0]['lng'] = $last_link['lng']; //verify
 					
 					$square_to_save['path'] = json_encode($square_to_save['path']);
-					//from_index not used
-					//to_index not used
+					$square_to_save['from_index'] = $area_opposite->out;//from_index not used
+					$square_to_save['to_index'] = $area_opposite->out;//to_index not used
 					
-					//go_in_point_lat not used
-					//go_in_point_ln not used
+					$from_squares_length = count($from_squares);
+					$square_to_save['go_in_point_lat'] = $from_squares[$from_squares_length-1]['go_out_point_lat']; //go_in_point_lat not used
+					$square_to_save['go_in_point_lng'] = $from_squares[$from_squares_length-1]['go_out_point_lng']; //go_in_point_ln not used
 					$square_to_save['from_link_lat'] = $last_link['vertex']->lat;
 					$square_to_save['from_link_lng'] = $last_link['vertex']->lng;
-					$to_squares['to_link_lng'] = $square_to_save;
+					
+					$to_squares[] = $square_to_save;
 					
 					$square_to_save['to_link_lat'] = $square_to_save['from_link_lat'];
 					$square_to_save['to_link_lng'] = $square_to_save['from_link_lng'];
-					unset ($square_to_save['from_link_lat']);
-					unset ($square_to_save['from_link_lng']);
+					$square_to_save['go_out_point_lat'] = $next_vertex->lat; //go_in_point_lat not used
+					$square_to_save['go_out_point_lng'] = $next_vertex->lng;
+					
+					unset($square_to_save['from_link_lat']);
+					unset($square_to_save['from_link_lng']);
+					unset($square_to_save['go_in_point_lat']);
+					unset($square_to_save['go_in_point_lng']);
+					
 					//go_out_point_lat not used
 					//go_out_point_ln not used
 					
