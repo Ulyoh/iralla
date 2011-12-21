@@ -13,8 +13,10 @@ $bus_speed = 7;
 
 $request = $_POST['q'];
 //$request = '{"lat":-2.1561053360208935,"lng":-79.91647949218748}';
+$request = '{"lat":-2.1147636751398027,"lng":-79.90858306884763}';
 $request = json_decode($request);
 
+$position = array();
 $position['lat'] = $request->lat;
 $position['lng'] = $request->lng;
 
@@ -43,7 +45,14 @@ foreach ($position_squares as $squares_by_bus_line_id){
 		if(!isset($all_squares_coord_by_bus_line_id[$bus_line_id])){
 			$all_squares_coord_by_bus_line_id[$bus_line_id] = array();
 		}
-		$all_squares_coord_by_bus_line_id[$bus_line_id][] = array(lat=>-$square['lat']*$grid_path, lng=>-$square['lng']*$grid_path);
+		$all_squares_coord_by_bus_line_id[$bus_line_id][] = array(
+				'lat' => -$square['lat']*$grid_path,
+				'lng' => -$square['lng']*$grid_path,
+				'to_link_lat' => $square['to_link_lat']/$denominator_to_get_real_values,
+				'to_link_lng' => $square['to_link_lng']/$denominator_to_get_real_values,
+				'from_index' => $square['from_index'],
+				'to_index' => $square['to_index']
+				);
 		
 		if(!in_array($bus_line_id, $values)){
 			if(isset($test)){
