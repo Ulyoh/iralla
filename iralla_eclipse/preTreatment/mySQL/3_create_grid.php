@@ -84,6 +84,8 @@ function extract_datas_from_db(){
 			FROM
 				links
 			
+			where busLineId = 139,
+			
 			ORDER BY
 				busLineId, prevIndex, distanceToPrevIndex
 			");
@@ -100,6 +102,8 @@ function extract_datas_from_db(){
 			
 			FROM
 				bus_lines
+			
+			where id = 139,
 			");
 	
 	while($bus_line = $bus_lines_list_db->fetch()){
