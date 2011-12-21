@@ -74,8 +74,8 @@ function extract_datas_from_db(){
 	
 	//todebug, removing the truncates:
 	////////////////////////////////////////////////////////////////////// SEGURE
-	$bdd->query("TRUNCATE TABLE to_square");
-	$bdd->query("TRUNCATE TABLE from_square");
+	//$bdd->query("TRUNCATE TABLE to_square");
+	//$bdd->query("TRUNCATE TABLE from_square");
 	
 	//extract the links by bus lines and in order:
 	$links_by_bus_lines_db = $bdd->query("

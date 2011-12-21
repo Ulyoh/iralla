@@ -268,24 +268,80 @@ function showBuslineOverlay(busline){
 	
 	var latLng;
 	
-	if(typeof busline.squaresMarker == 'undefined'){
-		busline.squaresMarker = [];
+	var iconSquare = new gmap.MarkerImage('data/blue_MarkerS.png');
+	var iconToLink = new gmap.MarkerImage('data/red_MarkerL.png');
+	var iconFromIndex = new gmap.MarkerImage('data/darkgreen_MarkerF.png');
+	var iconToIndex = new gmap.MarkerImage('data/darkgreen_MarkerT.png');
 	
-		for(var i = 0; i < busline.DbList.squares_list.length; i++){
-			latLng = busline.DbList.squares_list[i];
+	if(typeof busline.DbList.squares_list != 'undefined'){
+		if(typeof busline.squaresMarker == 'undefined'){
+			busline.squaresMarker = [];
+			busline.toLink = [];
+			busline.fromIndex = [];
+			busline.toIndex = [];
+		
+			for(var i = 0; i < busline.DbList.squares_list.length; i++){
+				latLng = busline.DbList.squares_list[i];
+				
+				
+				busline.squaresMarker.push(
+					new gmap.Marker({
+						map: map,
+						position: new gmap.LatLng(latLng.lat, latLng.lng),
+						icon: iconSquare,
+						zIndex: 10000
+					})
+				);
+				//busline.squaresMarker[i].setIcon(iconSquare);
+				
+				busline.toLink.push(
+					new gmap.Marker({
+						map: map,
+						position: new gmap.LatLng(latLng.to_link_lat, latLng.to_link_lng),
+						icon: iconToLink,
+						zIndex: 10000
+					})
+				);
+				//busline.toLink[i].setIcon(iconToLink);
+				
+				var path = busline.getPath();
+				
+				busline.fromIndex.push(
+						new gmap.Marker({
+							map: map,
+							position: path.getAt(latLng.from_index),
+							icon: iconFromIndex,
+							zIndex: 10000
+						})
+					);
+				//busline.fromIndex[i].setIcon(iconFromIndex);
+				
+				busline.toIndex.push(
+						new gmap.Marker({
+							map: map,
+							position: path.getAt(latLng.to_index),
+							icon: iconToIndex,
+							zIndex: 10000
+						})
+					);
+				//busline.toIndex[i].setIcon(iconToIndex);
+				
+			}	
 			
-			busline.squaresMarker.push(
-				new gmap.Marker({
-					map: map,
-					position: new gmap.LatLng(latLng.lat, latLng.lng),
-					zIndex: 10000
-				})
-			);
+			
+			
 		}
-	}
-	else{
-		for(var i = 0; i < busline.squaresMarker.length; i++){
-			busline.squaresMarker[i].setMap(map);      
+		else{
+			for(var i = 0; i < busline.squaresMarker.length; i++){
+				busline.squaresMarker[i].setMap(map);
+				//busline.squaresMarker[i].setIcon(iconSquare);
+				busline.toLink[i].setMap(map);
+			//	busline.toLink[i].setIcon(iconToLink);
+				busline.fromIndex[i].setMap(map);
+			//	busline.fromIndex[i].setIcon(iconFromIndex);
+				busline.toIndex[i].setMap(map);
+			//	busline.toIndex[i].setIcon(iconToIndex);
+			}
 		}
 	}
 	
@@ -295,7 +351,10 @@ function hideBuslineOverlay(busline){
 	busline.buslineOverlay.setMap(null);
 	if(typeof busline.squaresMarker != 'undefined'){
 		for(var i = 0; i < busline.squaresMarker.length; i++){
-			busline.squaresMarker[i].setMap(null);      
+			busline.squaresMarker[i].setMap(null);
+			busline.toLink[i].setMap(null);
+			busline.fromIndex[i].setMap(null);
+			busline.toIndex[i].setMap(null);   
 		}
 	}
 }
