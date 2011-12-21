@@ -124,9 +124,9 @@ function nearest_squares($from_lat_lng, $interval, $table_name, $ecart_min_betwe
 		if(!array_key_exists($square['id_of_bus_station_linked'], $selected_squares)){
 			$selected_squares[$square['id_of_bus_station_linked']] = array();
 		}
-		$result['time_by_foot'] = $square['distance'] / $foot_speed;
-		$result['time_by_bus'] = $square['length'] / $bus_speed;
-		$square['time_to_bus_station'] = $result['time_by_foot'] + $result['time_by_bus'];
+		$square['time_by_foot'] = $square['distance'] / $foot_speed;
+		$square['time_by_bus'] = $square['length'] / $bus_speed;
+		$square['time_to_bus_station'] = $square['time_by_foot'] + $square['time_by_bus'];
 		
 		if((!array_key_exists($square['bus_line_id'], $selected_squares[$square['id_of_bus_station_linked']])) ||
 		 ($selected_squares[$square['id_of_bus_station_linked']][$square['bus_line_id']]['time_to_bus_station'] > $square['time_to_bus_station'] ))
@@ -215,7 +215,7 @@ return $path;
 
 }*/
 
-function add_bus_stations_to_end_start_squares(&$start_or_end_squares, $start_or_end_nearest_bus_stations){
+function add_bus_stations_to_end_start_squares($start_or_end_squares, $start_or_end_nearest_bus_stations){
 	foreach ($start_or_end_nearest_bus_stations as $start_bus_station) {
 		foreach (array_keys($start_or_end_squares) as $bus_station_id_of_start_square) {
 			if($bus_station_id_of_start_square == $start_bus_station['id']){
@@ -242,10 +242,11 @@ function add_bus_stations_to_end_start_squares(&$start_or_end_squares, $start_or
 		$start_or_end_squares[$start_bus_station['id']]['path'] = json_encode(array());
 		$start_or_end_squares[$start_bus_station['id']]['bus_line_name'] = null;
 	}
+	return $start_or_end_squares;
 }
 
-function add_bus_stations_to_position_squares(&$start_or_end_squares, $start_or_end_nearest_bus_stations){
-	return add_bus_stations_to_end_start_squares(&$start_or_end_squares, $start_or_end_nearest_bus_stations);
+function add_bus_stations_to_position_squares($start_or_end_squares, $start_or_end_nearest_bus_stations){
+	return add_bus_stations_to_end_start_squares($start_or_end_squares, $start_or_end_nearest_bus_stations);
 }
 /*
 

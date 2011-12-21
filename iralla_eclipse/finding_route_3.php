@@ -12,16 +12,27 @@ $path_of_squares = "c:/squares2/";
 $foot_speed = 0.7;
 $bus_speed = 7;
 
-
 $request = $_POST['q'];
+$request = 	'{"start":{"lat":-2.1199100004450315,"lng":-79.91459121704099},"end":{"lat":-2.1525029949886085,"lng":-79.90154495239256}}';
+/*
+$request = '
+{
+"start":{
+"lat":-2.192814417860611,"lng":-79.8878120422363},"end":{
+"lat":-2.1142490416697988,"lng":-79.91373291015623}
+}
+';*/
 $request = json_decode($request);
+
 
 $start['lat'] = $request->start->lat;
 $start['lng'] = $request->start->lng;
 $end['lat'] = $request->end->lat;
 $end['lng'] = $request->end->lng;
 
-find_route($request);
+$result = find_route($start, $end);
+
+echo json_encode($result);
 
 function find_route($start, $end){
 	
@@ -33,14 +44,14 @@ function find_route($start, $end){
 	$interval = 5;
 	$ecart_min_between_d_min_and_d_max = 6;
 	
-	$start_lines = find_nearst_roads($start, 'from_squares', $interval, $ecart_min_between_d_min_and_d_max);
-	$end_lines = find_nearst_roads($end, 'to_squares', $interval, $ecart_min_between_d_min_and_d_max);
+	$start_lines = find_nearst_roads($start, 'from_square', $interval, $ecart_min_between_d_min_and_d_max);
+	$end_lines = find_nearst_roads($end, 'to_square', $interval, $ecart_min_between_d_min_and_d_max);
 	
 	//look if commun bus lines in $start_lines and $end_lines
 	$communs_lines = find_communs_lines($start_lines, $end_lines);
 	
 	if(is_array($communs_lines)){
-		$bus_lines_path = attach_bus_lines_path(&$communs_lines);
+		$communs_lines = attach_bus_lines_path($communs_lines);
 		
 		$results = array();
 		$results_part = array();
@@ -50,11 +61,15 @@ function find_route($start, $end){
 			$results = array_merge($results, $results_part);
 		}
 		
-		//sort by time:
-		//TODO
+		//sort by time total:
+		usort($results, "cmp_sort_by_total_time");
+		$results_sort_by_total_time = $results;
 		
+		//sort by time by foot
+		//usort($results, "cmp_sort_by_time_by_foot");
+		//$results_sort_by_time_by_foot = $results;
 		
-		return json_encode($results);
+		return $results_sort_by_total_time[0];
 	}
 	
 	//if there is not a commun route:
