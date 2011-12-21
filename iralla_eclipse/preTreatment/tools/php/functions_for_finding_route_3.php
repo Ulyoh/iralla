@@ -162,6 +162,7 @@ function calculate_shortest_time_from_starts_to_ends_on_one_line($bus_line, $sta
 					$result = new stdClass();
 					$result->bs2bss = array($by_foot_1, $bs2bs, $by_foot_2);
 					$result->time = $total_time;
+					$result->time_by_foot = $by_foot_1->time + $by_foot_2->time;
 				
 					$results[] = $result;
 			}
@@ -253,8 +254,8 @@ function cmp_sort_by_total_time($a, $b){
 
 function cmp_sort_by_time_by_foot($a, $b){
 
-	if ($a->time_by_foot == $b->time_by_foot) {
-		return 0;
+	if (abs($a->time_by_foot - $b->time_by_foot) < 60) {
+		return cmp_sort_by_total_time($a, $b);
 	}
 	return ($a->time_by_foot < $b->time_by_foot) ? -1 : 1;
 }

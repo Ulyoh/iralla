@@ -13,7 +13,13 @@ $foot_speed = 0.7;
 $bus_speed = 7;
 
 $request = $_POST['q'];
-$request = 	'{"start":{"lat":-2.1199100004450315,"lng":-79.91459121704099},"end":{"lat":-2.1525029949886085,"lng":-79.90154495239256}}';
+/*$request = 	'
+{"start":{
+	"lat":-2.1601365170652644,"lng":-79.8958801269531},"end":{
+		"lat":-2.118709192736059,"lng":-79.90995635986326}
+}';
+*/
+//$request = 	'{"start":{"lat":-2.1199100004450315,"lng":-79.91459121704099},"end":{"lat":-2.1525029949886085,"lng":-79.90154495239256}}';
 /*
 $request = '
 {
@@ -67,9 +73,9 @@ function find_route($start, $end){
 		
 		//sort by time by foot
 		//usort($results, "cmp_sort_by_time_by_foot");
-		//$results_sort_by_time_by_foot = $results;
+		$results_sort_by_time_by_foot = $results;
 		
-		return $results_sort_by_total_time[0];
+		return $results[0];
 	}
 	
 	//if there is not a commun route:
