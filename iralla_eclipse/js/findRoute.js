@@ -651,7 +651,7 @@ function addMarkerOnTheMap(latLng){
 		if ((typeof(map.arrivalMarker) != 'undefined') && (map.arrivalMarker != null)) {
 			map.arrivalMarker.setPosition(null);
 			//remove listener:
-			if(typeof(map.departureMarker.listenerDragEnd) != "undefined"){
+			if(typeof(map.arrivalMarker.listenerDragEnd) != "undefined"){
 				gmap.event.removeListener(map.arrivalMarker.listenerDragEnd);
 			}
 		}
