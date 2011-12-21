@@ -340,7 +340,7 @@ function find_nearest_roads(){
 	
 	//send to the servor:
 	map.calculateNearTo = request({
-		phpFileCalled: mysite + 'find_nearest_roads.php',
+		phpFileCalled: mysite + 'find_nearest_roads_to_debug.php',
 		argumentsToPhpFile: 'q=' + JSON.stringify(position),
 		type: "",
 		callback: showNearestRoads,
