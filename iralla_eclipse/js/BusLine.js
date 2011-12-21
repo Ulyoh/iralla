@@ -265,10 +265,39 @@ function removeBuslineFromSelected(){
 function showBuslineOverlay(busline){
 	busline.buslineOverlay.setOptions({map:map, strokeWeight: Math.abs(SubMap._busLinesArray.sizeForAZoomValue[map.getZoom()]/2)});
 	busline.buslineOverlay.setMap(map);
+	
+	var latLng;
+	
+	if(typeof busline.squaresMarker == 'undefined'){
+		busline.squaresMarker = [];
+	
+		for(var i = 0; i < busline.DbList.squares_list.length; i++){
+			latLng = busline.DbList.squares_list[i];
+			
+			busline.squaresMarker.push(
+				new gmap.Marker({
+					map: map,
+					position: new gmap.LatLng(latLng.lat, latLng.lng),
+					zIndex: 10000
+				})
+			);
+		}
+	}
+	else{
+		for(var i = 0; i < busline.squaresMarker.length; i++){
+			busline.squaresMarker[i].setMap(map);      
+		}
+	}
+	
 }
 
 function hideBuslineOverlay(busline){
 	busline.buslineOverlay.setMap(null);
+	if(typeof busline.squaresMarker != 'undefined'){
+		for(var i = 0; i < busline.squaresMarker.length; i++){
+			busline.squaresMarker[i].setMap(null);      
+		}
+	}
 }
 
 function setupCleanLines(table){
