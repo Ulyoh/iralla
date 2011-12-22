@@ -141,7 +141,7 @@ function createLineForShowingListTable(table, busline){
 	addButton.setAttribute('onclick',"addBuslineToSelected(this)");
 	addButton.busline = busline;
 	addButton.setAttribute('onmouseover', 'showBuslineOverlay(this.busline)');
-	addButton.setAttribute('onmouseout', 'hideBuslineOverlay(this.busline)');
+	//addButton.setAttribute('onmouseout', 'hideBuslineOverlay(this.busline)');
 	busline.addButton = addButton;
 
 	//create unshow button
@@ -153,7 +153,7 @@ function createLineForShowingListTable(table, busline){
 	unShowButton.busline = busline;
 	unShowButton.style.display = "none";
 	unShowButton.setAttribute('onmouseover', 'showBuslineOverlay(this.busline)');
-	unShowButton.setAttribute('onmouseout', 'hideBuslineOverlay(this.busline)');
+	//unShowButton.setAttribute('onmouseout', 'hideBuslineOverlay(this.busline)');
 	busline.unShowButton = unShowButton;
 	
 	//create show button
@@ -175,7 +175,7 @@ function createLineForShowingListTable(table, busline){
 	span_road_name.classCell = 'td_name_showing_buslines';
 	span_road_name.style.cursor = 'pointer';
 	span_road_name.setAttribute('onmouseover', 'showBuslineOverlay(this.busline)');
-	span_road_name.setAttribute('onmouseout', 'hideBuslineOverlay(this.busline)');
+	span_road_name.setAttribute('onclick', 'hideBuslineOverlay(this.busline)');
 	span_road_name.busline = busline;
 
 	//create trash
@@ -186,7 +186,7 @@ function createLineForShowingListTable(table, busline){
 	trash.setAttribute('onclick',"removeBuslineFromButton(this)");
 	trash.classCell = 'td_showing_buslines';
 	trash.setAttribute('onmouseover', 'showBuslineOverlay(this.busline)');
-	trash.setAttribute('onmouseout', 'hideBuslineOverlay(this.busline)');
+	//trash.setAttribute('onmouseout', 'hideBuslineOverlay(this.busline)');
 	trash.busline = busline;
 	busline.trash = trash;
 	
@@ -268,6 +268,11 @@ function showBuslineOverlay(busline){
 	
 	var latLng;
 	
+	var squareMarker;
+	var toLinkMarker;
+	var fromIndexMarker;
+	var toIndexMarker;
+	
 	var iconSquare = new gmap.MarkerImage('data/blue_MarkerS.png');
 	var iconToLink = new gmap.MarkerImage('data/red_MarkerL.png');
 	var iconFromIndex = new gmap.MarkerImage('data/darkgreen_MarkerF.png');
@@ -276,6 +281,7 @@ function showBuslineOverlay(busline){
 	if(typeof busline.DbList.squares_list != 'undefined'){
 		if(typeof busline.squaresMarker == 'undefined'){
 			busline.squaresMarker = [];
+			busline.squaresInfoWindows = [];
 			busline.toLink = [];
 			busline.fromIndex = [];
 			busline.toIndex = [];
@@ -283,48 +289,49 @@ function showBuslineOverlay(busline){
 			for(var i = 0; i < busline.DbList.squares_list.length; i++){
 				latLng = busline.DbList.squares_list[i];
 				
+				squareMarker = new gmap.Marker({
+					map: map,
+					position: new gmap.LatLng(latLng.lat, latLng.lng),
+					icon: iconSquare,
+					zIndex: 10000
+				});
+				squareMarker.i = i;
+				busline.squaresMarker.push(squareMarker);
+				//set info window:
+				squareMarker.listenerClick = setInfoWindow(squareMarker);
 				
-				busline.squaresMarker.push(
-					new gmap.Marker({
-						map: map,
-						position: new gmap.LatLng(latLng.lat, latLng.lng),
-						icon: iconSquare,
-						zIndex: 10000
-					})
-				);
-				//busline.squaresMarker[i].setIcon(iconSquare);
+				toLinkMarker = new gmap.Marker({
+					map: map,
+					position: new gmap.LatLng(latLng.to_link_lat, latLng.to_link_lng),
+					icon: iconToLink,
+					zIndex: 10000
+				});
+				toLinkMarker.i = i;
+				busline.toLink.push(toLinkMarker);
+				//set info window:
+				toLinkMarker.listenerClick = setInfoWindow(toLinkMarker);
 				
-				busline.toLink.push(
-					new gmap.Marker({
-						map: map,
-						position: new gmap.LatLng(latLng.to_link_lat, latLng.to_link_lng),
-						icon: iconToLink,
-						zIndex: 10000
-					})
-				);
-				//busline.toLink[i].setIcon(iconToLink);
 				
 				var path = busline.getPath();
+				fromIndexMarker = new gmap.Marker({
+					map: map,
+					position: path.getAt(latLng.from_index),
+					icon: iconFromIndex,
+					zIndex: 10000
+				});
+				fromIndexMarker.i = i;
+				busline.fromIndex.push(fromIndexMarker);
+				fromIndexMarker.listenerClick = setInfoWindow(fromIndexMarker);
 				
-				busline.fromIndex.push(
-						new gmap.Marker({
-							map: map,
-							position: path.getAt(latLng.from_index),
-							icon: iconFromIndex,
-							zIndex: 10000
-						})
-					);
-				//busline.fromIndex[i].setIcon(iconFromIndex);
-				
-				busline.toIndex.push(
-						new gmap.Marker({
-							map: map,
-							position: path.getAt(latLng.to_index),
-							icon: iconToIndex,
-							zIndex: 10000
-						})
-					);
-				//busline.toIndex[i].setIcon(iconToIndex);
+				toIndexMarker = new gmap.Marker({
+					map: map,
+					position: path.getAt(latLng.to_index),
+					icon: iconToIndex,
+					zIndex: 10000
+				});
+				toIndexMarker.i = i;
+				busline.toIndex.push(toIndexMarker);
+				toIndexMarker.listenerClick = setInfoWindow(toIndexMarker);
 				
 			}	
 			
@@ -345,6 +352,19 @@ function showBuslineOverlay(busline){
 		}
 	}
 	
+}
+
+function setInfoWindow(marker){
+	return gmap.event.addListener(marker, 'click', function(){
+	
+		if(typeof this.squareInfoWindow == 'undefined'){
+			var squareInfoWindow = new gmap.InfoWindow({
+				content: "index: " + this.i
+			});
+			this.squareInfoWindow = squareInfoWindow;
+		}
+		this.squareInfoWindow.open(map, this);
+	});
 }
 
 function hideBuslineOverlay(busline){
@@ -428,7 +448,7 @@ function setupCleanLines(table){
 	tableLine.id = 'button_clean_lines';
 	tableLine.linesIdAdded = [];
 	tableLine.setAttribute('mouseover', 'showBuslineOverlay()');
-	tableLine.setAttribute('mouseout', 'hideBuslineOverlay()');
+	tableLine.setAttribute('onclick', 'hideBuslineOverlay()');
 	tableLine.style.display = 'none';
 }
 
