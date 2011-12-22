@@ -380,7 +380,7 @@
 		return $length;
 	}
 	
-	function real_distance_between_2_vertex($vertex_1,$vertex_2){
+	function real_distance_between_2_vertex($vertex_1,$vertex_2, $divide = null){
 		if (is_object($vertex_1)){
 			$buffer = array();
 			$buffer['lat'] = $vertex_1->lat;
@@ -405,6 +405,13 @@
 		//if $vertex1 == $vertex_2:
 		if($vertex_1 == $vertex_2){
 			return 0;
+		}
+		
+		if($divide != null){
+			$vertex_1['lat'] = bcdiv($vertex_1['lat'],$divide, 10);
+			$vertex_1['lng'] = bcdiv($vertex_1['lng'],$divide, 10);
+			$vertex_2['lat'] = bcdiv($vertex_2['lat'],$divide, 10);
+			$vertex_2['lng'] = bcdiv($vertex_2['lng'],$divide, 10);
 		}
 		
 		// R [cos^-1(sin(a)sin(b)+cos(a)cos(c-d)]
