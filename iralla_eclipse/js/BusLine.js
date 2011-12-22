@@ -319,7 +319,7 @@ function showBuslineOverlay(busline){
 					icon: iconFromIndex,
 					zIndex: 10000
 				});
-				fromIndexMarker.i = i;
+				fromIndexMarker.i = i + ' from_index:' + latLng.from_index ;
 				busline.fromIndex.push(fromIndexMarker);
 				fromIndexMarker.listenerClick = setInfoWindow(fromIndexMarker);
 				
@@ -329,7 +329,7 @@ function showBuslineOverlay(busline){
 					icon: iconToIndex,
 					zIndex: 10000
 				});
-				toIndexMarker.i = i;
+				toIndexMarker.i = i + ' to_index:' + latLng.to_index ;;
 				busline.toIndex.push(toIndexMarker);
 				toIndexMarker.listenerClick = setInfoWindow(toIndexMarker);
 				
