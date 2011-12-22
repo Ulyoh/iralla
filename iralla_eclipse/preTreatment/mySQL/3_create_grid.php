@@ -84,6 +84,8 @@ function extract_datas_from_db(){
 			FROM
 				links
 			
+			where busLineId = 27
+			
 			ORDER BY
 				busLineId, prevIndex, distanceToPrevIndex
 			");
@@ -100,6 +102,8 @@ function extract_datas_from_db(){
 			
 			FROM
 				bus_lines
+			
+			where id = 27
 			");
 	
 	while($bus_line = $bus_lines_list_db->fetch()){
@@ -140,16 +144,16 @@ function extract_datas_from_db(){
 			$path = extarct_path($bus_lines_list[$bus_line_id]['path_string']);
 			$path_length = count($path);
 			$one_link['distance_from_first_vertex'] =
-			distanceFromFirstVertex($path, $one_link['prevIndex'])
+			real_distance_from_first_vertex($path, $one_link['prevIndex'])
 			+ $one_link['distanceToPrevIndex'];
-			$bus_line_length = distanceFromFirstVertex($path, $path_length-1);
+			$bus_line_length = real_distance_from_first_vertex($path, $path_length-1);
 			$distance_to_last_vertex = $bus_line_length/* - $distance_from_first_vertex*/;
 	
 		}
 		else if (($bus_line_id == $previous_bus_line_id)
 				&& ($bus_lines_list[$bus_line_id]['type'] != 'mainLine')){
 			$one_link['distance_from_first_vertex'] =
-			distanceFromFirstVertex($path, $one_link['prevIndex'])
+			real_distance_from_first_vertex($path, $one_link['prevIndex'])
 			+ $one_link['distanceToPrevIndex'];
 	
 			$links_list_length = count($links_list);
@@ -588,10 +592,10 @@ function treatment($bus_line, $last_id){
 					//$bus_line_part->vertex_list = array();
 				
 					$loop_qte++;
-					if($loop_qte > 1000){
-						echo "\n over than 1000 loops";
+					if($loop_qte > 10000){
+						echo "\n over than 10000 loops";
 						echo "\nindex: ".$next_index;
-						return "over than 1000 loops";
+						return "over than 10000 loops";
 					}
 				
 					//coordinates of next square:
@@ -603,7 +607,7 @@ function treatment($bus_line, $last_id){
 					
 					//if link in current square
 					if($previous_link == $next_link){
-						//$todebug = 0;
+						$todebug = 0;
 						//next link must be the first link once going out from the current square
 						do {
 							//todebug
@@ -612,11 +616,11 @@ function treatment($bus_line, $last_id){
 							//end to debug
 							
 							//to debug:
-							/*$todebug++;
+							$todebug++;
 							if($todebug >500){
 								echo $index . "\n";
 								exit("boucle infini");
-							}*/
+							}
 							
 							//end todebug;
 							$next_link = $bus_line['links_list'][$current_next_link_index];
@@ -720,7 +724,7 @@ function treatment($bus_line, $last_id){
 								//$next_index = $index + 1;
 								
 								$next_vertex = $path[$last_index_in_square];
-								//$square_of_next_vertex = found_main_square_coords_of_vertex($next_vertex);
+								$square_of_next_vertex = found_main_square_coords_of_vertex($next_vertex);
 								
 								break;
 							}
@@ -758,14 +762,14 @@ function treatment($bus_line, $last_id){
 						}
 					}
 					//todebug
-				/*	if(!isset($todebug2)){
+					if(!isset($todebug2)){
 						$todebug2 = 0;
 					}
 					$todebug2++;
 					if($todebug2 >5000){
 						echo $index . "\n";
 						exit("boucle infini");
-					}*/
+					}
 					//end to debug
 					$current_square = $next_square;
 					//END EVOLUTION OF PREVIOUS AND NEXT LINKS
