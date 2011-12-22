@@ -432,4 +432,20 @@
 		return $result;
 	}
 	
+	function real_distance_from_first_vertex($path, $vertex_index){
+		$distance = 0;
+		foreach ($path as $key => $coords) {
+			if ($key == 0){
+				continue;
+			}
+			if ($key > $vertex_index){
+				break;
+			}
+
+			$distance = bcadd($distance, real_distance_between_2_vertex($path[$key-1], $path[$key]));
+			
+		}
+		return $distance;
+	}
+	
 ?>
