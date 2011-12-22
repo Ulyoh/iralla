@@ -84,8 +84,6 @@ function extract_datas_from_db(){
 			FROM
 				links
 			
-			where busLineId = 139
-			
 			ORDER BY
 				busLineId, prevIndex, distanceToPrevIndex
 			");
@@ -102,8 +100,6 @@ function extract_datas_from_db(){
 			
 			FROM
 				bus_lines
-			
-			where id = 139
 			");
 	
 	while($bus_line = $bus_lines_list_db->fetch()){
@@ -607,7 +603,7 @@ function treatment($bus_line, $last_id){
 					
 					//if link in current square
 					if($previous_link == $next_link){
-						$todebug = 0;
+						//$todebug = 0;
 						//next link must be the first link once going out from the current square
 						do {
 							//todebug
@@ -616,11 +612,11 @@ function treatment($bus_line, $last_id){
 							//end to debug
 							
 							//to debug:
-							$todebug++;
+							/*$todebug++;
 							if($todebug >500){
 								echo $index . "\n";
 								exit("boucle infini");
-							}
+							}*/
 							
 							//end todebug;
 							$next_link = $bus_line['links_list'][$current_next_link_index];
@@ -762,14 +758,14 @@ function treatment($bus_line, $last_id){
 						}
 					}
 					//todebug
-					if(!isset($todebug2)){
+				/*	if(!isset($todebug2)){
 						$todebug2 = 0;
 					}
 					$todebug2++;
 					if($todebug2 >5000){
 						echo $index . "\n";
 						exit("boucle infini");
-					}
+					}*/
 					//end to debug
 					$current_square = $next_square;
 					//END EVOLUTION OF PREVIOUS AND NEXT LINKS
