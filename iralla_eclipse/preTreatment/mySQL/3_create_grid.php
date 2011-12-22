@@ -21,7 +21,7 @@ bcscale(0);
 $multipicador = 10000000; //if it needs to be mayor, lat and lng in to_square and from_square must be resetting
 $grid_path = bcmul($multipicador, 0.001);
 $precision = - substr_count($grid_path, '0');
-$path_to_save = "c:/squares3";
+$path_to_save = "c:/squares4";
 
 if(!is_dir($path_to_save)){
 	if (!mkdir($path_to_save)) {
