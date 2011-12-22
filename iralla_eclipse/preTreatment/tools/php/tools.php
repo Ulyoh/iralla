@@ -395,6 +395,22 @@
 			$vertex_2 = $buffer;
 		}
 		
+		if(isset($vertex_1[0])){
+			$vertex_1['lat'] = $vertex_1[0];
+		}
+		
+		if(isset($vertex_1[1])){
+			$vertex_1['lng'] = $vertex_1[1];
+		}
+		
+		if(isset($vertex_2[0])){
+			$vertex_2['lat'] = $vertex_2[0];
+		}
+		
+		if(isset($vertex_2[1])){
+			$vertex_2['lng'] = $vertex_2[1];
+		}
+		
 		if (!is_numeric($vertex_1['lat']) 
 				|| !is_numeric($vertex_1['lng']) 
 				|| !is_numeric($vertex_2['lat']) 
