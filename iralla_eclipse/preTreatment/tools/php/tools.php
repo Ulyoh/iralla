@@ -285,7 +285,7 @@
 		
 		$length = count($path_lat_lngs);
 		for ($i = 0; $i < $length; $i++) {
-			$lat_lng = $path_lat_lngs[0];
+			$lat_lng = $path_lat_lngs[$i];
 			array_push($path, array($lat_lng->lat, $lat_lng->lng));
 		}
 		/*foreach (path_lat_lngs as $lat_lng){
