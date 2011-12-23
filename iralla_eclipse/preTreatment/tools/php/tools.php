@@ -33,6 +33,7 @@
 		}
 	}
 	
+	
 	function found_main_square_coords_of_vertex($vertex){
 		global $precision;
 		global $grid_path; 
@@ -50,6 +51,9 @@
 		}
 		
 		return $square_main_corner_coordinates;
+	}
+	function found_square_coords_of_vertex($vertex){
+		return found_main_square_coords_of_vertex($vertex);
 	}
 	
 	function is_vertex_equal($vertex_1, $vertex_2){
