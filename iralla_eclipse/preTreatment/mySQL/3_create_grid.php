@@ -16,6 +16,7 @@ require_once 'saveToDb.php';
 require_once 'tools.php';
 require_once 'Vertex.php';
 require_once 'Bus_line_part.php';
+require_once 'extract_datas_from_db.php';
 bcscale(0);
 	
 $multipicador = 10000000; //if it needs to be mayor, lat and lng in to_square and from_square must be resetting

@@ -65,6 +65,7 @@
 		}
 	}
 	
+	
 	/*
 	 * found the coordinate of the intersection between the segment
 	 * [$vertex_in, $vertex_out] with a square of sides = $grid_path
@@ -262,6 +263,26 @@
 		return $where;
 	}
 	
+	function first_index_after_square($index_in_or_just_before_square, $square, $path){
+		$index = $index_in_or_just_before_square;
+		do{
+			$index++;
+			$vertex_out = $path[$index];
+		}while(is_vertex_in_square($vertex_out, $square) === true);
+		return $index;
+	}
+	
+	function all_vertex_to_link_inside_square($first_index_in_square, $link, $square, $path){
+		$index = $first_index_in_square;
+		do{
+			if(is_vertex_in_square($path[$index], $square) === false){
+				return false;
+			}
+			$index++;
+		}while($index <= $link['prevIndex']);
+		return true;
+	}
+
 	function distanceFromFirstVertex($path, $vertex_index){
 		$distance = 0;
 		foreach ($path as $key => $coords) {

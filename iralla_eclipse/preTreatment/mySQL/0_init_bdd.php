@@ -202,7 +202,7 @@
 			from_link_lng INT(9),
 			go_in_point_lat MEDIUMINT(6) UNSIGNED,
 			go_in_point_lng MEDIUMINT(6) UNSIGNED,
-			previous_index_of_go_out SMALLINT UNSIGNED,
+			previous_index_of_go_in SMALLINT UNSIGNED,
 			previous_vertex_of_link SMALLINT UNSIGNED,
 			length INT,
 			id_of_bus_station_linked MEDIUMINT(6) UNSIGNED,
