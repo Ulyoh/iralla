@@ -33,7 +33,9 @@ function create_squares_between_links($previous_link, $next_link, $bus_line, $cu
 		create_squares($bus_line,
 				$current_out_coords,
 				$previous_link,
-				$next_link);
+				$next_link,
+				$distance_to_prev_link,
+				$distance_to_next_link);
 		
 		$index_out = first_index_after_square($index_out, $current_out_coords['next_square'], $path);
 		$vertex_out = $path[$index_out];
