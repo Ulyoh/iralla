@@ -60,8 +60,15 @@ function create_squares_between_links($previous_link, $next_link, $bus_line, $cu
 				$next_link,
 				$distances);
 		
-		$index_out = first_index_after_square($index_out, $current_square, $path);
+		$index_out = first_index_after_square($index_out-1, $current_square, $path);
 		$vertex_out = $path[$index_out];
+		/*$i = 1;
+		
+		do{
+			$last_vertex_in=$path[$index_out - $i];
+			$i++;
+		}while (Vertex::are_egal($last_vertex_in, $vertex_out) == true);
+		*/
 		$last_vertex_in = $path[$index_out - 1];
 		
 		$current_out_coords = found_out_point($last_vertex_in, $vertex_out, $current_square);
