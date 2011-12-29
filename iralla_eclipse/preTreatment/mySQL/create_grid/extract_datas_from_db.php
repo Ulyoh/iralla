@@ -15,8 +15,6 @@ function extract_datas_from_db(){
 			*
 			FROM
 				links
-			WHERE
-				busLineId = 1
 
 			ORDER BY
 				busLineId, prevIndex, distanceToPrevIndex
@@ -34,8 +32,6 @@ function extract_datas_from_db(){
 
 			FROM
 				bus_lines
-			WHERE
-				id = 1
 			");
 
 	while($bus_line = $bus_lines_list_db->fetch()){
