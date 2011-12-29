@@ -221,7 +221,7 @@
 	else{
 		echo "table to_square created or already exists\n";
 	}
-		
+
 		//create the table of connections between all bus stations if not exist
 	$query = "CREATE TABLE IF NOT EXISTS from_square (
 			id MEDIUMINT(6) UNSIGNED PRIMARY KEY AUTO_INCREMENT,
@@ -248,6 +248,40 @@
 	else{
 		echo "table from_square created or already exists\n";
 	}
+	
+	####################################"""
+	//create the table of connections between all bus stations if not exist
+	$query = "CREATE TABLE IF NOT EXISTS squares (
+		id MEDIUMINT(6) UNSIGNED PRIMARY KEY AUTO_INCREMENT,
+		bl_id MEDIUMINT(6) UNSIGNED,
+		bl_name TINYTEXT,
+		lat INT,
+		lng INT,
+		pt_coords VARCHAR(50),
+		prev_index_of_pt SMALLINT UNSIGNED,
+		prev_vertex_of_prev_link SMALLINT UNSIGNED,
+		prev_vertex_of_next_link SMALLINT UNSIGNED,
+		prev_link_coords VARCHAR(50),
+		next_link_coords VARCHAR(50),
+		prev_bs_linked_id MEDIUMINT(6) UNSIGNED,
+		next_bs_linked_id MEDIUMINT(6) UNSIGNED,
+		distance_to_prev_link INT,
+		distance_to_next_link INT,
+		distance_from_first_vertex INT,
+		previous_link_id MEDIUMINT(6) UNSIGNED,
+		next_link_id MEDIUMINT(6) UNSIGNED,
+		flows TINYTEXT
+	)";
+	
+	if (!(mysql_query($query))){
+		echo "table to_square could not be created\n";
+		return;
+	}
+	else{
+		echo "table to_square created or already exists\n";
+	}
+	############################################"
+	
 	
 	//create the table of text to search of rutas
 	$query = "CREATE TABLE IF NOT EXISTS words_to_search_rutas (
