@@ -9,6 +9,7 @@ function treatment($busline, $last_id){
 	global $bdd;
 
 	$busline['path'] = extract_path_from_string($busline['path_string']);
+	$busline['real_path'] = extract_path_from_string($busline['path_string'], $multipicador);
 	$busline['path_length'] = count($busline['path']); 
 	$next_index = 0;
 	$previous_link = NULL;
