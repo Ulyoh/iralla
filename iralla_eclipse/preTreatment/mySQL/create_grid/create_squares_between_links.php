@@ -4,23 +4,42 @@ include_once 'create_squares.php';
 include_once 'distances_to_links.php';
 
 function create_squares_between_links($previous_link, $next_link, $bus_line, $current_area){
-	global $to_squares;
-	global $from_squares;
 	
 	$path = $bus_line['path'];
 	
-	//find first square
-	$first_square = found_square_coords_of_vertex($path[$current_area->enter]);
+	//find first square:
+	if($previous_link['prevIndex'] >= $current_area->enter){
+		//find square of first link
+		$first_square = found_square_coords_of_vertex($previous_link);
+		
+		//is there squares to be created between the two links?
+		$first_index_out = first_index_after_square($previous_link['prevIndex'], $first_square, $path);
+	}
+	else{
+		//find first square of area
+		$first_square = found_square_coords_of_vertex($path[$current_area->enter]);
+		
+		//is there squares to be created between the two links?
+		$first_index_out = first_index_after_square($current_area->enter, $first_square, $path);
+	}
 	
-	//find last square
-	$last_square = found_square_coords_of_vertex($path[$current_area->out]);
-	
-	//is there squares to be created between the two links?
-	$first_index_out = first_index_after_square($current_area->enter, $first_square, $path);
+	//find last square:
+	if($next_link['prevIndex'] < $current_area->out){
+		//find square of last link
+		$last_square = found_square_coords_of_vertex($next_link);
+		$index_to_compare = $next_link['prevIndex'];
+	}
+	else{
+		//find last square of area
+		$last_square = found_square_coords_of_vertex($path[$current_area->out]);
+		$index_to_compare = $current_area->out;
+	}
+		
+
 	
 	//is there squares between the first and last one:
 	if(($first_square === $last_square)
-			&&($current_area->out < $first_index_out )){
+			&&($index_to_compare < $first_index_out )){
 		return;
 	}
 	
@@ -31,6 +50,8 @@ function create_squares_between_links($previous_link, $next_link, $bus_line, $cu
 	$current_out_coords = found_out_point($last_vertex_in, $vertex_out, $first_square);
 	$current_out_coords['prev_index_before_intersection'] = $first_index_out - 1;
 	$distances = distances_to_links($bus_line, $previous_link, $next_link, $current_area, $current_out_coords);
+	$index_out = $first_index_out;
+	$current_square = $current_out_coords['next_square'];
 	
 	do{	
 		create_squares($bus_line,
@@ -39,15 +60,16 @@ function create_squares_between_links($previous_link, $next_link, $bus_line, $cu
 				$next_link,
 				$distances);
 		
-		$current_square = $current_out_coords['next_square'];
 		$index_out = first_index_after_square($index_out, $current_square, $path);
 		$vertex_out = $path[$index_out];
 		$last_vertex_in = $path[$index_out - 1];
 		
 		$current_out_coords = found_out_point($last_vertex_in, $vertex_out, $current_square);
 		$current_out_coords['prev_index_before_intersection'] = $index_out - 1;
-		$distances = distances_to_links($path, $previous_link, $next_link, $current_area, $current_out_coords);
-
-	}while($vertex_out > $current_area->out);
+		$distances = distances_to_links($bus_line, $previous_link, $next_link, $current_area, $current_out_coords);
+		$current_square = $current_out_coords['next_square'];
+		
+	}while(($index_out <= $current_area->out) && ($distances['from_first_vertex'] <= $next_link['distance_from_first_vertex']));
 }
+
 
