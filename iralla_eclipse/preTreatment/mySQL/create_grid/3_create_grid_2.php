@@ -35,7 +35,9 @@ $last_id = 0;
 foreach ($bus_lines_list as $bus_line) {
 	if($bus_line['type'] != 'mainLine'){
 		echo 'processing grid creation for bus line : ' . $bus_line['bus_line_id'] . "<br \\> \n";
+		$squares = array();
 		$last_id = create_squares_of_bus_line($bus_line, $last_id);
+		saveToDb($squares, 'squares');
 		echo ' grid creation for bus line : ' . $bus_line['bus_line_id'] . " done <br \\> \n";
 	}
 }

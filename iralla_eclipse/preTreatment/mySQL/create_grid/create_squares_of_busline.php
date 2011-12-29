@@ -8,7 +8,6 @@ function create_squares_of_bus_line($busline, $last_id){
 	global $precision;
 	global $bdd;
 	global $links_squares;
-	$links_squares = array();
 
 	$busline['path'] = extract_path_from_string($busline['path_string']);
 	$busline['real_path'] = extract_path_from_string($busline['path_string'], $multipicador);
