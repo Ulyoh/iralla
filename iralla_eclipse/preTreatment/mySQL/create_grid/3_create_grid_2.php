@@ -3,9 +3,13 @@ require_once 'access_to_db.php';
 require_once 'saveToDb.php';
 require_once 'tools.php';
 require_once 'Vertex.php';
-require_once 'Bus_line_part.php';
+require_once 'create_squares_between_links.php';
+require_once 'create_squares.php';
 require_once 'extract_datas_from_db.php';
 require_once 'find_areas_to_make_squares.php';
+require_once 'Square_infos.php';
+require_once 'treatment.php';
+
 
 bcscale(0);
 
