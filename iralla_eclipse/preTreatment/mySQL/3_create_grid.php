@@ -1,6 +1,6 @@
 <?php
 /*to_square
-	Object { id="93547", lat="2114", lng="79912", más...}	
+	Object { id="93547", lat="2114", lng="79912", mï¿½s...}	
 id	"93547"
 lat	"2114"
 lng	"79912"
@@ -946,19 +946,6 @@ function is_link_in_square(&$link, $square, $path, $path_length){
 	return is_vertex_in_square($link_coords, $square);
 }
 
-function is_vertex_in_square($vertex, $square){
-	global $grid_path;
-	if((( $square->lat - $grid_path ) < $vertex->lat) 
-	&& ($vertex->lat <= $square->lat)
-	&& (( $square->lng - $grid_path ) < $vertex->lng) 
-	&& ($vertex->lng <= $square->lng))
-	{
-		return true;
-	}
-	else{
-		return false;
-	}
-}
 
 function verify_squares($to_square_list, $from_square_list){
 	$compt = 0;

@@ -493,4 +493,18 @@
 		return $distance;
 	}
 	
+	function is_vertex_in_square($vertex, $square){
+		global $grid_path;
+		if((( $square->lat - $grid_path ) < $vertex->lat)
+				&& ($vertex->lat <= $square->lat)
+				&& (( $square->lng - $grid_path ) < $vertex->lng)
+				&& ($vertex->lng <= $square->lng))
+		{
+			return true;
+		}
+		else{
+			return false;
+		}
+	}
+	
 ?>
