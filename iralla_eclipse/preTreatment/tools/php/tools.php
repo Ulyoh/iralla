@@ -36,7 +36,11 @@
 	
 	function found_main_square_coords_of_vertex($vertex){
 		global $precision;
-		global $grid_path; 
+		global $grid_path;
+		
+		if(is_array($vertex) === true){
+			$vertex = new Vertex($vertex['lat'], $vertex['lng']);
+		}
 		//found the square around the vertex
 		$square_main_corner_coordinates = new Vertex("0 0", NULL);
 		$square_main_corner_coordinates->lat = round($vertex->lat,$precision);
