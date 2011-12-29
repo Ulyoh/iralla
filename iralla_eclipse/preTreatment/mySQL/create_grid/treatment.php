@@ -8,7 +8,6 @@ function treatment($bus_line, $last_id){
 	global $precision;
 	global $bdd;
 
-	$bus_line_part = new Bus_line_part($bus_line);
 	$busline['path'] = extract_path_from_string($bus_line['path_string']);
 	$busline['path_length'] = count($busline['path']); 
 	$next_index = 0;
