@@ -21,10 +21,6 @@ function distances_to_links($busline, $previous_link, $next_link, $current_area,
 	$distances['from_previous_link'] = $distance_from_first_vertex - $previous_link['distance_from_first_vertex'];
 	$distances['to_next_link'] = $next_link['distance_from_first_vertex'] - $distance_from_first_vertex;
 	
-	if(($distances['from_previous_link'] < 0) || ($distances['to_next_link'] < 0)){
-		exit('error distanc to link');
-	}
-	
 	return $distances;
 	
 }
