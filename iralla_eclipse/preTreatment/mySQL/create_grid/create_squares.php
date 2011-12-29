@@ -26,6 +26,7 @@ function create_squares($bus_line,
 	$square_to_save['next_bs_linked_id'] = $next_link['busStationId'];
 	$square_to_save['distance_to_prev_link'] = $distances['from_previous_link'];
 	$square_to_save['distance_to_next_link'] = $distances['to_next_link'];
+	$square_to_save['distance_from_first_vertex'] = $distances['from_first_vertex'];
 	$square_to_save['previous_link_id'] = $previous_link['id'];
 	$square_to_save['next_link_id'] = $next_link['id'];
 	$square_to_save['flows'] = $bus_line['flows'];
