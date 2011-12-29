@@ -1,24 +1,24 @@
 <?php
 require_once 'tools.php';
 require_once 'create_squares_between_links.php';
-function treatment($bus_line, $last_id){
+function treatment($busline, $last_id){
 
 	global $multipicador;
 	global $grid_path;
 	global $precision;
 	global $bdd;
 
-	$busline['path'] = extract_path_from_string($bus_line['path_string']);
+	$busline['path'] = extract_path_from_string($busline['path_string']);
 	$busline['path_length'] = count($busline['path']); 
 	$next_index = 0;
 	$previous_link = NULL;
 	$next_link = NULL;
-	$links_list_length = count($bus_line['links_list']);
+	$links_list_length = count($busline['links_list']);
 
-	$busline['authorized_areas'] = find_areas_to_make_squares($bus_line);
+	$busline['authorized_areas'] = find_areas_to_make_squares($busline);
 	$nbr_of_authorized_areas = count($busline['authorized_areas']);
 	
-	$links = $bus_line['links_list'];
+	$links = $busline['links_list'];
 	$links_lenght = count($links);
 	
 	//init

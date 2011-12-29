@@ -14,24 +14,28 @@ function extract_datas_from_db(){
 			SELECT
 			*
 			FROM
-			links
+				links
+			WHERE
+				busLineId = 1
 
 			ORDER BY
-			busLineId, prevIndex, distanceToPrevIndex
+				busLineId, prevIndex, distanceToPrevIndex
 			");
 
 	//extract the bus lines of the database
 	$bus_lines_list_db = $bdd->query("
 			SELECT
-			bus_lines.id AS bus_line_id,
-			name AS bus_line_name,
-			path AS path_string,
-			type,
-			flows,
-			areaOnlyBusStations
+				bus_lines.id AS bus_line_id,
+				name AS bus_line_name,
+				path AS path_string,
+				type,
+				flows,
+				areaOnlyBusStations
 
 			FROM
-			bus_lines
+				bus_lines
+			WHERE
+				id = 1
 			");
 
 	while($bus_line = $bus_lines_list_db->fetch()){

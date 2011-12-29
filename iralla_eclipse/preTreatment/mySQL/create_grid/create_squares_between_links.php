@@ -9,10 +9,10 @@ function create_squares_between_links($previous_link, $next_link, $bus_line, $cu
 	$path = $bus_line['path'];
 	
 	//find first square
-	$first_square = found_square_coords_of_vertex($current_area->enter);
+	$first_square = found_square_coords_of_vertex($path[$current_area->enter]);
 	
 	//find last square
-	$last_square = found_square_coords_of_vertex($current_area->out);
+	$last_square = found_square_coords_of_vertex($path[$current_area->out]);
 	
 	//is there squares to be created between the two links?
 	$first_index_out = first_index_after_square($current_area->enter, $first_square, $path);
