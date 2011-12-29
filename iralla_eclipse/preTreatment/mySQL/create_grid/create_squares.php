@@ -7,6 +7,7 @@ function create_squares($bus_line,
 				$distances){
 	global $links_squares;
 	
+	$square_to_save = array();
 	$square_to_save['bl_id'] = $bus_line['bus_line_id'];
 	$square_to_save['bl_name'] = $bus_line['bus_line_name'];
 	$square_to_save['lat'] = $current_out_coords['next_square']->lat;
@@ -33,5 +34,6 @@ function create_squares($bus_line,
 	
 	$links_squares[] = $square_to_save;
 }
+
 
 

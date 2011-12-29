@@ -7,7 +7,6 @@ require_once 'create_squares_between_links.php';
 require_once 'create_squares.php';
 require_once 'extract_datas_from_db.php';
 require_once 'find_areas_to_make_squares.php';
-require_once 'Square_infos.php';
 require_once 'create_squares_of_busline.php';
 
 
@@ -37,7 +36,7 @@ foreach ($bus_lines_list as $bus_line) {
 		echo 'processing grid creation for bus line : ' . $bus_line['bus_line_id'] . "<br \\> \n";
 		$squares = array();
 		$last_id = create_squares_of_bus_line($bus_line, $last_id);
-		saveToDb($squares, 'squares');
+		saveToDb($links_squares, 'squares');
 		echo ' grid creation for bus line : ' . $bus_line['bus_line_id'] . " done <br \\> \n";
 	}
 }
