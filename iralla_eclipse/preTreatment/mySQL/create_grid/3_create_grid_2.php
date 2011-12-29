@@ -8,7 +8,7 @@ require_once 'create_squares.php';
 require_once 'extract_datas_from_db.php';
 require_once 'find_areas_to_make_squares.php';
 require_once 'Square_infos.php';
-require_once 'treatment.php';
+require_once 'create_squares_of_busline.php';
 
 
 bcscale(0);
@@ -25,8 +25,8 @@ set_time_limit(30000);
 //and found the bus lines and bus station inside each one
 
 //access to the database:
-global $bdd;
-global $bus_lines_list;
+$bdd;
+$bus_lines_list;
 
 extract_datas_from_db();
 
@@ -35,7 +35,7 @@ $last_id = 0;
 foreach ($bus_lines_list as $bus_line) {
 	if($bus_line['type'] != 'mainLine'){
 		echo 'processing grid creation for bus line : ' . $bus_line['bus_line_id'] . "<br \\> \n";
-		$last_id = treatment($bus_line, $last_id);
+		$last_id = create_squares_of_bus_line($bus_line, $last_id);
 		echo ' grid creation for bus line : ' . $bus_line['bus_line_id'] . " done <br \\> \n";
 	}
 }
