@@ -267,10 +267,13 @@
 		return $where;
 	}
 	
-	function first_index_after_square($index_in_or_just_before_square, $square, $path){
+	function first_index_after_square($index_in_or_just_before_square, $square, $path, $path_length){
 		$index = $index_in_or_just_before_square;
 		do{
 			$index++;
+			if($index >= $path_length){
+				return null;
+			}
 			$vertex_out = $path[$index];
 		}while(is_vertex_in_square($vertex_out, $square) === true);
 		return $index;

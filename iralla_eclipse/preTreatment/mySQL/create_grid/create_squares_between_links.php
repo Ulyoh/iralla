@@ -13,14 +13,19 @@ function create_squares_between_links($previous_link, $next_link, $bus_line, $cu
 		$first_square = found_square_coords_of_vertex($previous_link);
 		
 		//is there squares to be created between the two links?
-		$first_index_out = first_index_after_square($previous_link['prevIndex'], $first_square, $path);
+		$first_index_out = first_index_after_square($previous_link['prevIndex'], $first_square, $path, $bus_line['path_length']);
 	}
 	else{
 		//find first square of area
 		$first_square = found_square_coords_of_vertex($path[$current_area->enter]);
 		
 		//is there squares to be created between the two links?
-		$first_index_out = first_index_after_square($current_area->enter, $first_square, $path);
+		$first_index_out = first_index_after_square($current_area->enter, $first_square, $path, $bus_line['path_length']);
+	}
+	
+	//if the last index is reach:
+	if($first_index_out === null){
+		return;
 	}
 	
 	//find last square:
@@ -34,10 +39,8 @@ function create_squares_between_links($previous_link, $next_link, $bus_line, $cu
 		$last_square = found_square_coords_of_vertex($path[$current_area->out]);
 		$index_to_compare = $current_area->out;
 	}
-		
-
 	
-	//is there squares between the first and last one:
+	//if there is not squares between the first and last one:
 	if(($first_square === $last_square)
 			&&($index_to_compare < $first_index_out )){
 		return;
@@ -60,7 +63,12 @@ function create_squares_between_links($previous_link, $next_link, $bus_line, $cu
 				$next_link,
 				$distances);
 		
-		$index_out = first_index_after_square($index_out-1, $current_square, $path);
+		$index_out = first_index_after_square($index_out-1, $current_square, $path, $bus_line['path_length']);
+		
+		//if the last index is reach:
+		if($index_out === null){
+			break;
+		}
 		$vertex_out = $path[$index_out];
 		/*$i = 1;
 		
