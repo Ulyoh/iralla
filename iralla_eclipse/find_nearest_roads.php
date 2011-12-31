@@ -31,9 +31,8 @@ $position['lng'] =abs( bcmul($position['lng'], $grid_path_mult));
 //from square
 $interval = 5;
 $ecart_min_between_d_min_and_d_max = 6;
-$max_group_size = 15;
 
-$bus_lines_ids = nearest_squares($position, $interval, $ecart_min_between_d_min_and_d_max, $max_group_size);
+$bus_lines_ids = nearest_squares_2($position, $interval, $ecart_min_between_d_min_and_d_max);
 
 //extract the bus lines path:
 $values = array();
