@@ -138,6 +138,194 @@ function nearest_squares($from_lat_lng, $interval, $table_name, $ecart_min_betwe
 	return $selected_squares;
 }
 
+function nearest_squares_2($from_lat_lng, $interval, $ecart_min_between_d_min_and_d_max, $to_from_both_or_none = 'none'){
+	global $bdd;
+	global $foot_speed;
+	global $bus_speed;
+	global $grid_path_mult;
+	
+	if(($to_from_both_or_none != 'to') && ($to_from_both_or_none != 'from') 
+			&& ($to_from_both_or_none != 'both') && ($to_from_both_or_none != 'none')){
+		exit('error of parameter value: $to_from_or_none');
+	}
+
+	//TODO add a coeff for the lng value depending of the latitude
+	$values[0] = $from_lat_lng['lat'] - $interval;
+	$values[1] = $from_lat_lng['lat'] + $interval;
+	$values[2] = $from_lat_lng['lng'] - $interval;
+	$values[3] = $from_lat_lng['lng'] + $interval;
+
+	$req = $bdd->prepare('
+			SELECT *
+			FROM squares
+			WHERE squares lat BETWEEN ? AND ?
+			AND	squares lng BETWEEN ? AND ?
+			ORDER BY id
+			');
+
+	$nearest_point = array();
+	$shortest_distance = INF;
+	$further_distance = 0;
+	$from_vertex = array();
+	$from_vertex['lat'] = $from_lat_lng['lat'] / $grid_path_mult;
+	$from_vertex['lng'] = $from_lat_lng['lng'] / $grid_path_mult;
+
+	do{
+
+		$squares = array();
+		$req->execute($values);
+
+		while($square = $req->fetch()){
+
+			//$distance = sqrt(pow($square[lat] - $from_lat_lng[lat], 2) + pow($square[lng] - $from_lat_lng[lng], 2));
+
+			$vertex_on_busline = array();
+			
+			$vertex_on_busline = json_decode($square['pt_coords']);
+
+			$distance = real_distance_between_2_vertex($from_vertex, $vertex_on_busline);
+
+			if ($distance < $shortest_distance){
+				$shortest_distance = $distance;
+			}
+			if ($distance > $further_distance){
+				$further_distance = $distance;
+			}
+			$square['distance'] = $distance;
+			$squares[] = $square;
+		}
+
+		if(!isset( $squares[0])){
+			//if not any square found
+			$interval *= 2;
+			$values[0] -= $interval;
+			$values[1] += $interval;
+			$values[2] -= $interval;
+			$values[3] += $interval;
+		}
+		else{
+			//increase interval to get further_distance > shortest_distance + 300 metre environ
+			//ie 15 square
+			$values[0] -= $ecart_min_between_d_min_and_d_max + 2;
+			$values[1] += $ecart_min_between_d_min_and_d_max + 2;
+			$values[2] -= $ecart_min_between_d_min_and_d_max + 2;
+			$values[3] += $ecart_min_between_d_min_and_d_max + 2;
+		}
+	}while(($ecart_min_between_d_min_and_d_max > ((int)$further_distance - (int)$shortest_distance) )
+			||( $squares[0] == null));
+
+	$result = array();
+	if($to_from_both_or_none != 'none'){
+		//found squares to get shortest time to go to a bus station
+		switch($to_from_both_or_none){
+			case 'both':
+			case 'to':
+				$selected_squares_to_bs = array();
+				
+				if($to_from_both_or_none != 'both'){
+					break;
+				}
+				
+			case 'from':
+				$selected_squares_from_bs = array();
+		}
+		
+		foreach ($squares as $square) {
+
+			$square['time_by_foot'] = $square['distance'] / $foot_speed;
+			
+			$square = calcul_time_to_from_bus_station($square, $to_from_both_or_none);
+			
+			if(isset($square['time_to_bus_station'])){
+				$selected_squares_to_bs = save_square_if_quickest($square, $selected_squares_to_bs);
+			}
+			if(isset($square['time_from_bus_station'])){
+				$selected_squares_from_bs = save_square_if_quickest($square, $selected_squares_from_bs);
+			}
+		}
+		$result = array();
+		switch($to_from_both_or_none){
+			case 'both':
+			case 'to':
+				$result['to'] = $selected_squares_to_bs;
+				
+				if($to_from_both_or_none != 'both'){
+					break;
+				}
+				
+			case 'from':
+				$result['from'] = $selected_squares_from_bs;
+		}
+	}
+	else{
+		//return id list of found buslines:
+		foreach ($squares as $square) {
+			$result[$square['bl_id']] = $square['bl_id'];
+		}
+	}
+
+	return $result;
+}
+
+function calcul_time_to_from_bus_station($square, $to_from_both_or_none){
+	global $bus_speed;
+	switch ($square['flow']){
+		case 'both':
+		case 'normal':
+			switch ($to_from_both_or_none){
+				case 'both':
+				case 'to':
+					//case flow normal to bus station:
+					$square['time_by_bus_to_bs'] = $square['distance_to_next_link'] / $bus_speed;
+					$square['time_to_bus_station'] = $square['time_by_foot'] + $square['time_by_bus_to_bs'];
+						
+					if($to_from_both_or_none != 'both'){
+						break;
+					}
+				case 'from':
+					//case flow normal from bus station:
+					$square['time_by_bus_from_bs'] = $square['distance_to_prev_link'] / $bus_speed;
+					$square['time_from_bus_station'] = $square['time_by_foot'] + $square['time_by_bus_from_bs'];
+					break;
+			}
+				
+			if($square['flow'] != 'both'){
+				break;
+			}
+				
+		case 'reverse':
+			switch ($to_from_both_or_none){
+				case 'both':
+				case 'to':
+					//case flow normal to bus station:
+					$square['time_by_bus_to_bs'] = $square['distance_to_prev_link'] / $bus_speed;
+					$square['time_to_bus_station'] = $square['time_by_foot'] + $square['time_by_bus_to_bs'];
+						
+					if($to_from_both_or_none != 'both'){
+						break;
+					}
+				case 'from':
+					//case flow normal from bus station:
+					$square['time_by_bus_from_bs'] = $square['distance_to_next_link'] / $bus_speed;
+					$square['time_from_bus_station'] = $square['time_by_foot'] + $square['time_by_bus_from_bs'];
+					break;
+			}
+	}
+	return square;
+}
+
+function save_square_if_quickest($square, $selected_squares_to_or_from_bs){
+	if(!array_key_exists($square['id_of_bus_station_linked'], $selected_squares_to_or_from_bs)){
+		$selected_squares_to_or_from_bs[$square['id_of_bus_station_linked']] = array();
+	}
+	//keep square if new couple bs bl or shrtest than the one saved
+	if((!array_key_exists($square['bus_line_id'], $selected_squares_to_or_from_bs[$square['id_of_bus_station_linked']]))
+			|| ($selected_squares_to_or_from_bs[$square['id_of_bus_station_linked']][$square['bus_line_id']]['time_to_bus_station'] > $square['time_to_bus_station'] ))
+	{
+		$selected_squares_to_or_from_bs[$square['id_of_bus_station_linked']][$square['bus_line_id']] = $square;
+	}
+	return $selected_squares_to_or_from_bs;
+}
 
 function nearest_bus_stations($from_lat_lng, $interval, $table_name){
 	global $bdd;
