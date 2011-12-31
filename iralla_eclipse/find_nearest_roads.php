@@ -21,7 +21,7 @@ $position['lng'] = $request->lng;
 //find nearst bus stations :
 $interval = 0.005;
 
-$position_nearest_bus_stations = nearest_bus_stations($position, $interval, "bus_stations");
+//$position_nearest_bus_stations = nearest_bus_stations($position, $interval, "bus_stations");
 //end find nearest bus stations
 
 //change position to fit with from square coordinates
@@ -33,22 +33,18 @@ $interval = 5;
 $ecart_min_between_d_min_and_d_max = 6;
 $max_group_size = 15;
 
-$position_squares = nearest_squares($position, $interval, "from_square", $ecart_min_between_d_min_and_d_max, $max_group_size);
+$bus_lines_ids = nearest_squares($position, $interval, $ecart_min_between_d_min_and_d_max, $max_group_size);
 
 //extract the bus lines path:
 $values = array();
-foreach ($position_squares as $squares_by_bus_line_id){
-	foreach($squares_by_bus_line_id as $bus_line_id => $square){
-		if(!in_array($bus_line_id, $values)){
-			if(isset($test)){
-				$test .= 'OR id = ? ';
-			}
-			else{
-				$test = 'id = ? ';
-			}
-			$values[] = $bus_line_id;
-		}
+foreach ($bus_lines_ids as $bus_line_id){
+	if(isset($test)){
+		$test .= 'OR id = ? ';
 	}
+	else{
+		$test = 'id = ? ';
+	}
+	$values[] = $bus_line_id;
 }
 
 $req = $bdd->prepare("
