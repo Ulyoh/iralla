@@ -33,9 +33,14 @@
 		}
 	}
 	
+	
 	function found_main_square_coords_of_vertex($vertex){
 		global $precision;
-		global $grid_path; 
+		global $grid_path;
+		
+		if(is_array($vertex) === true){
+			$vertex = new Vertex($vertex['lat'], $vertex['lng']);
+		}
 		//found the square around the vertex
 		$square_main_corner_coordinates = new Vertex("0 0", NULL);
 		$square_main_corner_coordinates->lat = round($vertex->lat,$precision);
@@ -51,6 +56,9 @@
 		
 		return $square_main_corner_coordinates;
 	}
+	function found_square_coords_of_vertex($vertex){
+		return found_main_square_coords_of_vertex($vertex);
+	}
 	
 	function is_vertex_equal($vertex_1, $vertex_2){
 		if(($vertex_1->lat == $vertex_2->lat) && ($vertex_1->lng == $vertex_2->lng)){
@@ -60,6 +68,7 @@
 			return false;
 		}
 	}
+	
 	
 	/*
 	 * found the coordinate of the intersection between the segment
@@ -258,6 +267,29 @@
 		return $where;
 	}
 	
+	function first_index_after_square($index_in_or_just_before_square, $square, $path, $path_length){
+		$index = $index_in_or_just_before_square;
+		do{
+			$index++;
+			if($index >= $path_length){
+				return null;
+			}
+			$vertex_out = $path[$index];
+		}while(is_vertex_in_square($vertex_out, $square) === true);
+		return $index;
+	}
+	
+	function all_vertex_to_link_inside_square($first_index_in_square, $link, $square, $path){
+		$index = $first_index_in_square;
+		do{
+			if(is_vertex_in_square($path[$index], $square) === false){
+				return false;
+			}
+			$index++;
+		}while($index <= $link['prevIndex']);
+		return true;
+	}
+
 	function distanceFromFirstVertex($path, $vertex_index){
 		$distance = 0;
 		foreach ($path as $key => $coords) {
@@ -285,7 +317,7 @@
 		
 		$length = count($path_lat_lngs);
 		for ($i = 0; $i < $length; $i++) {
-			$lat_lng = $path_lat_lngs[0];
+			$lat_lng = $path_lat_lngs[$i];
 			array_push($path, array($lat_lng->lat, $lat_lng->lng));
 		}
 		/*foreach (path_lat_lngs as $lat_lng){
@@ -380,7 +412,7 @@
 		return $length;
 	}
 	
-	function real_distance_between_2_vertex($vertex_1,$vertex_2){
+	function real_distance_between_2_vertex($vertex_1,$vertex_2, $divide = null){
 		if (is_object($vertex_1)){
 			$buffer = array();
 			$buffer['lat'] = $vertex_1->lat;
@@ -395,6 +427,22 @@
 			$vertex_2 = $buffer;
 		}
 		
+		if(isset($vertex_1[0])){
+			$vertex_1['lat'] = $vertex_1[0];
+		}
+		
+		if(isset($vertex_1[1])){
+			$vertex_1['lng'] = $vertex_1[1];
+		}
+		
+		if(isset($vertex_2[0])){
+			$vertex_2['lat'] = $vertex_2[0];
+		}
+		
+		if(isset($vertex_2[1])){
+			$vertex_2['lng'] = $vertex_2[1];
+		}
+		
 		if (!is_numeric($vertex_1['lat']) 
 				|| !is_numeric($vertex_1['lng']) 
 				|| !is_numeric($vertex_2['lat']) 
@@ -405,6 +453,13 @@
 		//if $vertex1 == $vertex_2:
 		if($vertex_1 == $vertex_2){
 			return 0;
+		}
+		
+		if($divide != null){
+			$vertex_1['lat'] = bcdiv($vertex_1['lat'],$divide, 10);
+			$vertex_1['lng'] = bcdiv($vertex_1['lng'],$divide, 10);
+			$vertex_2['lat'] = bcdiv($vertex_2['lat'],$divide, 10);
+			$vertex_2['lng'] = bcdiv($vertex_2['lng'],$divide, 10);
 		}
 		
 		// R [cos^-1(sin(a)sin(b)+cos(a)cos(c-d)]
@@ -423,6 +478,36 @@
 		$result = acos($pre_calcul)*$earth_radius;
 		
 		return $result;
+	}
+	
+	function real_distance_from_first_vertex($path, $vertex_index){
+		$distance = 0;
+		foreach ($path as $key => $coords) {
+			if ($key == 0){
+				continue;
+			}
+			if ($key > $vertex_index){
+				break;
+			}
+
+			$distance = bcadd($distance, real_distance_between_2_vertex($path[$key-1], $path[$key]));
+			
+		}
+		return $distance;
+	}
+	
+	function is_vertex_in_square($vertex, $square){
+		global $grid_path;
+		if((( $square->lat - $grid_path ) < $vertex->lat)
+				&& ($vertex->lat <= $square->lat)
+				&& (( $square->lng - $grid_path ) < $vertex->lng)
+				&& ($vertex->lng <= $square->lng))
+		{
+			return true;
+		}
+		else{
+			return false;
+		}
 	}
 	
 ?>

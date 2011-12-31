@@ -14,6 +14,19 @@ class Vertex{
 		}
 	}
 	
+	public function get_lat_lng_string(){
+		global $multipicador;
+		if($this->with_multiplicador == true){
+			return json_encode(array(
+					'lat' => bcdiv($this->lat, $multipicador,10), 
+					'lng' => bcdiv($this->lng, $multipicador,10)));
+		}
+		else{
+			return json_encode(array('lat'=>$this->lat, 'lng'=>$this->lng));
+		}
+		
+	}
+	
 	public function __construct($lat_lng_string_or_lat, $lng_optional, $with_multiplicador = true){
 		global $multipicador;
 		$this->with_multiplicador = $with_multiplicador;

@@ -1,6 +1,6 @@
 <?php
 /*to_square
-	Object { id="93547", lat="2114", lng="79912", más...}	
+	Object { id="93547", lat="2114", lng="79912", mï¿½s...}	
 id	"93547"
 lat	"2114"
 lng	"79912"
@@ -16,12 +16,13 @@ require_once 'saveToDb.php';
 require_once 'tools.php';
 require_once 'Vertex.php';
 require_once 'Bus_line_part.php';
+require_once 'extract_datas_from_db.php';
 bcscale(0);
 	
 $multipicador = 10000000; //if it needs to be mayor, lat and lng in to_square and from_square must be resetting
 $grid_path = bcmul($multipicador, 0.001);
 $precision = - substr_count($grid_path, '0');
-$path_to_save = "c:/squares3";
+$path_to_save = "c:/squares4";
 
 if(!is_dir($path_to_save)){
 	if (!mkdir($path_to_save)) {
@@ -140,16 +141,16 @@ function extract_datas_from_db(){
 			$path = extarct_path($bus_lines_list[$bus_line_id]['path_string']);
 			$path_length = count($path);
 			$one_link['distance_from_first_vertex'] =
-			distanceFromFirstVertex($path, $one_link['prevIndex'])
+			real_distance_from_first_vertex($path, $one_link['prevIndex'])
 			+ $one_link['distanceToPrevIndex'];
-			$bus_line_length = distanceFromFirstVertex($path, $path_length-1);
+			$bus_line_length = real_distance_from_first_vertex($path, $path_length-1);
 			$distance_to_last_vertex = $bus_line_length/* - $distance_from_first_vertex*/;
 	
 		}
 		else if (($bus_line_id == $previous_bus_line_id)
 				&& ($bus_lines_list[$bus_line_id]['type'] != 'mainLine')){
 			$one_link['distance_from_first_vertex'] =
-			distanceFromFirstVertex($path, $one_link['prevIndex'])
+			real_distance_from_first_vertex($path, $one_link['prevIndex'])
 			+ $one_link['distanceToPrevIndex'];
 	
 			$links_list_length = count($links_list);
@@ -588,10 +589,10 @@ function treatment($bus_line, $last_id){
 					//$bus_line_part->vertex_list = array();
 				
 					$loop_qte++;
-					if($loop_qte > 1000){
-						echo "\n over than 1000 loops";
+					if($loop_qte > 10000){
+						echo "\n over than 10000 loops";
 						echo "\nindex: ".$next_index;
-						return "over than 1000 loops";
+						return "over than 10000 loops";
 					}
 				
 					//coordinates of next square:
@@ -601,21 +602,31 @@ function treatment($bus_line, $last_id){
 
 					//is link in next square:
 					
+					//if link in current square
 					if($previous_link == $next_link){
-						
+						$todebug = 0;
 						//next link must be the first link once going out from the current square
 						do {
 							//todebug
 							$previous_next_link = $next_link;
 							
 							//end to debug
+							
+							//to debug:
+							$todebug++;
+							if($todebug >500){
+								echo $index . "\n";
+								exit("boucle infini");
+							}
+							
+							//end todebug;
 							$next_link = $bus_line['links_list'][$current_next_link_index];
 							$current_next_link_index++;
 							if($next_link == null){
 								echo "ERROR:\n\tdoes not find the next link\n";
 							}
 							$next_link['vertex'] = new Vertex($next_link['lat'], $next_link['lng']);
-						} while(is_link_in_square($next_link, $current_square) == true);
+						} while(is_link_in_square(&$next_link, $current_square, $path, $path_length) == true);
 						
 						$extract_lenght = $next_link['prevIndex'] - $next_index + 1;
 			
@@ -645,14 +656,14 @@ function treatment($bus_line, $last_id){
 						}
 						
 
-						if(is_link_in_square($next_link, $next_square) == true){
+						if(is_link_in_square(&$next_link, $next_square, $path, $path_length) == true){
 							$previous_link = $next_link;
 						}
 						
 					}
 					//else if the next link is in the next square
 					//and 
-					elseif(is_link_in_square($next_link, $next_square) == true)	{
+					elseif(is_link_in_square(&$next_link, $next_square, $path, $path_length) == true)	{
 						
 						//if exists vertex between the vertex design by the index 
 						//and the link
@@ -670,6 +681,8 @@ function treatment($bus_line, $last_id){
 							$last_index_in_square--;
 							
 							//if all the vertex to go to the link are inside the next square
+							//ie the oath does not go out of the square before to go to
+							//the link
 							if ($last_index_in_square >= $next_link['prevIndex']){
 								//modify the previous link and the next link:
 								
@@ -707,8 +720,8 @@ function treatment($bus_line, $last_id){
 								$index = $last_index_in_square - 1;
 								//$next_index = $index + 1;
 								
-								//$next_vertex = $path[$next_index];
-								//$square_of_next_vertex = found_main_square_coords_of_vertex($next_vertex);
+								$next_vertex = $path[$last_index_in_square];
+								$square_of_next_vertex = found_main_square_coords_of_vertex($next_vertex);
 								
 								break;
 							}
@@ -745,7 +758,16 @@ function treatment($bus_line, $last_id){
 							}
 						}
 					}
-					
+					//todebug
+					if(!isset($todebug2)){
+						$todebug2 = 0;
+					}
+					$todebug2++;
+					if($todebug2 >5000){
+						echo $index . "\n";
+						exit("boucle infini");
+					}
+					//end to debug
 					$current_square = $next_square;
 					//END EVOLUTION OF PREVIOUS AND NEXT LINKS
 							
@@ -895,33 +917,35 @@ function treatment($bus_line, $last_id){
 	return $last_id;
 }
 
-function is_link_in_square($link, $square){
-	global $grid_path;
-	if((( $square->lat - $grid_path ) < $link['vertex']->lat) 
-	&& ($link['vertex']->lat <= $square->lat)
-	&& (( $square->lng - $grid_path ) < $link['vertex']->lng) 
-	&& ($link['vertex']->lng <= $square->lng))
-	{
-		return true;
+function is_link_in_square(&$link, $square, $path, $path_length){
+	global $multipicador;
+
+	if($link['distanceToPrevIndex'] == 0){
+		$link_coords = $path[$link['prevIndex']];
+	}
+	else if($link['prevIndex'] < $path_length - 1){
+		if(!isset($link['coords'])){
+			$distance_between_vertex = real_distance_between_2_vertex($path[$link['prevIndex']], $path[$link['prevIndex'] + 1], $multipicador);
+			$ratio = bcdiv($link['distanceToPrevIndex'], $distance_between_vertex, 14);
+			
+			$diff_lat = $path[$link['prevIndex']+1]->lat - $path[$link['prevIndex']]->lat;
+			$diff_lng = $path[$link['prevIndex']+1]->lng - $path[$link['prevIndex']]->lng;
+			
+			$link_coords = new stdClass();
+			$link_coords->lat = $path[$link['prevIndex']]->lat + bcdiv(bcmul($link['distanceToPrevIndex'], $diff_lat, 2), $distance_between_vertex, 0);
+			$link_coords->lng = $path[$link['prevIndex']]->lng + bcdiv(bcmul($link['distanceToPrevIndex'], $diff_lng, 2), $distance_between_vertex, 0);	
+			$link['coords'] = $link_coords;
+		}
+		else{
+			$link_coords = $link['coords'];
+		}
 	}
 	else{
-		return false;
+		exit("error in is_link_in_square()");
 	}
+	return is_vertex_in_square($link_coords, $square);
 }
 
-function is_vertex_in_square($vertex, $square){
-	global $grid_path;
-	if((( $square->lat - $grid_path ) < $vertex->lat) 
-	&& ($vertex->lat <= $square->lat)
-	&& (( $square->lng - $grid_path ) < $vertex->lng) 
-	&& ($vertex->lng <= $square->lng))
-	{
-		return true;
-	}
-	else{
-		return false;
-	}
-}
 
 function verify_squares($to_square_list, $from_square_list){
 	$compt = 0;
