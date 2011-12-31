@@ -6,12 +6,13 @@ function create_squares($bus_line,
 				$next_link,
 				$distances){
 	global $links_squares;
+	global $grid_path;
 	
 	$square_to_save = array();
 	$square_to_save['bl_id'] = $bus_line['bus_line_id'];
 	$square_to_save['bl_name'] = $bus_line['bus_line_name'];
-	$square_to_save['lat'] = $current_out_coords['next_square']->lat;
-	$square_to_save['lng'] = $current_out_coords['next_square']->lng;
+	$square_to_save['lat'] = $current_out_coords['next_square']->lat / $grid_path;
+	$square_to_save['lng'] = $current_out_coords['next_square']->lng / $grid_path;
 	$square_to_save['pt_coords'] = $current_out_coords['intersection']->get_lat_lng_string();
 	//prev_index_of_pt or the index of the vertex if they are merged
 	$square_to_save['prev_index_of_pt'] = $current_out_coords['prev_index_before_intersection'];
