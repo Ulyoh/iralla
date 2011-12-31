@@ -7,7 +7,6 @@ $multipicador = 10000000;
 $denominator_to_get_real_values = 10000000;
 $grid_path = 0.001;
 $grid_path_mult = bcmul($multipicador, $grid_path)/10;  //TODO why /10???? to check with create grid
-$path_of_squares = "c:/squares2/";
 $foot_speed = 0.7;
 $bus_speed = 7;
 
@@ -25,8 +24,8 @@ $interval = 0.005;
 //end find nearest bus stations
 
 //change position to fit with from square coordinates
-$position['lat'] =abs( bcmul($position['lat'], $grid_path_mult));
-$position['lng'] =abs( bcmul($position['lng'], $grid_path_mult));
+$position['lat'] =bcmul($position['lat'], $grid_path_mult);
+$position['lng'] =bcmul($position['lng'], $grid_path_mult);
 
 //from square
 $interval = 5;

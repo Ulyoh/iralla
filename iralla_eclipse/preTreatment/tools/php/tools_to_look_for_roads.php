@@ -158,8 +158,8 @@ function nearest_squares_2($from_lat_lng, $interval, $ecart_min_between_d_min_an
 	$req = $bdd->prepare('
 			SELECT *
 			FROM squares
-			WHERE squares lat BETWEEN ? AND ?
-			AND	squares lng BETWEEN ? AND ?
+			WHERE squares.lat BETWEEN ? AND ?
+			AND	squares.lng BETWEEN ? AND ?
 			ORDER BY id
 			');
 
