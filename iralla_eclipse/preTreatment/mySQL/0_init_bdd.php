@@ -237,12 +237,15 @@ require_once 'access_to_db.php';
 		bl_name TINYTEXT,
 		lat INT,
 		lng INT,
-		pt_coords VARCHAR(50),
+		pt_coords_lat FLOAT(10,8),
+		pt_coords_lng FLOAT(10,8),
 		prev_index_of_pt SMALLINT UNSIGNED,
 		prev_vertex_of_prev_link SMALLINT UNSIGNED,
 		prev_vertex_of_next_link SMALLINT UNSIGNED,
-		prev_link_coords VARCHAR(50),
-		next_link_coords VARCHAR(50),
+		prev_link_coords_lat FLOAT(10,8),
+		prev_link_coords_lng FLOAT(10,8),
+		next_link_coords_lat FLOAT(10,8),
+		next_link_coords_lng FLOAT(10,8),
 		prev_bs_linked_id MEDIUMINT(6) UNSIGNED,
 		next_bs_linked_id MEDIUMINT(6) UNSIGNED,
 		distance_to_prev_link INT,
@@ -250,7 +253,10 @@ require_once 'access_to_db.php';
 		distance_from_first_vertex INT,
 		previous_link_id MEDIUMINT(6) UNSIGNED,
 		next_link_id MEDIUMINT(6) UNSIGNED,
-		flows TINYTEXT
+		flows TINYINT(1) UNSIGNED,
+		INDEX lng (lat),
+		INDEX lat (lng),
+		INDEX lat_lng (lat,lng)
 	)";
 	
 	if (($bdd->exec($query)) === false){
