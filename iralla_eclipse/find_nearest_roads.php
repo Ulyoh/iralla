@@ -11,7 +11,7 @@ $foot_speed = 0.7;
 $bus_speed = 7;
 
 $request = $_POST['q'];
-//$request = '{"lat":-2.1561053360208935,"lng":-79.91647949218748}';
+$request = '	{"lat":-2.2540513884736235,"lng":-79.89485015869138}';
 $request = json_decode($request);
 
 $position['lat'] = $request->lat;
