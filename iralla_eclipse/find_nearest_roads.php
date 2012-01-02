@@ -61,6 +61,7 @@ while($bus_line = $req->fetch()){
 }
 require_once 'close_bdd.php';
 
-echo json_encode($bus_lines);
+//echo json_encode($bus_lines);
+echo memory_get_peak_usage (true );
 
 
