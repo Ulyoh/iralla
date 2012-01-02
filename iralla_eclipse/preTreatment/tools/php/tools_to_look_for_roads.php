@@ -190,7 +190,7 @@ function nearest_squares_2($from_lat_lng, $interval, $ecart_min_between_d_min_an
 
 			$vertex_on_busline = array();
 			
-			$vertex_on_busline = json_decode($square['pt_coords']);
+			$vertex_on_busline = new Vertex($square['pt_coords_lat'], $square['pt_coords_lng'], 1);
 
 			$distance_pow_2 = pow($from_vertex['lat'] - $vertex_on_busline->lat, 2) * $lat_coeff_pow_2 + pow($from_vertex['lng'] - $vertex_on_busline->lng, 2) * $lng_coeff_pow_2;
 
@@ -279,8 +279,8 @@ function nearest_squares_2($from_lat_lng, $interval, $ecart_min_between_d_min_an
 function calcul_time_to_from_bus_station($square, $to_from_both_or_none){
 	global $bus_speed;
 	switch ($square['flow']){
-		case 'both':
-		case 'normal':
+		case 3:
+		case 1:
 			switch ($to_from_both_or_none){
 				case 'both':
 				case 'to':
@@ -302,11 +302,11 @@ function calcul_time_to_from_bus_station($square, $to_from_both_or_none){
 				break;
 			}
 				
-		case 'reverse':
+		case 2:
 			switch ($to_from_both_or_none){
 				case 'both':
 				case 'to':
-					//case flow normal to bus station:
+					//case flow reverse to bus station:
 					$square['time_by_bus_to_bs'] = $square['distance_to_prev_link'] / $bus_speed;
 					$square['time_to_bus_station'] = $square['time_by_foot'] + $square['time_by_bus_to_bs'];
 						
@@ -314,7 +314,7 @@ function calcul_time_to_from_bus_station($square, $to_from_both_or_none){
 						break;
 					}
 				case 'from':
-					//case flow normal from bus station:
+					//case flow reverse from bus station:
 					$square['time_by_bus_from_bs'] = $square['distance_to_next_link'] / $bus_speed;
 					$square['time_from_bus_station'] = $square['time_by_foot'] + $square['time_by_bus_from_bs'];
 					break;
