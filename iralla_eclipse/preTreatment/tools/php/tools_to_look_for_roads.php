@@ -162,10 +162,19 @@ function nearest_squares_2($from_lat_lng, $interval, $ecart_min_between_d_min_an
 			AND	squares.lng BETWEEN ? AND ?
 			ORDER BY id
 			');
+	
+	$lat_coeff = 111320;
+	$lat_coeff_pow_2 = pow(111.32, 2);
+	//calculate coeff to get quicker calculation of lng:
+	$from_lat_lng_more_delta = array();
+	$from_lat_lng_more_delta['lat'] = $from_lat_lng['lat'];
+	$from_lat_lng_more_delta['lng'] = $from_lat_lng['lng'] + 1;
+	$lng_coeff = real_distance_between_2_vertex($from_lat_lng, $from_lat_lng_more_delta, 1000)*1000;
+	$lng_coeff_pow_2 = pow($lng_coeff, 2);
 
 	$nearest_point = array();
-	$shortest_distance = INF;
-	$further_distance = 0;
+	$shortest_distance_pow_2 = INF;
+	$further_distance_pow_2 = 0;
 	$from_vertex = array();
 	$from_vertex['lat'] = $from_lat_lng['lat'] / $grid_path_mult;
 	$from_vertex['lng'] = $from_lat_lng['lng'] / $grid_path_mult;
@@ -183,15 +192,15 @@ function nearest_squares_2($from_lat_lng, $interval, $ecart_min_between_d_min_an
 			
 			$vertex_on_busline = json_decode($square['pt_coords']);
 
-			$distance = real_distance_between_2_vertex($from_vertex, $vertex_on_busline);
+			$distance_pow_2 = pow($from_vertex['lat'] - $vertex_on_busline->lat, 2) * $lat_coeff_pow_2 + pow($from_vertex['lng'] - $vertex_on_busline->lng, 2) * $lng_coeff_pow_2;
 
-			if ($distance < $shortest_distance){
-				$shortest_distance = $distance;
+			if ($distance_pow_2 < $shortest_distance_pow_2){
+				$shortest_distance_pow_2 = $distance_pow_2;
 			}
-			if ($distance > $further_distance){
-				$further_distance = $distance;
+			if ($distance_pow_2 > $further_distance_pow_2){
+				$further_distance_pow_2 = $distance_pow_2;
 			}
-			$square['distance'] = $distance;
+			$square['distance_pow_2'] = $distance_pow_2;
 			$squares[] = $square;
 		}
 
@@ -204,15 +213,15 @@ function nearest_squares_2($from_lat_lng, $interval, $ecart_min_between_d_min_an
 			$values[3] += $interval;
 		}
 		else{
-			//increase interval to get further_distance > shortest_distance + 300 metre environ
+			//increase interval to get further_distance > shortest_distance + 100 metre environ
 			//ie 15 square
-			$values[0] -= $ecart_min_between_d_min_and_d_max + 2;
-			$values[1] += $ecart_min_between_d_min_and_d_max + 2;
-			$values[2] -= $ecart_min_between_d_min_and_d_max + 2;
-			$values[3] += $ecart_min_between_d_min_and_d_max + 2;
+			$values[0] -= $ecart_min_between_d_min_and_d_max + 0.003;
+			$values[1] += $ecart_min_between_d_min_and_d_max + 0.003;
+			$values[2] -= $ecart_min_between_d_min_and_d_max + 0.003;
+			$values[3] += $ecart_min_between_d_min_and_d_max + 0.003;
 		}
-	}while(($ecart_min_between_d_min_and_d_max > ((int)$further_distance - (int)$shortest_distance) )
-			||( $squares[0] == null));
+	}while(( $squares[0] == null)
+		||($ecart_min_between_d_min_and_d_max > (sqrt((int)$further_distance_pow_2) - sqrt((int)$shortest_distance_pow_2)) ));
 
 	$result = array();
 	if($to_from_both_or_none != 'none'){
@@ -318,7 +327,7 @@ function save_square_if_quickest($square, $selected_squares_to_or_from_bs){
 	if(!array_key_exists($square['id_of_bus_station_linked'], $selected_squares_to_or_from_bs)){
 		$selected_squares_to_or_from_bs[$square['id_of_bus_station_linked']] = array();
 	}
-	//keep square if new couple bs bl or shrtest than the one saved
+	//keep square if new couple bs bl is shortest than the one saved
 	if((!array_key_exists($square['bus_line_id'], $selected_squares_to_or_from_bs[$square['id_of_bus_station_linked']]))
 			|| ($selected_squares_to_or_from_bs[$square['id_of_bus_station_linked']][$square['bus_line_id']]['time_to_bus_station'] > $square['time_to_bus_station'] ))
 	{
