@@ -3,6 +3,10 @@ require_once 'access_to_db.php';
 require_once 'tools.php';
 require_once 'tools_to_look_for_roads.php';
 
+//to debug
+//echo 'first' . memory_get_usage (true ). "\n";
+//end to debug
+
 $start = time();
 $multipicador = 10000000;
 $denominator_to_get_real_values = 10000000;
@@ -20,9 +24,6 @@ $position['lng'] = $request->lng;
 
 //find nearst bus stations :
 $interval = 0.003;
-
-//$position_nearest_bus_stations = nearest_bus_stations($position, $interval, "bus_stations");
-//end find nearest bus stations
 
 //change position to fit with from square coordinates
 $position['lat'] =bcmul($position['lat'], $grid_path_mult);
@@ -62,10 +63,10 @@ while($bus_line = $req->fetch()){
 }
 require_once 'close_bdd.php';
 
-$execution_time = time() - $start;
-echo'execution time: '. $execution_time . "\n";
-//echo json_encode($bus_lines);
-echo memory_get_peak_usage (true );
+//$execution_time = time() - $start;
+//echo'execution time: '. $execution_time . "\n";
 
+//echo memory_get_peak_usage (true );
+echo json_encode($bus_lines);
 
 

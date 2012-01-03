@@ -148,7 +148,11 @@ function nearest_squares_2($from_lat_lng, $interval, $ecart_min_between_d_min_an
 			&& ($to_from_both_or_none != 'both') && ($to_from_both_or_none != 'none')){
 		exit('error of parameter value: $to_from_or_none');
 	}
-
+	
+	//to debug
+	//echo 'first' . memory_get_usage (true ). "\n";
+	//end to debug
+	
 	//TODO add a coeff for the lng value depending of the latitude
 	$values[0] = $from_lat_lng['lat'] - $interval;
 	$values[1] = $from_lat_lng['lat'] + $interval;
@@ -178,14 +182,26 @@ function nearest_squares_2($from_lat_lng, $interval, $ecart_min_between_d_min_an
 	$from_vertex = array();
 	$from_vertex['lat'] = $from_lat_lng['lat'] / $grid_path_mult;
 	$from_vertex['lng'] = $from_lat_lng['lng'] / $grid_path_mult;
-
+	$selected_squares = array();
+	if($to_from_both_or_none != 'none'){
+		$selected_squares['to_bs']= array();
+		$selected_squares['from_bs']= array();
+	}
+	$found_squares = false;
+	
+	//to debug
+	//echo 'first' . memory_get_usage (true ). "\n";
+	//end to debug
+	
 	do{
-
 		$squares = array();
 		$req->execute($values);
-
+		
+		//to debug
+		//echo 'first' . memory_get_usage (true ). "\n";
+		//end to debug
+	
 		while($square = $req->fetch()){
-
 			//$distance = sqrt(pow($square[lat] - $from_lat_lng[lat], 2) + pow($square[lng] - $from_lat_lng[lng], 2));
 
 			$vertex_on_busline = array();
@@ -201,10 +217,14 @@ function nearest_squares_2($from_lat_lng, $interval, $ecart_min_between_d_min_an
 				$further_distance_pow_2 = $distance_pow_2;
 			}
 			$square['distance_pow_2'] = $distance_pow_2;
-			$squares[] = $square;
+			
+			$selected_squares = save_square_if_quickest_main($square, $to_from_both_or_none, $selected_squares);
 		}
-
-		if(!isset( $squares[0])){
+		
+		if(is_squares_found($selected_squares, $to_from_both_or_none) === false){
+			$found_squares = true;
+		}
+		if($found_squares === true){
 			//if not any square found
 			$interval *= 2;
 			$values[0] -= $interval;
@@ -220,60 +240,47 @@ function nearest_squares_2($from_lat_lng, $interval, $ecart_min_between_d_min_an
 			$values[2] -= $ecart_min_between_d_min_and_d_max + 0.003;
 			$values[3] += $ecart_min_between_d_min_and_d_max + 0.003;
 		}
-	}while(( $squares[0] == null)
+	}while(($found_squares === true)
 		||($ecart_min_between_d_min_and_d_max > (sqrt((int)$further_distance_pow_2) - sqrt((int)$shortest_distance_pow_2)) ));
+	//to debug
+	//echo memory_get_usage (true ). "\n";
+	//end to debug
 
-	$result = array();
-	if($to_from_both_or_none != 'none'){
-		//found squares to get shortest time to go to a bus station
-		switch($to_from_both_or_none){
-			case 'both':
-			case 'to':
-				$selected_squares_to_bs = array();
-				
-				if($to_from_both_or_none != 'both'){
-					break;
-				}
-				
-			case 'from':
-				$selected_squares_from_bs = array();
-		}
-		
-		foreach ($squares as $square) {
+	return $selected_squares;
+}
 
-			$square['time_by_foot'] = $square['distance'] / $foot_speed;
-			
-			$square = calcul_time_to_from_bus_station($square, $to_from_both_or_none);
-			
-			if(isset($square['time_to_bus_station'])){
-				$selected_squares_to_bs = save_square_if_quickest($square, $selected_squares_to_bs);
+function is_squares_found($selected_squares, $to_from_both_or_none){
+	switch ($to_from_both_or_none){
+		case 'none' : 
+			if(empty( $selected_squares)) {
+				return false;
 			}
-			if(isset($square['time_from_bus_station'])){
-				$selected_squares_from_bs = save_square_if_quickest($square, $selected_squares_from_bs);
+			else{
+				return true;
 			}
-		}
-		$result = array();
-		switch($to_from_both_or_none){
-			case 'both':
-			case 'to':
-				$result['to'] = $selected_squares_to_bs;
-				
-				if($to_from_both_or_none != 'both'){
-					break;
-				}
-				
-			case 'from':
-				$result['from'] = $selected_squares_from_bs;
-		}
+		case 'from' :
+			if(empty( $selected_squares['to_bs'])) {
+				return false;
+			}
+			else{
+				return true;
+			}
+		case 'from' :
+			if(empty( $selected_squares['from_bs'])) {
+				return false;
+			}
+			else{
+				return true;
+			}
+		case 'both' :
+			if((empty( $selected_squares['to_bs']))
+			||(empty( $selected_squares['from_bs']))) {
+				return false;
+			}
+			else{
+				return true;
+			}
 	}
-	else{
-		//return id list of found buslines:
-		foreach ($squares as $square) {
-			$result[$square['bl_id']] = $square['bl_id'];
-		}
-	}
-
-	return $result;
 }
 
 function calcul_time_to_from_bus_station($square, $to_from_both_or_none){
@@ -321,6 +328,36 @@ function calcul_time_to_from_bus_station($square, $to_from_both_or_none){
 			}
 	}
 	return square;
+}
+
+function save_square_if_quickest_main($square, $to_from_both_or_none, $selected_squares){
+	global $foot_speed;
+	$result = array();
+	
+	if($to_from_both_or_none != 'none'){
+		//found squares to get shortest time to go to a bus station
+		$square['time_by_foot'] = $square['distance'] / $foot_speed;
+		
+		$square = calcul_time_to_from_bus_station($square, $to_from_both_or_none);
+		
+		if(isset($square['time_to_bus_station'])){
+			$selected_squares_to_bs = save_square_if_quickest($square, $selected_squares_to_bs);
+		}
+		if(isset($square['time_from_bus_station'])){
+			$selected_squares_from_bs = save_square_if_quickest($square, $selected_squares_from_bs);
+		}
+			
+		$result = array();
+		$selected_squares['to_bs'] = $selected_squares_to_bs;
+		$selected_squares['from_bs'] = $selected_squares_from_bs;
+	
+	}
+	else{
+		//return id list of found buslines:
+		$selected_squares[$square['bl_id']] = $square['bl_id'];
+	}
+	
+	return $selected_squares;
 }
 
 function save_square_if_quickest($square, $selected_squares_to_or_from_bs){
