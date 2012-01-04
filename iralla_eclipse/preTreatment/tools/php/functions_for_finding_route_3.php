@@ -17,11 +17,11 @@ function find_nearst_roads($lat_lng, $from_or_to_square, $interval, $ecart_min_b
 	global $grid_path_mult;
 	
 	//change position to fit with from or to square coordinates
-	$position['lat'] =abs( bcmul($lat_lng['lat'], $grid_path_mult));
-	$position['lng'] =abs( bcmul($lat_lng['lng'], $grid_path_mult));
+	$position['lat'] =bcmul($lat_lng['lat'], $grid_path_mult);
+	$position['lng'] =bcmul($lat_lng['lng'], $grid_path_mult);
 
-	$position_squares = nearest_squares($position, $interval, $from_or_to_square, $ecart_min_between_d_min_and_d_max);
-
+	$position_squares = nearest_squares_2($position, $interval, $ecart_min_between_d_min_and_d_max, $from_or_to_square);
+	
 	//reorganize the result by [bus_line_id][bus_station_id]
 	$by_bus_lines_then_by_bus_stations = array();
 	foreach ($position_squares as $bus_station_id => $bus_lines_list) {

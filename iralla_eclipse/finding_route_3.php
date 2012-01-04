@@ -8,7 +8,6 @@ $multipicador = 10000000;
 $denominator_to_get_real_values = 10000000;
 $grid_path = 0.001;
 $grid_path_mult = bcmul($multipicador, $grid_path)/10;  //TODO why /10???? to check with create grid
-$path_of_squares = "c:/squares2/";
 $foot_speed = 0.7;
 $bus_speed = 7;
 
@@ -20,14 +19,14 @@ $request = $_POST['q'];
 }';
 */
 //$request = 	'{"start":{"lat":-2.1199100004450315,"lng":-79.91459121704099},"end":{"lat":-2.1525029949886085,"lng":-79.90154495239256}}';
-/*
+
 $request = '
 {
 "start":{
 "lat":-2.192814417860611,"lng":-79.8878120422363},"end":{
 "lat":-2.1142490416697988,"lng":-79.91373291015623}
 }
-';*/
+';
 $request = json_decode($request);
 
 
@@ -50,8 +49,8 @@ function find_route($start, $end){
 	$interval = 5;
 	$ecart_min_between_d_min_and_d_max = 6;
 	
-	$start_lines = find_nearst_roads($start, 'from_square', $interval, $ecart_min_between_d_min_and_d_max);
-	$end_lines = find_nearst_roads($end, 'to_square', $interval, $ecart_min_between_d_min_and_d_max);
+	$start_lines = find_nearst_roads($start, 'from', $interval, $ecart_min_between_d_min_and_d_max);
+	$end_lines = find_nearst_roads($end, 'to', $interval, $ecart_min_between_d_min_and_d_max);
 	
 	//look if commun bus lines in $start_lines and $end_lines
 	$communs_lines = find_communs_lines($start_lines, $end_lines);
