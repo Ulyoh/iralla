@@ -217,13 +217,13 @@ function nearest_squares_2($from_lat_lng, $interval, $ecart_min_between_d_min_an
 			}
 			$square['distance_pow_2'] = $distance_pow_2;
 			
-			$selected_squares = save_square_if_quickest_main($square, $to_from_both_or_none, $selected_squares);
+			$selected_squares = save_square_if_nearest_main($square, $to_from_both_or_none, $selected_squares);
 		}
 		
 		if(is_squares_found($selected_squares, $to_from_both_or_none) === false){
 			$found_squares = true;
 		}
-		if($found_squares === true){
+		if($found_squares === false){
 			//if not any square found
 			$interval *= 2;
 			$values[0] -= $interval;
@@ -239,8 +239,8 @@ function nearest_squares_2($from_lat_lng, $interval, $ecart_min_between_d_min_an
 			$values[2] -= $ecart_min_between_d_min_and_d_max + 0.003;
 			$values[3] += $ecart_min_between_d_min_and_d_max + 0.003;
 		}
-	}while(($found_squares === true)
-		||($ecart_min_between_d_min_and_d_max > (sqrt((int)$further_distance_pow_2) - sqrt((int)$shortest_distance_pow_2)) ));
+	}while(($found_squares === false)
+		/*||($ecart_min_between_d_min_and_d_max > (sqrt((int)$further_distance_pow_2) - sqrt((int)$shortest_distance_pow_2)) )*/);
 	//to debug
 	//echo memory_get_usage (true ). "\n";
 	//end to debug
@@ -338,7 +338,7 @@ function calcul_time_to_from_bus_station($square, $to_from_both_or_none){
 	return $square;
 }
 
-function save_square_if_quickest_main($square, $to_from_both_or_none, $selected_squares){
+function save_square_if_nearest_main($square, $to_from_both_or_none, $selected_squares){
 	global $foot_speed;
 	$result = array();
 	
@@ -352,102 +352,66 @@ function save_square_if_quickest_main($square, $to_from_both_or_none, $selected_
 	switch ($to_from_both_or_none){
 		case 'both':
 		case 'to':
-			$selected_squares['to_bs'] = save_square_to_bs_if_quickest($square, $selected_squares['to_bs']);
+			$selected_squares['to_bs'] = save_square_to_link_if_nearest($square, $selected_squares['to_bs']);
 			if($to_from_both_or_none != 'both'){
 				break;
 			}
 		case 'from':
-			$selected_squares['from_bs'] = save_square_from_bs_if_quickest($square, $selected_squares['from_bs']);
+			$selected_squares['from_bs'] = save_square_from_link_if_nearest($square, $selected_squares['from_bs']);
 			break;
 	}
 	
 	return $selected_squares;
 }
 
-function save_square_to_bs_if_quickest($square, $selected_squares_to_bs){
+function save_square_to_link_if_nearest($square, $selected_squares_to_link){
 
 	switch ($square['flows']){
 		case 1:
 		case 3:
-			if(!array_key_exists($square['next_bs_linked_id'], $selected_squares_to_bs)){
-				$selected_squares_to_bs[$square['next_bs_linked_id']] = array();
-			}
-			//keep square if new couple bs bl is shortest than the one saved
-			if((!array_key_exists($square['bl_id'], $selected_squares_to_bs[$square['next_bs_linked_id']]))
-					|| ($selected_squares_to_bs[$square['next_bs_linked_id']][$square['bl_id']]['time_to_bus_station'] > $square['time_to_next_link'] ))
-			{
+			if((!array_key_exists($square['next_link_id'], $selected_squares_to_link)) || $square['distance_pow_2'] < $selected_squares_to_link[$square['next_link_id']]['distance_pow_2']){
 				$square_to_save = $square;
-				$square_to_save['time_to_bus_station'] = $square['time_to_next_link'];
 				$square_to_save['flows'] = 1;
-				
-				$selected_squares_to_bs[$square['next_bs_linked_id']][$square['bl_id']] = $square_to_save;
+				$selected_squares_to_link[$square['next_link_id']] = $square_to_save;
 			}
-				
 			if ($square['flows'] == 1){
 				break;
 			}
 			
 		case 2:
-			if(!array_key_exists($square['prev_bs_linked_id'], $selected_squares_to_bs)){
-				$selected_squares_to_bs[$square['prev_bs_linked_id']] = array();
-			}
-			//keep square if new couple bs bl is shortest than the one saved
-			if((!array_key_exists($square['bl_id'], $selected_squares_to_bs[$square['prev_bs_linked_id']]))
-					|| ($selected_squares_to_bs[$square['prev_bs_linked_id']][$square['bl_id']]['time_to_bus_station_reverse'] > $square['time_to_prev_link'] ))
-			{
-				$square_to_save = $square;
-				$square_to_save['time_to_bus_station'] = $square['time_to_prev_link'];
-				$square_to_save['flows'] = 2;
-				
-				$selected_squares_to_bs[$square['prev_bs_linked_id']][$square['bl_id']] = $square_to_save;
-			}		
+			if((!array_key_exists($square['previous_link_id'], $selected_squares_to_link)) || $square['distance_pow_2'] < $selected_squares_to_link[$square['previous_link_id']]['distance_pow_2']){
+				$square['flows'] = 2;
+				$selected_squares_to_link[$square['previous_link_id']] = $square;
+			}	
 			break;
 	}
 
-	return $selected_squares_to_bs;
+	return $selected_squares_to_link;
 }
 
-function save_square_from_bs_if_quickest($square, $selected_squares_from_bs){
+function save_square_from_link_if_nearest($square, $selected_squares_from_link){
 
 	switch ($square['flows']){
 		case 1:
 		case 3:
-			if(!array_key_exists($square['prev_bs_linked_id'], $selected_squares_from_bs)){
-				$selected_squares_from_bs[$square['prev_bs_linked_id']] = array();
-			}
-			//keep square if new couple bs bl is shortest than the one saved
-			if((!array_key_exists($square['bl_id'], $selected_squares_from_bs[$square['prev_bs_linked_id']]))
-					|| ($selected_squares_from_bs[$square['prev_bs_linked_id']][$square['bl_id']]['time_from_bus_station'] > $square['time_to_prev_link'] ))
-			{
+			if((!array_key_exists($square['previous_link_id'], $selected_squares_from_link)) || $square['distance_pow_2'] < $selected_squares_from_link[$square['previous_link_id']]['distance_pow_2']){
 				$square_to_save = $square;
-				$square_to_save['time_from_bus_station'] = $square['time_to_prev_link'];
 				$square_to_save['flows'] = 1;
-				
-				$selected_squares_from_bs[$square['prev_bs_linked_id']][$square['bl_id']] = $square_to_save;
+				$selected_squares_from_link[$square['previous_link_id']] = $square;
 			}
-			break;
-			
 			if ($square['flows'] == 1){
 				break;
 			}
-			
-		case 2:
-			if(!array_key_exists($square['next_bs_linked_id'], $selected_squares_from_bs)){
-				$selected_squares_from_bs[$square['next_bs_linked_id']] = array();
-			}
-			//keep square if new couple bs bl is shortest than the one saved
-			if((!array_key_exists($square['bl_id'], $selected_squares_from_bs[$square['next_bs_linked_id']]))
-					|| ($selected_squares_from_bs[$square['next_bs_linked_id']][$square['bl_id']]['time_from_bus_station'] > $square['time_to_next_link'] ))
-			{
-				$square_to_save = $square;
-				$square_to_save['time_from_bus_station'] = $square['time_to_next_link'];
-				$square_to_save['flows'] = 2;
 				
-				$selected_squares_from_bs[$square['next_bs_linked_id']][$square['bl_id']] = $square_to_save;
+		case 2:
+			if((!array_key_exists($square['next_link_id'], $selected_squares_from_link)) || $square['distance_pow_2'] < $selected_squares_from_link[$square['next_link_id']]['distance_pow_2']){
+				$square['flows'] = 2;
+				$selected_squares_from_link[$square['next_link_id']] = $square;
 			}
+			break;
 	}
 
-	return $selected_squares_from_bs;
+	return $selected_squares_from_link;
 }
 
 function nearest_bus_stations($from_lat_lng, $interval, $table_name){
