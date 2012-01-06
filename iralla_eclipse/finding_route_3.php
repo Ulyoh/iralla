@@ -3,7 +3,7 @@ require_once 'access_to_db.php';
 require_once 'tools.php';
 require_once 'functions_for_finding_route_3.php';
 
-
+ini_set('memory_limit', "2000M");
 $multipicador = 10000000;
 $denominator_to_get_real_values = 10000000;
 $grid_path = 0.001;
@@ -46,8 +46,8 @@ function find_route($start, $end){
 	}
 
 	//look for nearest bus lines of the start and end point:
-	$interval = 5;
-	$ecart_min_between_d_min_and_d_max = 6;
+	$interval = 2;
+	$ecart_min_between_d_min_and_d_max = 100;
 	
 	$start_lines = find_nearst_roads($start, 'from', $interval, $ecart_min_between_d_min_and_d_max);
 	$end_lines = find_nearst_roads($end, 'to', $interval, $ecart_min_between_d_min_and_d_max);
