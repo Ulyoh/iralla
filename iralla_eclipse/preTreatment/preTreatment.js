@@ -79,6 +79,7 @@ function accessToPreTreatment(){
 	newPretreatmentAccessButton('AreaAroundTroncales', 'create areas around Troncales');
 	newPretreatmentAccessButton('LinkBusStationToTroncales', 'create link: bus lines / troncales');
 	newPretreatmentAccessButton('MakeVirtualsBusStation', 'make virtual bus stations');
+	newPretreatmentAccessButton('CommunsPathsBetweenBS', 'one path between 2 bus stations');
 	newPretreatmentAccessButton('DataBaseCreation', 'create dataBase');
 	newPretreatmentAccessButton('AddNewDatas', 'add new datas');
 	newPretreatmentAccessButton('ShowHideAreas', 'show/hide areas');
@@ -286,6 +287,25 @@ function launchMainMakeVirtualsBusStation(){
 		else
 			mainMakeVirtualsBusStation();
 }
+
+//add one path between 2 bus stations')
+function loadCommunsPathsBetweenBSFilesAndLaunch(){
+	if (typeof(loaded.communsPathsBetweenBS) == 'undefined') {
+		loaded.communsPathsBetweenBS = [];
+	}
+	
+	includeJs("preTreatment/communsPathsBetweenBS/mainCommunsPathsBetweenBS.js");
+	
+	setTimeout("launchMainCommunsPathsBetweenBS()",500);
+}
+
+function launchMainCommunsPathsBetweenBS(){
+	if (loaded.communsPathsBetweenBS.length < 1)
+		setTimeout("loadCommunsPathsBetweenBSFilesAndLaunch()",500);
+	else
+		mainCommunsPathsBetweenBS();	
+}
+
 
 //add new datas
 function loadAddNewDatasFilesAndLaunch(){
