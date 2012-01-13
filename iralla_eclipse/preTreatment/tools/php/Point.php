@@ -186,6 +186,26 @@ class Point {
 		}
 	}
 	
+	/**
+	 * return the distance and the coordinates of the point projection
+	 * on a polyline as :
+	 * array('distance' => float $value, 'to' => Point $value)
+	 * 
+	 */
+	public function projection_on_polyline(Polyline $p){
+		$pts = $p->get_points();
+		$result = array('distance' => INF);
+		
+		for($i = 1; $i < $p->length; $i++){
+			$seg_result = $this->projection_on_segment(Segment($pts[$i - 1], $$pts[$i]));
+			if($seg_result['distance'] < $result['distance']){
+				$result = $seg_result;
+				$result['index'] = $i - 1;
+			}
+		}
+		return $result;
+	}
+	
 	private static function intersection_point_of_colinears_segments(Point $pt1, Point $pt2, Point $pt3, Point $pt4) {
 		
 		//throw exception if they are not segments:
