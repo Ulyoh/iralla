@@ -32,6 +32,9 @@ class Point {
 		}
 	}
 	
+	public function distance_to(Point $other_pt){
+		return sqrt(pow($other_pt->x - $this->x, 2) + pow($other_pt->y - $this->y, 2));
+	}
 	/**
 	 * 
 	 * Return the intersection point between two segments if exists
@@ -139,6 +142,47 @@ class Point {
 		}
 		else {
 			return false;
+		}
+	}
+	
+	/**
+	 * return the distance and the coordinates of the point projection
+	 * on a segement as :
+	 * array('distance' => float $value, 'to' => Point $value)
+	 * 
+	 */
+	public function projection_on_segment(Segment $seg){
+		if(($x1 == $x2) && ($y1 == $y2)){
+			return $this->distance_to($seg->get_pt1());
+		}
+		else{
+			$Dx = $x2 - $x1;
+			$Dy = $y2 - $y1;
+			$ratio = (($this->x - $x1) * $Dx + ($this->y - $y1) * $Dy) / ($Dx * $Dx + $Dy * $Dy);
+		    if ($ratio < 0){
+		    	return  array(
+		    		'distance'=> $this->distance_to($seg->get_pt1()),
+		    		'to'=>$seg->get_pt1()
+		    	);
+		    }
+		    else if ($ratio > 1){
+		    	return  array(
+		    		'distance'=> $this->distance_to($seg->get_pt2()),
+		    		'to'=>$seg->get_pt2()
+		    	);
+		    }
+		    else{
+				$x1 = $seg->get_pt1()->x;
+				$y1 = $seg->get_pt1()->y;
+				$x2 = $seg->get_pt2()->x;
+				$y2 = $seg->get_pt2()->y;
+				$pt = Point((1 - $ratio) * x1 + $ratio * x2,
+		       				(1 - $ratio) * y1 + $ratio * y2);
+		       	return  array(
+		    		'distance'=> $this->distance_to($pt),
+		    		'to'=>$pt
+		    	);
+		    }
 		}
 	}
 	
