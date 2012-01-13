@@ -1,0 +1,20 @@
+
+SET @lat_start := -2192, @lng_start := -79887, @interval:= 1, @set_interval_start:= @interval;
+SET @lat_end := -2114, @lng_end := -79913, @set_interval_end:= @interval;
+
+CREATE TABLE IF NOT EXISTS links_couples
+SELECT * FROM
+(SELECT  @lat_start, @lng_start, @set_interval_start, *
+FROM squares
+WHERE squares.lat BETWEEN @lat_start - @set_interval_start AND @lat_start + @set_interval_start
+AND	squares.lng BETWEEN @lng_start - @set_interval_start AND @lng_start + @set_interval_start
+ORDER BY id) t_start
+
+(SELECT  @lat_end, @lng_end, @set_interval_end, *
+FROM squares
+WHERE squares.lat BETWEEN @lat_end - @set_interval_end AND @lat_end + @set_interval_end
+AND	squares.lng BETWEEN @lng_end - @set_interval_end AND @lng_end + @set_interval_end
+ORDER BY id) t_end
+
+
+WHERE t_start.id = t_end.id;
