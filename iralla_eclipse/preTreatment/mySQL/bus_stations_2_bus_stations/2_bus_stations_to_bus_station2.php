@@ -1,5 +1,9 @@
 <?php
+//todebug
 require_once 'access_to_db.php';
+$beginning_time = time();
+//end todebug
+
 require_once 'saveToDb.php';
 require_once 'Bs2bs.php';
 require_once 'Bus_line.php';
@@ -12,7 +16,8 @@ require_once 'Sub_red.php';
 require_once 'tools.php';
 
 ini_set('memory_limit', '2000M');
-$path_to_save = "d:/roads";
+set_time_limit ( 100000 );
+$path_to_save = "c:/roads3";   //todebug 35
 
 if (!is_dir($path_to_save)){
 	if(!mkdir($path_to_save)){
@@ -38,7 +43,7 @@ function bus_stations_to_bus_station2($first_id_of_bus_station_to_do, $nbr_of_bu
 	//$nbr_of_connections_done = 0;
 	//create all the Links from the datas:
 	while( $connection = $request->fetch()){
-		if($connection[nextBusStationId] != $connection[busStationIdDeparture]){
+		if($connection['nextBusStationId'] != $connection['busStationIdDeparture']){
 			$one_li2li = new Li2li($connection, $sub_red);
 			//$nbr_of_connections_done++;
 			//echo "$nbr_of_connections_done conections done\n";
@@ -46,8 +51,11 @@ function bus_stations_to_bus_station2($first_id_of_bus_station_to_do, $nbr_of_bu
 	}
 	
 	$sub_red->generate_roads_from_bs2bss();
+	//to test if size as previous:
+	//$sub_red->sub_red_json_started = json_encode($sub_red);
 	
 	$sub_red->find_all_roads_for_each_bus_stations($first_id_of_bus_station_to_do, $nbr_of_bus_station_to_do);
+
 
 	//return false if the last bus station start is done:
 	if(($first_id_of_bus_station_to_do + $nbr_of_bus_station_to_do) <= max(array_keys($sub_red->roads_of_one_bs2bs_by_start_bs_id))){
@@ -70,17 +78,18 @@ $count_destruct = 0;
 //end to debug
 
 $count = 0;
-
+//	REFAIRE 498
 //$bdd->query("TRUNCATE TABLE bus_stations_to_bus_stations");
-$first_id_of_bus_station_to_do = 990;
+$first_id_of_bus_station_to_do = 800;
 $nbr_of_bus_station_to_do = 1;
-$stop_when_count_egal = 10000;
-/*bus_stations_to_bus_station2($first_id_of_bus_station_to_do, $nbr_of_bus_station_to_do, $path_to_save);*/
+$stop_when_count_egal =1000 ;
+//bus_stations_to_bus_station2($first_id_of_bus_station_to_do, $nbr_of_bus_station_to_do, $path_to_save);
 while((bus_stations_to_bus_station2($first_id_of_bus_station_to_do, $nbr_of_bus_station_to_do, $path_to_save))
 &&($stop_when_count_egal > $count)){
 	$first_id_of_bus_station_to_do += $nbr_of_bus_station_to_do;
 	gc_collect_cycles();
 	$count++;
 }
-
+$total_time_min = (time() - $beginning_time) / 60;
+echo "total time: $total_time_min minutes\n";
 ?>

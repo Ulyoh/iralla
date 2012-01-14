@@ -109,19 +109,6 @@ body {
 	z-index:5;
 }
 
-#button_clean_lines{
-	position:absolute;
-	display:none;
-	top:22px;
-	left:2px;
-	width:90px;
-	border: 2px solid #0060DA;
-	background-color:#0090DA;
-	padding: 0px;
-	color: white;
-	z-index:5;
-}
-
 #itinerario{
 	position:fixed;
 	display:none;
@@ -170,11 +157,11 @@ tr, td{
 	margin:0;
 	border:0;
 }
-
+/*
 td{
 	width: 100%;
 }
-
+*/
 table{
 	border-collapse: collapse;
 }
@@ -222,3 +209,29 @@ span {
 	background-color: #FFFFFF;
 	z-index:1;
 }*/
+.buslines_table_selected_button {
+    color: red;
+}
+#show_buslines_list {
+    position: fixed;
+    right: 0;
+    top: 0;
+	background-color: #FFFFFF;
+}
+.cross_button_selected_busline{
+	top:0;	
+}
+
+#table_show_buslines_list tr{
+	height: 10px;
+	width: 10px;
+}
+
+.td_name_showing_buslines{
+	height:8px;
+}
+
+.td_showing_buslines{
+	height:8px;
+	weigth:8px;
+}

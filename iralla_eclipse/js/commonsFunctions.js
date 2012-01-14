@@ -182,6 +182,7 @@ function createTableInElt(elt){
  * 		lineId
  * 		lineClass
  * 		innerHTML
+ * 		childs[]
  * };
  */
 function addLineWithOneCellInTable(table, more, functionToExec){
@@ -200,6 +201,11 @@ function addLineWithOneCellInTable(table, more, functionToExec){
 	if(typeof(more.lineClass) != 'undefined'){
 		newLine.className = more.lineClass;
 	}
+	if(typeof(more.childs) != 'undefined'){
+		for(var i = 0; i < more.childs.length; i++){
+			newCell.appendChild(more.childs[i]);
+		}
+	}
 	
 	if(typeof(functionToExec) != 'undefined'){
 		functionToExec(more, table, newLine, newCell);
@@ -209,6 +215,51 @@ function addLineWithOneCellInTable(table, more, functionToExec){
 		line: newLine,
 		cell: newCell
 	};
+	return created;
+}
+
+/*
+ * more = {
+ * 		lineTitle
+ * 		lineId
+ * 		lineClass
+ * 		childsInCells[]
+ * 		classCell
+ * };
+ */
+
+function addLineInTable(table, more, functionToExec){
+	var newLine = document.createElement("tr");
+	
+	if (typeof(more.title) != 'undefined') {
+		newLine.title = more.lineTitle;
+	}
+	if(typeof(more.lineClass) != 'undefined'){
+		newLine.className = more.lineClass;
+	}
+	if(typeof(more.childsInCells) != 'undefined'){
+		var newCell;
+		for(var i = 0; i < more.childsInCells.length; i++){
+			newCell = document.createElement("td");
+			newCell.appendChild(more.childsInCells[i]);
+			newLine.appendChild(newCell);
+			if(typeof more.childsInCells[i].classCell != 'undefined' ){
+				newCell.className = more.childsInCells[i].classCell;
+			}
+		}
+	}
+	
+	if(typeof(functionToExec) != 'undefined'){
+		functionToExec(more, table, newLine, newCell);
+	}
+	
+	var created = {
+		line: newLine,
+		cell: newCell
+	};
+	
+	table.appendChild(newLine);
+	return created;
 }
 
 function newButton(more){
@@ -218,3 +269,13 @@ function newButton(more){
 	newButtonVar.setAttribute('class', more.myClass);
 	return newButtonVar;
 }
+
+function isInsideArray(elt, array){
+	for(var i = 0; i < array.length; i++){
+		if(array[i] == elt)
+			return true;
+	}
+	return false;
+}
+
+isInArray = isInsideArray;

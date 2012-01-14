@@ -14,8 +14,8 @@ class Bus_line_part{
 	
 	
 	public function __construct($bus_line){
-		$this->id = $bus_line[bus_line_id];
-		$this->name = $bus_line[bus_line_name];
+		$this->id = $bus_line['bus_line_id'];
+		$this->name = $bus_line['bus_line_name'];
 		$this->go_in = new Vertex("0 0", NULL);
 		$this->go_out = new Vertex("0 0", NULL);
 	}

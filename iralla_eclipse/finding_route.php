@@ -10,7 +10,7 @@ $foot_speed = 0.7; //0.7 m/s ~2.5km/h
 $bus_speed = 13; //13 m/s ~30km/h
 $path_of_roads = "d:/roads/";
 
-$max_time_lost_whitout_changing_bus_line = 600;
+$time_lost_when_changing_bus_line = 600;
 
 class My_square {
 	public $bus_line_id;
@@ -180,7 +180,7 @@ while($bs2bss = $req->fetch()){
 					//if lost of time less than 10 minutes do not stay in the same bus
 					//record the bus line part which can be join to from_square 
 					//and how much time more than to use the shortest bus line part
-					if($time_lost < $max_time_lost_whitout_changing_bus_line){
+					if($time_lost < $time_lost_when_changing_bus_line){
 						$first_bus_line_part_selected = $bus_line_part;
 						$added_time_first_bus_line_part = $time_lost;
 						$merged_first_bus_line_part_with_from_square = true;
@@ -213,7 +213,7 @@ while($bs2bss = $req->fetch()){
 				//if lost of time less than 10 minutes do not stay in the same bus
 				//record the bus line part which can be join to from_square 
 				//and how much time more than to use the shortest bus line part
-				if($time_lost < $max_time_lost_whitout_changing_bus_line){
+				if($time_lost < $time_lost_when_changing_bus_line){
 					$last_bus_line_part_selected = $bus_line_part;
 					$added_time_last_bus_line_part = $time_lost;
 					$merged_last_bus_line_part_with_to_square = true;
@@ -371,7 +371,7 @@ function nearest_point($from_lat_lng, $interval, $table_name){
 	while(count($nearest_point) == 0){
 
 		$req->execute($values);
-		$shortest_distance = -log(0);
+		$shortest_distance = +INF;
 		
 		while($square = $req->fetch()){
 			
@@ -575,7 +575,7 @@ function nearest_bus_stations($from_lat_lng, $interval, $table_name){
 
 // not used:
 function nearest_point_from_array_to_point($array, $point){
-	$shortest_distance = -log(0);
+	$shortest_distance = +INF;
 	foreach ($array as $point_to_compare) {
 		$distance = sqrt(pow($point[lat] - $point_to_compare[lat], 2) + pow($point[lng] - $point_to_compare[lng], 2));
 		if ($distance < $shortest_distance){

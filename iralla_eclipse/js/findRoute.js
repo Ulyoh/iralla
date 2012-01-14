@@ -37,6 +37,7 @@ function showFindRouteMenu(){
 				'look_for_menu',
 				'direction',
 				'to_road_title',
+				'near_to_title',
 				'modify_roads_button_1',
 				'valid_roads_button_1',
 				'modify_roads_button_2',
@@ -72,6 +73,7 @@ function showFindRouteMenu(){
 				'look_for_menu',
 				'direction',
 				'from_road_title',
+				'near_to_title',
 				'modify_roads_button_1',
 				'valid_roads_button_1',
 				'modify_roads_button_2',
@@ -100,6 +102,40 @@ function showFindRouteMenu(){
 					
 		break;
 		
+		case 'near to':
+			
+			idsToHide = [
+				'look_for_menu',
+				'direction',
+				'from_road_title',
+				'to_road_title',
+				'modify_roads_button_1',
+				'valid_roads_button_1',
+				'modify_roads_button_2',
+				'valid_roads_button_2',
+				'row_suggestion_list_road_1',
+				'row_suggestion_list_road_2',
+				'instructions_to_select_marker',
+				'cross_road_not_found',
+				'row_instructions_marker',
+				'row_valid_cancel_marker'
+			];
+			
+			idsToShow = [
+				'near_to_title',
+				'table_to_find_road_1',
+				'row_nombre_road_1',
+				//'row_list_road_1',
+				'row_input_road_1',
+				'table_to_find_road_2',
+				'row_nombre_road_2',
+				//'row_list_road_2',
+				'row_input_road_2',
+				'directly_point_at_the_place',
+				'itinerario'
+			];
+					
+		break;
 		
 		
 		
@@ -440,6 +476,10 @@ function showIntersectionList(received, which){
 	((typeof(map.arrivalMarker)) && (map.arrivalMarker != null))){
 		map.arrivalMarker.setMap(null);
 	}
+	else if((map.stepLookForMenu == "nearTo") && 
+	((typeof(map.nearToMarker)) && (map.nearToMarker != null))){
+		map.nearToMarker.setMap(null);
+	}
 	
 	var crossRoadsFound = JSON.parse(received);
 	map.markersList = [];
@@ -471,7 +511,7 @@ gmap.Marker.prototype.select_cross_road_marker = function(){
 	getEltById("to_find_road_2").value = '';
 	
 	this.setDraggable(true);
-	
+	var i;
 	//remove all others marker:
 	if (typeof(map.markersList) != 'undefined') {
 		for (i = 0; i < map.markersList.length; i++) {
@@ -504,7 +544,7 @@ gmap.Marker.prototype.select_cross_road_marker = function(){
 		gmap.event.clearInstanceListeners(this);
 	}
 	
-	//if two marker selected:
+	//if two marker selected:  //TODO: strange here
 	if (((typeof(map.departureMarker) != 'undefined') && (map.departureMarker != null)) &&
 	((typeof(map.arrivalMarker) != 'undefined') && (map.arrivalMarker != null))) {
 		
@@ -563,7 +603,10 @@ function initToPlaceTheMarker(){
 	if(((map.stepLookForMenu  == "departure") && 
 	((typeof(map.departureMarker) != 'undefined') && (map.departureMarker != null)))||
 	((map.stepLookForMenu == "arrival") && 
-	((typeof(map.arrivalMarker) != 'undefined') && (map.arrivalMarker != null)))){
+	((typeof(map.arrivalMarker) != 'undefined') && (map.arrivalMarker != null)))||
+	((map.stepLookForMenu == "nearTo") && 
+			((typeof(map.nearToMarker) != 'undefined') && (map.nearToMarker != null))))
+	{
 		showBlockById("valid_marker");
 	}
 	
@@ -580,6 +623,7 @@ function addMarkerOnTheMap(latLng){
 	removeNodeById("roads_list_selected_1");
 	removeNodeById("roads_list_selected_2");
 	
+	var i;
 	//remove all others marker:
 	if (typeof(map.markersList) != 'undefined') {
 		for (i = 0; i < map.markersList.length; i++) {
@@ -591,7 +635,7 @@ function addMarkerOnTheMap(latLng){
 		if ((typeof(map.departureMarker) != 'undefined') && (map.departureMarker != null)) {
 			map.departureMarker.setMap(null);
 			//remove listener:
-			if(typeof(map.departureMarker.listenerDragEnd) != undefined){
+			if(typeof(map.departureMarker.listenerDragEnd) != "undefined"){
 				gmap.event.removeListener(map.departureMarker.listenerDragEnd);
 			}
 		}
@@ -607,12 +651,29 @@ function addMarkerOnTheMap(latLng){
 		if ((typeof(map.arrivalMarker) != 'undefined') && (map.arrivalMarker != null)) {
 			map.arrivalMarker.setPosition(null);
 			//remove listener:
-			if(typeof(map.departureMarker.listenerDragEnd) != undefined){
+			if(typeof(map.arrivalMarker.listenerDragEnd) != "undefined"){
 				gmap.event.removeListener(map.arrivalMarker.listenerDragEnd);
 			}
 		}
 		
 		map.arrivalMarker = new gmap.Marker({
+			map: this,
+			position: latLng,
+			draggable: true,
+			raiseOnDrag: false,
+			flat: false
+		});	
+	}
+	else if (map.stepLookForMenu == 'near to') {
+		if ((typeof(map.nearToMarker) != 'undefined') && (map.nearToMarker != null)) {
+			map.nearToMarker.setPosition(null);
+			//remove listener:
+			if(typeof(map.nearToMarker.listenerDragEnd) != "undefined"){
+				gmap.event.removeListener(map.nearToMarker.listenerDragEnd);
+			}
+		}
+		
+		map.nearToMarker = new gmap.Marker({
 			map: this,
 			position: latLng,
 			draggable: true,
@@ -660,7 +721,14 @@ function validMarker(){
 		calculateRoad();
 	}
 	
-	
+	if(map.stepLookForMenu == 'near to'){
+		//add listeners to show new road if a marker is moved:
+		if (typeof(map.nearToMarker.listenerDragEnd) == 'undefined') {
+			map.nearToMarker.listenerDragEnd = gmap.event.addListener(map.nearToMarker, 'dragend', find_nearest_roads);
+		}
+		hideNodeById('itinerario');
+		find_nearest_roads();
+	}
 }
 
 function cancelMarker(){
@@ -714,6 +782,10 @@ function removeCurrentsMarkers(except){
 		((typeof(map.arrivalMarker) != 'undefined') && (map.arrivalMarker != null))) {
 			map.currentMarker = map.arrivalMarker;
 		}
+		else if ((map.stepLookForMenu == "nearTo") &&
+				((typeof(map.nearToMarker) != 'undefined') && (map.nearToMarker != null))) {
+					map.currentMarker = map.nearToMarker;
+				}
 	}
 	
 	

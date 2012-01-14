@@ -1,26 +1,6 @@
 <?php
-	$serveur = '127.0.0.1';
+require_once 'access_to_db.php';
 	
-	//TODO : create the database automaticaly
-	$database = 'guayaquil';
-	
-	//connect to the server:
-	if (!(mysql_connect($serveur, 'root', ''))){
-		echo 'could not connect to the serveur: ' . $serveur;
-		return;
-	}
-	else{
-		echo "connected to " . $serveur . "\n";
-	}
-	
-	//open the database:
-	if (!(mysql_select_db($database))){
-		echo "could not open the database: " . $database . "\n";
-		return;
-	}
-	else{
-		echo "connected to the database: " . $database . "\n";
-	}
 	
 	//create the table of links if not exist
 	$query = "CREATE TABLE IF NOT EXISTS links (
@@ -43,7 +23,7 @@
             distanceToNextLink2 FLOAT(12,10),
             */
 
-	if (!(mysql_query($query))){
+	if (($bdd->exec($query)) === false){
 		echo "table links could not be created\n";
 		return;
 	}
@@ -67,7 +47,7 @@
             idFromJavascript MEDIUMINT(6)
             )";
 
-	if (!(mysql_query($query))){
+	if (($bdd->exec($query)) === false){
 		echo "table bus_stations could not be created\n";
 		return;
 	}
@@ -94,7 +74,7 @@
             idFromJavascript MEDIUMINT(6)
             )";
 
-	if (!(mysql_query($query))){
+	if (($bdd->exec($query)) === false){
 		echo "table bus_lines could not be created\n";
 		return;
 	}
@@ -111,7 +91,7 @@
             path TEXT
             )";
 
-	if (!(mysql_query($query))){
+	if (($bdd->exec($query)) === false){
 		echo "table arrows could not be created\n";
 		return;
 	}
@@ -159,7 +139,7 @@
             )";
            
 
-	if (!(mysql_query($query))){
+	if (($bdd->exec($query)) === false){
 		echo "table nearest_connected_bus_stations could not be created\n";
 		return;
 	}
@@ -183,7 +163,7 @@
             UNIQUE INDEX couple (start_bus_station_id, end_bus_station_id)
             )";
 
-	if (!(mysql_query($query))){
+	if (($bdd->exec($query)) === false){
 		echo "table bus_stations_to_bus_stations could not be created\n";
 		return;
 	}
@@ -203,22 +183,25 @@
 			go_in_point_lat MEDIUMINT(6) UNSIGNED,
 			go_in_point_lng MEDIUMINT(6) UNSIGNED,
 			path TEXT,
-			from_index SMALLINT UNSIGNED,
-			to_index SMALLINT UNSIGNED,
+			previous_index_of_go_out SMALLINT UNSIGNED,
+			previous_vertex_of_link SMALLINT UNSIGNED,
 			length INT,
 			id_of_bus_station_linked MEDIUMINT(6) UNSIGNED,
+			link_id MEDIUMINT(6) UNSIGNED ,
+			previous_link_id MEDIUMINT(6) UNSIGNED ,
+			next_link_id MEDIUMINT(6) UNSIGNED ,
 			INDEX lat_lng (lat,lng),
 			INDEX bus_line_id (bus_line_id)
             )";
 
-	if (!(mysql_query($query))){
+	if (($bdd->exec($query)) === false){
 		echo "table to_square could not be created\n";
 		return;
 	}
 	else{
 		echo "table to_square created or already exists\n";
 	}
-		
+
 		//create the table of connections between all bus stations if not exist
 	$query = "CREATE TABLE IF NOT EXISTS from_square (
 			id MEDIUMINT(6) UNSIGNED PRIMARY KEY AUTO_INCREMENT,
@@ -238,13 +221,47 @@
 			INDEX lat_lng (lat,lng)
             )";
 
-	if (!(mysql_query($query))){
+	if (($bdd->exec($query)) === false){
 		echo "table from_square could not be created\n";
 		return;
 	}
 	else{
 		echo "table from_square created or already exists\n";
 	}
+	
+	####################################"""
+	//create the table of connections between all bus stations if not exist
+	$query = "CREATE TABLE IF NOT EXISTS squares (
+		id MEDIUMINT(6) UNSIGNED PRIMARY KEY AUTO_INCREMENT,
+		bl_id MEDIUMINT(6) UNSIGNED,
+		bl_name TINYTEXT,
+		lat INT,
+		lng INT,
+		pt_coords VARCHAR(50),
+		prev_index_of_pt SMALLINT UNSIGNED,
+		prev_vertex_of_prev_link SMALLINT UNSIGNED,
+		prev_vertex_of_next_link SMALLINT UNSIGNED,
+		prev_link_coords VARCHAR(50),
+		next_link_coords VARCHAR(50),
+		prev_bs_linked_id MEDIUMINT(6) UNSIGNED,
+		next_bs_linked_id MEDIUMINT(6) UNSIGNED,
+		distance_to_prev_link INT,
+		distance_to_next_link INT,
+		distance_from_first_vertex INT,
+		previous_link_id MEDIUMINT(6) UNSIGNED,
+		next_link_id MEDIUMINT(6) UNSIGNED,
+		flows TINYTEXT
+	)";
+	
+	if (($bdd->exec($query)) === false){
+		echo "table to_square could not be created\n";
+		return;
+	}
+	else{
+		echo "table to_square created or already exists\n";
+	}
+	############################################"
+	
 	
 	//create the table of text to search of rutas
 	$query = "CREATE TABLE IF NOT EXISTS words_to_search_rutas (
@@ -254,7 +271,7 @@
 			INDEX word (word)
             )";
 
-	if (!(mysql_query($query))){
+	if (($bdd->exec($query)) === false){
 		echo "table words_to_search_rutas could not be created\n";
 		return;
 	}
@@ -275,7 +292,7 @@
 			INDEX reference (reference)
             )";
 
-	if (!(mysql_query($query))){
+	if (($bdd->exec($query)) === false){
 		echo "table geolocalisation could not be created\n";
 		return;
 	}
@@ -293,7 +310,7 @@
 			INDEX way_name_id (way_name_id)
             )";
 
-	if (!(mysql_query($query))){
+	if (($bdd->exec($query)) === false){
 		echo "table words_in_way_name could not be created\n";
 		return;
 	}
@@ -311,7 +328,7 @@
 			geolocalisation_ids MEDIUMTEXT
             )";
 
-	if (!(mysql_query($query))){
+	if (($bdd->exec($query)) === false){
 		echo "table geo_ways_names could not be created\n";
 		return;
 	}

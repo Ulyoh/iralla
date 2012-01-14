@@ -111,12 +111,32 @@ function SubMap(canvas, opts){
 		}
 	};
 	
+	//init for handling overlays on buslines:
+	subMap.toBeShown = [];
+	subMap.shownBusLines = [];
+	subMap.isOnABusLine = 0;
+	var table = createTableInElt(getEltById('show_buslines_list'));
+	subMap.show_buslines_table = table.tbody;
+	subMap.show_buslines_table.setAttribute('id', 'table_show_buslines_list');
+	subMap.buslines_shown = [];
+	setupCleanLines(subMap.show_buslines_table);
+	
 	subMap.addBusLinesFromDb = function(DbList){
 
 		var busLineBuffer;
 		var j = 0;
 		var nameList = [];
 		var latAndLng;
+
+		subMap.setSizeOfBusLinesDependingOnZoomLevel({
+			11: 7,
+			12: 8,
+			13: 9,
+			14: 10,
+			15: 11,
+			16: 14,
+			17: 16
+		});
 		
 		for (var i = 0; i < DbList.length; i++) {
 			/*	
@@ -132,6 +152,9 @@ function SubMap(canvas, opts){
 				DbList[i].path = JSON.parse(DbList[i].path);
 			}
 			
+			if (DbList[i].path == null){
+				continue;
+			}
 			var path = [];
 			
 			for (j = 0; j < DbList[i].path.length; j++) {
@@ -165,10 +188,10 @@ function SubMap(canvas, opts){
 			busLineBuffer.setOptions({
 				map: this,
 				strokeOpacity: 0.5,
-				strokeWeight: 3,
+				strokeWeight: subMap.sizeDependingOnZoom[subMap.getZoom()],
 				strokeColor: color,
 				path: path,
-				zIndex: 10
+				zIndex: 100
 			});
 			
 			busLineBuffer.DbList = DbList[i];
@@ -188,17 +211,9 @@ function SubMap(canvas, opts){
 			}
 		}
 		
-		subMap.setSizeOfBusLinesDependingOnZoomLevel({
-			11: 3,
-			12: 4,
-			13: 5,
-			14: 6,
-			15: 7,
-			16: 10,
-			17: 12
-		});
+
 		
-		//subMap.enableSizeDependingOnZoom(true);
+		subMap.enableSizeDependingOnZoom(true);
 	};
 	
 	

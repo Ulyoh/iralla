@@ -27,18 +27,9 @@ function show_look_for_route(){
 }
 
 function show_look_for_roads_near_to(){
-	getEltById("look_for_menu").style.display = "none";
-	getEltById("buscar").style.display = "none";
-	/*
-	 * to adapt:
-	 */
-	/*
-	var directionNode = getEltById("direction");
-	directionNode.style.display = "block";
-	var crossButtonNode = getEltById("cross_button");
-	directionNode.appendChild(crossButtonNode);
-	appendAsFirstChild(directionNode, crossButtonNode);
-	crossButtonNode.style.display = 'block';*/
+	map.stepLookForMenu = 'near to';
+	map.findRouteState = 'lookForNearTo';
+	showFindRouteMenu();
 }
 
 function cross_button_click(id_to_remove){

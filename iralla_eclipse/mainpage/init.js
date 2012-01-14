@@ -3,13 +3,13 @@
  */
 
 var mysite = 'http://www.cortocamino.com/guayaquil/';
-var xDebugOn = true;
 
 var gmap = google.maps;
 var rutasLoaded; //TODO I think it s not in use anymore
 //var listOfFilesToLoad = [/*'troncales.xml', 'rutas.xml',*/ 'rutas_reresimplified.xml']; //'rutas.xml'
 
 function initialize() {
+	
 	rutasLoaded = false;
 	var defaultCenter = new gmap.LatLng(-2.17,-79.9);
 
@@ -33,6 +33,18 @@ function initialize() {
     
     map = new SubMap(document.getElementById("map_canvas"), myOptions);
 	
+    //set rectangle on the map to get the mouse over event for showing overlays on buslines:
+    map.rectForMouseOver = new gmap.Rectangle({
+    	bounds: new gmap.LatLngBounds(new gmap.LatLng(-3,-81), new gmap.LatLng(-1,-78)),
+    	clickable: true,
+    	fillColor: "#DDDDDD",
+    	fillOpacity: 0,
+    	strokeWeight: 1,
+    	zIndex:1
+    });
+
+	gmap.event.addListener(map.rectForMouseOver, 'mouseover', removeFromToBeShown);
+    
 	//center the map for the zoomMin
 	
 	
@@ -75,7 +87,7 @@ function initialize() {
 		map.addBusStationsFromDb(mainBusStationsList);
 	}
 	
-	mainBusStationsList = undefined;
+	//mainBusStationsList = undefined;
 /*	var color = mainBusLinesList[0].color;
 	var path = JSON.parse(mainBusLinesList[0].path);
 	var path2 = [];
@@ -99,9 +111,8 @@ function initialize() {
 	if (mainBusLinesList.length > 0) {
 		map.addBusLinesFromDb(mainBusLinesList);
 	}
-	mainBusLinesList = undefined;
+	//mainBusLinesList = undefined;
 	
-	setupCleanLines();
 	document.getElementById('suggestionListNode').nextId = 0;
 	
 	//set style:

@@ -149,30 +149,35 @@ class Road{
 			//time to change bus:
 			$shortest_time += 300;
 		}
-		$this->shortest_time = $shortest_time;
-		return $shortest_time;
+		$this->shortest_time = (integer)$shortest_time;
+		return $this->shortest_time;
 	}
 	
 	public function format_datas_to_save(){
 		$road_to_save = array();
-		$road_to_save[start_bus_station_id] = $this->start_bus_station->id;
-		$road_to_save[start_lat] = $this->start_bus_station->lat;
-		$road_to_save[start_lng] = $this->start_bus_station->lng;
-		$road_to_save[end_bus_station_id] = $this->end_bus_station->id;
-		$road_to_save[end_lat] = $this->end_bus_station->lat;
-		$road_to_save[end_lng] = $this->end_bus_station->lng;
-		//$road_to_save[length] = $this->shortest_length;
-		$road_to_save[time] = $this->shortest_time;
+		$road_to_save['start_bus_station_id'] = $this->start_bus_station->id;
+		$road_to_save['start_lat'] = $this->start_bus_station->lat;
+		$road_to_save['start_lng'] = $this->start_bus_station->lng;
+		$road_to_save['end_bus_station_id'] = $this->end_bus_station->id;
+		$road_to_save['end_lat'] = $this->end_bus_station->lat;
+		$road_to_save['end_lng'] = $this->end_bus_station->lng;
+		//$road_to_save['length'] = $this->shortest_length;
+		$road_to_save['time'] = $this->shortest_time;
 /*		
 		
-		$road_to_save[first_bus_line]
-		$road_to_save[end_bus_line]
+		$road_to_save['first_bus_line']
+		$road_to_save['end_bus_line']
+		*/
+		
+		//debug
+		/*echo 'saving data for road from '.$road_to_save['start_bus_station_id']."id \n";
+		echo '                     to   '.$road_to_save['end_bus_station_id']."id \n\n";
 		*/
 		
 		$datas_to_save = Bs2bs::format_datas_to_save($this->bs2bss);
 		
-		$road_to_save[bs2bss_to_record_in_file] = $datas_to_save->to_file;
-		$road_to_save[road_datas] = $datas_to_save->to_mysql;
+		$road_to_save['bs2bss_to_record_in_file'] = $datas_to_save->to_file;
+		$road_to_save['road_datas'] = $datas_to_save->to_mysql;
 		//$road_datas
 		
 		return $road_to_save;
@@ -191,11 +196,21 @@ class Road{
 	}*/
 	
 	public static function return_shortest_road_key(array $roads){
-		$shortest_time = -log(0);
+		$shortest_time = +INF;
 		foreach($roads as $key => $road){
-			if(	$road->shortest_time < $shortest_time){
+			if($road->shortest_time < $shortest_time) {
 				$selected_key = $key;
 				$shortest_time = $road->shortest_time;
+				$shortest_bs2bss_length = count($road->bs2bss);
+			}
+			elseif ($road->shortest_time == $shortest_time){
+				$bs2bss_length = count($road->bs2bss);
+				
+				if($bs2bss_length < $shortest_bs2bss_length){
+					$selected_key = $key;
+					$shortest_time = $road->shortest_time;
+					$shortest_bs2bss_length = $bs2bss_length;
+				}
 			}
 		}
 		return $selected_key;
@@ -209,8 +224,8 @@ class Road{
 	
 	public static function  save_road($road_to_save){
 		global $path_to_save;
-		$start_bus_station_id = $road_to_save[start_bus_station_id];
-		$end_bus_station_id = $road_to_save[end_bus_station_id];
+		$start_bus_station_id = $road_to_save['start_bus_station_id'];
+		$end_bus_station_id = $road_to_save['end_bus_station_id'];
 		
 		//create folder if do not exists:
 		$directory_to_save_the_road = "$path_to_save/$start_bus_station_id";
@@ -223,11 +238,11 @@ class Road{
 		//save the path
 		$file_to_save = "$directory_to_save_the_road/$end_bus_station_id";
 		$fh = fopen($file_to_save, 'w') or die("can't open file\n");
-		fwrite($fh, $road_to_save[bs2bss_to_record_in_file]);
+		fwrite($fh, $road_to_save['bs2bss_to_record_in_file']);
 		fclose($fh);
 				
 		//save the road on the database
-		unset($road_to_save[bs2bss_to_record_in_file]);
+		unset($road_to_save['bs2bss_to_record_in_file']);
 		saveToDb(array($road_to_save) , 'bus_stations_to_bus_stations');
 		return;		
 	}

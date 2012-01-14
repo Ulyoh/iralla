@@ -66,6 +66,14 @@
 		//set unable to show my info for the polyilnes:
 		map.myInfoUnableForPolyline = false;
 		
+		if(typeof( myInfo.showingList) == 'undefined'){
+			for(var i = 0; i < myInfo.showingList.length; i++){
+				removeNode(myInfo.showingList[i].tableLine);
+				myInfo.showingList[i].busline.setOptions({zIndex:1000});
+				myInfo.showingList.splice(i,1);
+			}
+		}
+		
 		myInfo.listener =  gmap.event.addListener(this, 'mouseout', function(){
 				map.myInfoUnableForPolyline = true;
 				var myInfo = document.getElementById("myInfo");

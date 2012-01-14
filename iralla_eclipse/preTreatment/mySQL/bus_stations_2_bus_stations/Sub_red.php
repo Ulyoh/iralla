@@ -43,9 +43,9 @@ class Sub_red{
 		
 		//if there is not a bs2bs with the same 
 		//start and end bus station of $new_li2li exist:
-		if(isset($this->$bs2bss_by_start_end_bs_id[$start_id]) != true){
-			$this->bs2bss_by_start_end_bs_id[$start_id] == array();
-			$this->li2lis_by_start_end_bs_id[$start_id] == array();
+		if(isset($this->bs2bss_by_start_end_bs_id[$start_id]) != true){
+			$this->bs2bss_by_start_end_bs_id[$start_id] = array();
+			$this->li2lis_by_start_end_bs_id[$start_id] = array();
 		}
 		if(isset($this->bs2bss_by_start_end_bs_id[$start_id][$end_id]) != true){
 			$this->bs2bss_by_start_end_bs_id[$start_id][$end_id] = new Bs2bs($new_li2li, $this);
@@ -74,7 +74,7 @@ class Sub_red{
 	}
 	
 	public function find_all_roads_from_one_bs( $bus_station_id){
-		echo "calculate all roads for bus station id = ' . $bus_station_id .'<br \>\n";
+		echo "calculate all roads for bus station id = " . $bus_station_id ."<br \>\n";
 		
 		$this->roads_by_start_bs_id[$bus_station_id] = array();
 		
@@ -97,7 +97,7 @@ class Sub_red{
 			&& ($cur_road->end_bus_station->id != $bus_station_id)){
 				//create the roads which can extend this one:
 				//if roads from that bus station:
-				if(is_array($this->roads_of_one_bs2bs_by_start_bs_id[$cur_road->end_bus_station->id])){
+				if(isset($this->roads_of_one_bs2bs_by_start_bs_id[$cur_road->end_bus_station->id])){
 					$cur_road_cloned = clone $cur_road;
 					$possibles_roads = array_merge(
 						$possibles_roads,
@@ -199,10 +199,9 @@ class Sub_red{
 				$roads_to_save = $this->format_datas_to_save();
 				
 				$this->save_roads($roads_to_save);
-				
+				//$this->show_stats();
 				$this->remove_all_roads_created();
 
-				
 				//echo "all roads from start bus station of if : $roads[0]->start_bus_station->id\n";
 			}
 			//echo "coucou\n";
@@ -216,7 +215,9 @@ class Sub_red{
 		$count = 0;
 		//end to debug
 		foreach ($this->roads as /*$start_bus_station => */$road) {
-			$datas_to_save[] = $road->format_datas_to_save(/*$start_bus_station*/);
+			if($road->end_bus_station != $road->start_bus_station){
+				$datas_to_save[] = $road->format_datas_to_save(/*$start_bus_station*/);
+			}
 			//to debug
 			$count++;
 			//end to debug
@@ -260,8 +261,25 @@ class Sub_red{
 		gc_collect_cycles();
 	}
 	
+	public function show_stats(){
+		$bs2bss_nbr_by_length = array();
+		foreach ($this->roads as $road) {
+			$bs2bss_length = count($road->bs2bss);
+			if(isset($bs2bss_nbr_by_length[$bs2bss_length])){
+				$bs2bss_nbr_by_length[$bs2bss_length]++;
+			}
+			else{
+				$bs2bss_nbr_by_length[$bs2bss_length]=1;
+			}
+		}
+		foreach ($bs2bss_nbr_by_length as $key => $value){
+			echo "nbr of busline with $key part: $value\n";
+		}
+	}
+	
 	//from a road list base found all the roads possible:
 	public function __construct(){
+		global $path_to_save;
 		$this->path_to_save = $path_to_save;
 		
 		$this->speeds["mainLine"] = 13; //13 m/s ~30km/h

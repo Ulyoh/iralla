@@ -1,7 +1,5 @@
 
 function calculateRoad(){
-	/*var start = map.markerBegin.getPosition();
-	 var end = map.markerEnd.getPosition();*/
 	var startPosition = map.departureMarker.getPosition();
 	var endPosition = map.arrivalMarker.getPosition();
 	
@@ -25,7 +23,7 @@ function calculateRoad(){
 	
 	//send to the servor:
 	map.calculateRoadState = request({
-		phpFileCalled: mysite + 'finding_route_2.php',
+		phpFileCalled: mysite + 'finding_route_3.php',
 		argumentsToPhpFile: 'q=' + JSON.stringify(route),
 		type: "",
 		callback: showRoad,
@@ -107,7 +105,7 @@ function showRoad(datas){
 	var nextPath;
 	var newCircle;
 	//for each bus station of the road:
-	for (i = 1; i < busStations.length-1; i++){
+/*	for (i = 1; i < busStations.length-1; i++){
 		//make a circle around:
 		if (busStations[i] !== null){
 			center = new gmap.LatLng(parseFloat(busStations[i].lat), parseFloat(busStations[i].lng));
@@ -182,7 +180,7 @@ function showRoad(datas){
 		
 		
 	}
-	
+	*/
 	if (typeof(bs2Bss) != 'undefined'){
 		for(i = 0; i < bs2Bss.length; i++ ){
 			path = [];
@@ -324,4 +322,60 @@ function show_details(datas){
 	
 	
 	showBlockById("show_infos");
+}
+
+
+function find_nearest_roads(){
+	
+	var position = map.nearToMarker.getPosition();
+	
+	var position = {
+		lat: position.lat(),
+		lng: position.lng()
+	};
+	
+	if( (typeof(map.calculateNearTo) != 'undefined') && (map.calculateNearTo !== null) && (map.calculateNearTo.readyState != 0)){
+		map.calculateNearTo.abort();
+	}
+	
+	//send to the servor:
+	map.calculateNearTo = request({
+		phpFileCalled: mysite + 'find_nearest_roads_to_debug.php',
+		argumentsToPhpFile: 'q=' + JSON.stringify(position),
+		type: "",
+		callback: showNearestRoads,
+		asynchrone: true
+	});
+}
+
+function showNearestRoads(roadsList){
+	roadsList = JSON.parse(roadsList);
+	var cleanLinesNode = document.getElementById('button_clean_lines');
+	cleanLinesNode.style.display = 'table-row';
+
+	SubMap._busLinesArray.removePolylinesFromIds(cleanLinesNode.linesIdAdded); 
+	cleanLinesNode.linesIdAdded = [];	
+	
+	for( var i = 0; i < roadsList.length; i++){
+		road = roadsList[i];
+		var busLine = SubMap._busLinesArray.getItemById(road.id);
+		if (busLine === false) {
+			var array = [];
+			array.push(road);
+			map.addBusLinesFromDb(array);
+			busLine = SubMap._busLinesArray.getItemById(road.id);
+		}
+		else {
+			busLine.setMap(map);
+			busLine.overlayForEvent.setMap(map);
+		}
+		SubMap._busLinesArray.setOptionsToAll({
+			strokeColor: 'default'
+		});
+		cleanLinesNode.linesIdAdded.push(busLine.id);
+	}
+	
+	
+	
+	
 }
