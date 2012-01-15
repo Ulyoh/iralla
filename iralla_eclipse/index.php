@@ -69,14 +69,14 @@
 		?>
 		
     </head>
-    <body onload="<?php
+    <body onload="initialize();<?php
     	if ( (isset($_GET['preTreatment'])) &&  ($_GET['preTreatment'] == 'true')){
-     		echo " accessToPreTreatment(); setTimeout('launchMainShowBusStationsOnMap()', 20000);";
+     		echo "accessToPreTreatment(); setTimeout('launchMainShowBusStationsOnMap()', 5000);";
     	}
     	if ( (isset($_GET['debug'])) && ($_GET['debug'] == 'true') ){
     		echo 'debugMode();';
     	}
-     ?> initialize();">
+     ?>">
      	<div id="buscar" onMouseOver="showLookForMenu()"> buscar </div>
      	<table id="look_for_menu">
      		<tr><th><button id="select_look_for_roads" class="look_for_menu_button" onClick="show_look_for_roads()" > una ruta </button></th></tr>
