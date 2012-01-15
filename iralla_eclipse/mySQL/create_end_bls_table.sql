@@ -1,6 +1,5 @@
 -- create temporary table around start point:
-create table end_bls
-engine memory
+create table temporary end_bls
 select bl_id, lat, lng, 
 -- prev_index_of_prev_link, prev_index_of_next_link,
 -- prev_link_coords_lat, prev_link_coords_lng, next_link_coords_lat,
