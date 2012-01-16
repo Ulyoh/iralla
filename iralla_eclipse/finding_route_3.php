@@ -137,7 +137,20 @@ function find_route($start, $end){
 		}
 		else{
 			//found the communs bl in the bs:
+			$find_communs_bls =  file_get_contents('mySQL/find_communs_bls_throw_bs.sql');
+			//liste of bl:
+			$req = $bdd->query($find_communs_bls);
 			
+			//liste of the bs on the bl end
+			if ( $req->rowCount() != 0 ){
+				while($route = $req->fetch()){
+					echo $route;
+				}
+			}
+			else{
+				echo 'no answer';
+				return;
+			}
 		}	
 		
 	}
