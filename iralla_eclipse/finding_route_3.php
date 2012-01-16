@@ -16,17 +16,27 @@ $request = $_POST['q'];
 {"start":{
 	"lat":-2.1601365170652644,"lng":-79.8958801269531},"end":{
 		"lat":-2.118709192736059,"lng":-79.90995635986326}
-}';
-*/
-//$request = 	'{"start":{"lat":-2.1199100004450315,"lng":-79.91459121704099},"end":{"lat":-2.1525029949886085,"lng":-79.90154495239256}}';
+}';*/
 
+//$request = 	'{"start":{"lat":-2.1199100004450315,"lng":-79.91459121704099},"end":{"lat":-2.1525029949886085,"lng":-79.90154495239256}}';
+/*
 $request = '
 {
 "start":{
 "lat":-2.192814417860611,"lng":-79.8878120422363},"end":{
 "lat":-2.1142490416697988,"lng":-79.91373291015623}
 }
-';
+';*/
+
+//$request = '{"start":{"lat":-2.2121978230220463,"lng":-79.89261856079099},"end":{"lat":-2.1977889441097673,"lng":-79.89227523803709}}';
+
+//two bus lines:
+/*$request = '{"start":{
+	"lat":-2.172744609908308,"lng":-79.82841720581052},"end":{
+		"lat":-2.2128839566288687,"lng":-79.8929618835449}
+}';*/
+
+$request = '	{"start":{"lat":-2.089031793406955,"lng":-79.90463485717771},"end":{"lat":-2.2722333014760494,"lng":-79.88300552368162}}';
 $request = json_decode($request);
 
 
@@ -40,20 +50,99 @@ $result = find_route($start, $end);
 echo json_encode($result);
 
 function find_route($start, $end){
+	$create_start_bls_table =  file_get_contents('mySQL/create_start_bls_table.sql');
+	$create_end_bls_table =  file_get_contents('mySQL/create_end_bls_table.sql');
+	$join_start_end_by_bl_id =  file_get_contents('mySQL/join_start_end_by_bl_id.sql');
+	global $grid_path;
+	global $grid_path_mult;
+	global $bdd;
 	
 	if ( (is_numeric_lat_lng($start) == false) ||  (is_numeric_lat_lng($end) == false)){
 		exit("arguments not valids");
 	}
+	//change position to fit with from or to square coordinates
+	$start_simplify['lat'] =bcmul($start['lat'], $grid_path_mult);
+	$start_simplify['lng'] =bcmul($start['lng'], $grid_path_mult);
+	$end_simplify['lat'] =bcmul($end['lat'], $grid_path_mult);
+	$end_simplify['lng'] =bcmul($end['lng'], $grid_path_mult);	
+	
+	//create start_bls:
+	$req = $bdd->prepare($create_start_bls_table);
+	
+	$values = array();
+	$values[0] = $start_simplify['lat'];
+	$values[1] = $start_simplify['lat'];
+	$values[2] = $start_simplify['lng'];
+	$values[3] = $start_simplify['lng'];
 
-	//look for nearest bus lines of the start and end point:
-	$interval = 2;
-	$ecart_min_between_d_min_and_d_max = 100;
+	do {
+		$bdd->query('drop table if exists start_bls');
+		$values[0] --;
+		$values[1] ++;
+		$values[2] --;
+		$values[3] ++;
+		$req->execute($values);
+	} while( $req->rowCount() == 0 ) ;
 	
-	$start_lines = find_nearst_roads($start, 'from', $interval, $ecart_min_between_d_min_and_d_max);
-	$end_lines = find_nearst_roads($end, 'to', $interval, $ecart_min_between_d_min_and_d_max);
+	/*$bdd->query('drop table if exists start_bls');
+	$values[0] --;
+	$values[1] ++;
+	$values[2] --;
+	$values[3] ++;
+	$req->execute($values);*/
 	
-	//look if commun bus lines in $start_lines and $end_lines
-	$communs_lines = find_communs_lines($start_lines, $end_lines);
+	//create end_bls table
+	$req = $bdd->prepare($create_end_bls_table);
+	
+	$values[0] = $end_simplify['lat'];
+	$values[1] = $end_simplify['lat'];
+	$values[2] = $end_simplify['lng'];
+	$values[3] = $end_simplify['lng'];
+	
+	do {
+		$bdd->query('drop table if exists end_bls');
+		$values[0] --;
+		$values[1] ++;
+		$values[2] --;
+		$values[3] ++;
+		$req->execute($values);
+	} while( $req->rowCount() == 0 ) ;
+	
+/*	$bdd->query('drop table if exists end_bls');
+		$values[0] --;
+		$values[1] ++;
+		$values[2] --;
+		$values[3] ++;
+	$req->execute($values);*/
+	
+	//found the communs bls:
+	$req = $bdd->query($join_start_end_by_bl_id);
+	
+	if ( $req->rowCount() != 0 ){
+		while($route = $req->fetch()){
+			echo $route;
+		}
+	} 
+	else{
+		//found the communs bs:
+		$find_communs_bs =  file_get_contents('mySQL/find_communs_bs.sql');
+		//liste of bs on the bl start
+		$req = $bdd->query($find_communs_bs);
+		
+		//liste of the bs on the bl end
+		if ( $req->rowCount() != 0 ){
+			while($route = $req->fetch()){
+				echo $route;
+			}
+		}
+		else{
+			//found the communs bl in the bs:
+			
+		}	
+		
+	}
+	
+	//found the commmuns bs:
 	
 	if(is_array($communs_lines)){
 		$communs_lines = attach_bus_lines_path($communs_lines);
