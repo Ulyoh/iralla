@@ -118,6 +118,15 @@ function find_route($start, $end){
 	//found the communs bls:
 	$req = $bdd->query($join_start_end_by_bl_id);
 	
+	/*
+	 * 	var bs2Bss = datas.bs2bss;
+	var busStations = datas.bus_stations;
+	 * 
+	 * 
+	 */
+	$bs2bss = array();
+	$bus_stations = array();
+	
 	if ( $req->rowCount() != 0 ){
 		while($route = $req->fetch()){
 			echo $route;
@@ -131,8 +140,26 @@ function find_route($start, $end){
 		
 		//liste of the bs on the bl end
 		if ( $req->rowCount() != 0 ){
-			while($route = $req->fetch()){
-				echo $route;
+			$routes_length = 0;
+			while($one_route = $req->fetch()){
+				//if first route or
+				//if new couple start / end bls
+				//add it to the routes list
+				if((!isset($current_start_bl) && (!isset($current_end_bl)))
+				||($current_start_bl != $one_route['start_busLineId']) 
+				||($current_end_bl != $one_route['end_busLineId'])){
+					$current_start_bl = $one_route['start_busLineId'];
+					$current_end_bl = $one_route['end_busLineId'];
+					$routes[] = $route;
+					$routes_length++;
+					continue;
+				}
+				//in order to keep only the last one of following intermediate bs:
+				if($one_route['start_inter_links_id'] = $prev_start_inter_links_id){
+					
+				}
+				$prev_start_inter_links_id = $one_route['start_inter_links_id'];
+				$routes[$routes_length-1] = $route;
 			}
 		}
 		else{
