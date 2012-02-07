@@ -58,7 +58,7 @@ class Point {
 	public static function segment_intersection(Point $pt1, Point $pt2, Point $pt3, Point $pt4, $return_value_if_merged = false) {
 		
 		//throw exception if they are not segments:
-		if (($pt1 == $pt2) || ($pt3 == $pt4)) {
+		if (($pt1->same_coord_as($pt2)) || ($pt3->same_coord_as($pt4))) {
 			throw new Exception ( "At least one of the segment is a point" );
 		}
 		
@@ -210,12 +210,12 @@ class Point {
 	private static function intersection_point_of_colinears_segments(Point $pt1, Point $pt2, Point $pt3, Point $pt4) {
 		
 		//throw exception if they are not segments:
-		if (($pt1 == $pt2) || ($pt3 == $pt4)) {
+		if (($pt1->same_coord_as($pt2)) || ($pt3->same_coord_as($pt4))) {
 			throw new Exception ( "At least one of the segment is a point" );
 		}
 		
 		//if deux egal points:
-		if ((($pt1 == $pt3) && ($pt2 == $pt4)) || (($pt1 == $pt3) && ($pt2 == $pt4))) {
+		if ((($pt1->same_coord_as($pt3)) && ($pt2->same_coord_as($pt4))) || (($pt1->same_coord_as($pt3)) && ($pt2->same_coord_as($pt4)))) {
 			return array ("same", array (1 => $pt1, 2 => $pt2 ) );
 		}
 		
