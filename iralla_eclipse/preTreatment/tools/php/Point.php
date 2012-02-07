@@ -152,6 +152,11 @@ class Point {
 	 * 
 	 */
 	public function projection_on_segment(Segment $seg){
+		$x1 = $seg->get_pt1()->x;
+		$y1 = $seg->get_pt1()->y;
+		$x2 = $seg->get_pt2()->x;
+		$y2 = $seg->get_pt2()->y;
+		
 		if(($x1 == $x2) && ($y1 == $y2)){
 			return $this->distance_to($seg->get_pt1());
 		}
@@ -172,11 +177,7 @@ class Point {
 		    	);
 		    }
 		    else{
-				$x1 = $seg->get_pt1()->x;
-				$y1 = $seg->get_pt1()->y;
-				$x2 = $seg->get_pt2()->x;
-				$y2 = $seg->get_pt2()->y;
-				$pt = Point((1 - $ratio) * x1 + $ratio * x2,
+				$pt = new Point((1 - $ratio) * x1 + $ratio * x2,
 		       				(1 - $ratio) * y1 + $ratio * y2);
 		       	return  array(
 		    		'distance'=> $this->distance_to($pt),
@@ -197,7 +198,7 @@ class Point {
 		$result = array('distance' => INF);
 		
 		for($i = 1; $i < $p->length; $i++){
-			$seg_result = $this->projection_on_segment(Segment($pts[$i - 1], $$pts[$i]));
+			$seg_result = $this->projection_on_segment(new Segment($pts[$i - 1], $$pts[$i]));
 			if($seg_result['distance'] < $result['distance']){
 				$result = $seg_result;
 				$result['index'] = $i - 1;
