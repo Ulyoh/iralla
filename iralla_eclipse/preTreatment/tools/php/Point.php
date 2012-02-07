@@ -194,17 +194,28 @@ class Point {
 	 * 
 	 */
 	public function projection_on_polyline(Polyline $p){
-		$pts = $p->get_points();
+		$p_array = $p->get_points();
+		return $this->projection_on_array($p_array, $p->length);
+	}
+	
+	private function projection_on_array(array $p_array, int $length){
+		
 		$result = array('distance' => INF);
 		
-		for($i = 1; $i < $p->length; $i++){
-			$seg_result = $this->projection_on_segment(new Segment($pts[$i - 1], $$pts[$i]));
+		for($i = 1; $i < $length; $i++){
+			$seg_result = $this->projection_on_segment(new Segment($p_array[$i - 1], $p_array[$i]));
 			if($seg_result['distance'] < $result['distance']){
 				$result = $seg_result;
 				$result['index'] = $i - 1;
 			}
 		}
 		return $result;
+	}
+	
+	public function projection_on_polyline_between(Polyline $p, int $first_index, int $last_index){
+		$p_array = $p->get_points_between($first_index, $last_index);
+		return $this->projection_on_array($p_array, $p->length);
+		
 	}
 	
 	private static function intersection_point_of_colinears_segments(Point $pt1, Point $pt2, Point $pt3, Point $pt4) {
