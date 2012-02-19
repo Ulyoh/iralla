@@ -28,7 +28,11 @@ class Polyline{
 	}
 	
 	public function point_projected(Point $pt){
-		$pt->projection_on_polyline($this);
+		return $pt->projection_on_polyline($this);
+	}
+	
+	public function point_projected_on_polyline_between(Point $pt, int $first_index, int $last_index){
+		return $pt->projection_on_polyline_between($this, $first_index, $last_index);
 	}
 	
 	public function __construct(array $points_array, bool $closed = false) {
