@@ -1,4 +1,5 @@
 <?php
+require_once 'Point.php';
 
 class Polyline{
 	private $points_array;
@@ -35,7 +36,10 @@ class Polyline{
 		return $pt->projection_on_polyline_between($this, $first_index, $last_index);
 	}
 	
-	public function __construct(array $points_array, bool $closed = false) {
+	public function __construct(array $points_array, bool $closed = null) {
+		if ($closed == null) {
+			$closed = false;
+		}
 		$this->points_array = $points_array;
 		$this->length = count($points_array);
     	$this->closed = $closed;

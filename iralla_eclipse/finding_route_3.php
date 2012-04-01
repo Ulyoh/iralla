@@ -2,6 +2,7 @@
 require_once 'access_to_db.php';
 require_once 'tools.php';
 require_once 'functions_for_finding_route_3.php';
+require_once 'Busline.php';
 
 ini_set('memory_limit', "2000M");
 $multipicador = 10000000;
@@ -137,10 +138,13 @@ function find_route($start, $end){
 		$find_communs_bs =  file_get_contents('mySQL/find_communs_bs.sql');
 		//liste of bs on the bl start
 		$req = $bdd->query($find_communs_bs);
-		
+		$current_start_bl = 0; //0 does not exists as bl
+		$current_end_bl = 0; //0 does not exists as bl
+		$prev_start_inter_links_id = 0; //0 does not exists as link
 		//liste of the bs on the bl end
 		if ( $req->rowCount() != 0 ){
 			$routes_length = 0;
+			$bl_list = array();
 			while($one_route = $req->fetch()){
 				//if first route or
 				//if new couple start / end bls
@@ -150,17 +154,73 @@ function find_route($start, $end){
 				||($current_end_bl != $one_route['end_busLineId'])){
 					$current_start_bl = $one_route['start_busLineId'];
 					$current_end_bl = $one_route['end_busLineId'];
-					$routes[] = $route;
+					$routes[] = $one_route;
 					$routes_length++;
+					$bl_list[$one_route['start_busLineId']] = $current_start_bl;
+					$bl_list[$one_route['end_busLineId']] = $current_end_bl;
 					continue;
 				}
 				//in order to keep only the last one of following intermediate bs:
-				if($one_route['start_inter_links_id'] = $prev_start_inter_links_id){
-					
+				if($one_route['start_inter_links_id'] == $prev_start_inter_links_id){
+					$routes[$routes_length-1] = $one_route;
+				}
+				else{
+					//the first route after the loop including continue:
+					$routes[] = $one_route;
+					$routes_length++;
 				}
 				$prev_start_inter_links_id = $one_route['start_inter_links_id'];
-				$routes[$routes_length-1] = $route;
 			}
+			
+			//extract paths for each bus lines selected in $routes:
+			$bls_string = '';
+			foreach($bl_list as $bl){
+				if ($bls_string == ''){
+					$bls_string = $bl;
+				}
+				else{
+					$bls_string .= ' OR ' . $bl;
+				}
+			}
+			$req = $bdd->query('select id, path, flows from bus_lines where id = '. $bls_string);
+			
+			$bls = array();
+			//put in order all the extracted bus lines paths and create the Buslines:
+			while($bl = $req->fetch()){
+				if(key_exists($bl['id'], $bls)){
+					exit("error busline already saved");
+				}
+				$bls[$bl['id']] = new Busline(extract_path_from_string_to_points($bl['path']), new String(''));
+				$bls[$bl['id']]->flows = $bl['flows'];
+			}
+			
+			$start_point = new Point($start['lat'], $start['lng']);
+			$end_point = new Point($end['lat'], $end['lng']);
+			foreach ($routes as $route) {
+				$bl_start = $bls[$route[start_busLineId]];
+				//calculate the nearest point on the busline to the start point
+				if( isset($bl_start->nearest_pt_on_bl) === false){
+					$bl_start->nearest_pt_on_bl = $route['start_point']->projection_on_polyline_between(
+							$bl_start,
+							min($route['start_min_previous_link_id'], $route['start_min_next_link_id']), //should have same value????
+							max($route['start_max_previous_link_id'], $route['start_max_next_link_id']));
+				}
+				
+				//calculate the nearest point on the busline to the end point
+				$bl_end = $bls[$route[end_busLineId]];
+				if( isset($bl_end->nearest_pt_on_bl) === false){
+					$bl_end->nearest_pt_on_bl = $route['end_point']->projection_on_polyline_between(
+							$bl_end,
+							min($route['end_min_previous_link_id'],$route['end_min_next_link_id']), //should have same value????
+							max($route['end_max_previous_link_id'], $route['end_max_next_link_id']));
+				}
+			}
+			
+			
+			
+			
+			
+			
 		}
 		else{
 			//found the communs bl in the bs:
@@ -181,37 +241,5 @@ function find_route($start, $end){
 		}	
 		
 	}
-	
-	//found the commmuns bs:
-	
-	if(is_array($communs_lines)){
-		$communs_lines = attach_bus_lines_path($communs_lines);
-		
-		$results = array();
-		$results_part = array();
-		foreach($communs_lines as $bus_line_id => $communs_line){
-			//calcutate :
-			$results_part = calculate_shortest_time_from_starts_to_ends_on_one_line($communs_line, $start, $end);
-			$results = array_merge($results, $results_part);
-		}
-		
-		//sort by time total:
-		usort($results, "cmp_sort_by_total_time");
-		$results_sort_by_total_time = $results;
-		
-		//sort by time by foot
-		//usort($results, "cmp_sort_by_time_by_foot");
-		$results_sort_by_time_by_foot = $results;
-		
-		return $results[0];
-	}
-	
-	//if there is not a commun route:
-	//find if one start road and one end road have a comun bus station:
-	
-	find_roads_with_commun_bus_station($start_lines, $end_lines);
-	
-	//test if commun links roads 
-	
 	
 }
