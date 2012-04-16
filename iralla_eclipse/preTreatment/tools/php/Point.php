@@ -198,7 +198,11 @@ class Point {
 		return $this->projection_on_array($p_array, $p->length);
 	}
 	
-	private function projection_on_array(array $p_array, int $length){
+	private function projection_on_array(array $p_array, $length){
+		
+		if(!is_int($length)){
+			exit("Point->projection_on_polyline_between() -> Argument 2 must be an integer");
+		}
 		
 		$result = array('distance' => INF);
 		
@@ -212,9 +216,12 @@ class Point {
 		return $result;
 	}
 	
-	public function projection_on_polyline_between(Polyline $p, int $first_index, int $last_index){
+	public function projection_on_polyline_between(Polyline $p, $first_index, $last_index){
+		if(!is_int($first_index) || (!is_int($last_index))){
+			exit("Point->projection_on_polyline_between() : Argument 2 and 3 must be integer");
+		}
 		$p_array = $p->get_points_between($first_index, $last_index);
-		return $this->projection_on_array($p_array, $p->length);
+		return $this->projection_on_array($p_array, $p->get_length());
 		
 	}
 	
