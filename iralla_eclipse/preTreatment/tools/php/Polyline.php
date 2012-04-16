@@ -10,13 +10,22 @@ class Polyline{
 		return $this->points_array;
 	}
 	
+	public function get_length(){
+		return $this->length;
+	}
+	
 	/**
 	 * 
 	 * @param int $first_index
 	 * @param int $last_index
 	 * @return array / false
 	 */
-	public function get_points_between(int $first_index,int $last_index){
+	public function get_points_between($first_index, $last_index){
+		
+		if(!is_int($first_index) || (!is_int($last_index))){
+			exit("Point->projection_on_polyline_between() -> Arguments 1 and 2 must be integer");
+		}
+		
 		if($first_index <= $last_index){
 			return array_slice($this->points_array, $first_index, $last_index-$first_index);
 		}
