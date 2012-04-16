@@ -36,7 +36,7 @@ class Polyline{
 		return $pt->projection_on_polyline_between($this, $first_index, $last_index);
 	}
 	
-	public function __construct(array $points_array, bool $closed = null) {
+	public function __construct(array $points_array,/*bool*/ $closed = null) {
 		if ($closed == null) {
 			$closed = false;
 		}
