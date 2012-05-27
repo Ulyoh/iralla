@@ -12,7 +12,7 @@ $grid_path_mult = bcmul($multipicador, $grid_path)/10;  //TODO why /10???? to ch
 $foot_speed = 0.7;
 $bus_speed = 7;
 
-$request = $_POST['q'];
+//$request = $_POST['q'];
 /*$request = 	'
 {"start":{
 	"lat":-2.1601365170652644,"lng":-79.8958801269531},"end":{
@@ -190,29 +190,35 @@ function find_route($start, $end){
 				if(key_exists($bl['id'], $bls)){
 					exit("error busline already saved");
 				}
-				$bls[$bl['id']] = new Busline(extract_path_from_string_to_points($bl['path']), new String(''));
+				$bls[$bl['id']] = new Busline(extract_path_from_string_to_points($bl['path']), '');
 				$bls[$bl['id']]->flows = $bl['flows'];
 			}
 			
 			$start_point = new Point($start['lat'], $start['lng']);
 			$end_point = new Point($end['lat'], $end['lng']);
+			
+			$routes = links_index_of_routes($routes);
+			
 			foreach ($routes as $route) {
-				$bl_start = $bls[$route[start_busLineId]];
+				$bl_start = $bls[$route['start_busLineId']];
 				//calculate the nearest point on the busline to the start point
 				if( isset($bl_start->nearest_pt_on_bl) === false){
-					$bl_start->nearest_pt_on_bl = $route['start_point']->projection_on_polyline_between(
+					$bl_start->nearest_pt_on_bl = $start_point->projection_on_polyline_between(
 							$bl_start,
-							min($route['start_min_previous_link_id'], $route['start_min_next_link_id']), //should have same value????
-							max($route['start_max_previous_link_id'], $route['start_max_next_link_id']));
+							//IT S NOT THE ID THAT MUST BE GIVEN BUT THE INDEX OF VERTEX
+					//the links are created in the same order as the index, it does not matter to take in consideration
+					//the flows
+							min((int)$route['start_min_previous_index'], (int)$route['start_min_next_index']), //should have same value????
+							max((int)$route['start_max_previous_index'], (int)$route['start_max_next_index']) + 1);
 				}
 				
 				//calculate the nearest point on the busline to the end point
 				$bl_end = $bls[$route[end_busLineId]];
 				if( isset($bl_end->nearest_pt_on_bl) === false){
-					$bl_end->nearest_pt_on_bl = $route['end_point']->projection_on_polyline_between(
+					$bl_end->nearest_pt_on_bl = $end_point->projection_on_polyline_between(
 							$bl_end,
-							min($route['end_min_previous_link_id'],$route['end_min_next_link_id']), //should have same value????
-							max($route['end_max_previous_link_id'], $route['end_max_next_link_id']));
+							min($route['end_min_previous_index'],$route['end_min_next_index']), //should have same value????
+							max($route['end_max_previous_index'], $route['end_max_next_index']) + 1);
 				}
 			}
 			
