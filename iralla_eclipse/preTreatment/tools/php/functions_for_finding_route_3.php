@@ -248,4 +248,62 @@ function cmp_sort_by_time_by_foot($a, $b){
 	return ($a->time_by_foot < $b->time_by_foot) ? -1 : 1;
 }
 
+/**
+ * keep the first and last ids of each route
+ * depending of the parameters:
+ * $route['start_min_next_link_id']
+ * $route['start_max_previous_link_id']
+ */
+function add_starts_and_ends_links_ids_to_each_routes($routes){
+	global $bdd;
+	
+	//exctract the ids of each routes:
+	$ids = '';
+	$first = true;
+	foreach ($routes as $route){
+		if ($first == true){
+			$ids .= 'id =' . $route['start_min_previous_link_id'];
+			$first = false;
+		}
+		else{
+			$ids .= ' OR id =' . $route['start_min_previous_link_id'];
+		}
+		$ids .= ' OR id =' . $route['start_min_next_link_id'];
+		$ids .= ' OR id =' . $route['start_max_previous_link_id'];
+		$ids .= ' OR id =' . $route['start_max_next_link_id'];
+		$ids .= ' OR id =' . $route['end_min_previous_link_id'];
+		$ids .= ' OR id =' . $route['end_min_next_link_id'];
+		$ids .= ' OR id =' . $route['end_max_previous_link_id'];
+		$ids .= ' OR id =' . $route['end_max_next_link_id'];
+	}
+
+	//select all links with the previous found ids:
+	$req = $bdd->query('
+			SELECT id, prevIndex
+			FROM links
+			WHERE ' . $ids
+			);
+	
+	//order the links by ids:
+	$results = $req->fetchall();
+	$result_by_id = array();
+	foreach ($results as $result){
+		$result_by_id[$result['id']] = $result['prevIndex'];
+	}
+	
+	//keep the routes whith the first and last link id
+	$routes_with_index = array();
+	foreach ($routes as $route){
+		$route['start_min_previous_index'] = $result_by_id[$route['start_min_previous_link_id']];
+		$route['start_min_next_index'] = $result_by_id[$route['start_min_next_link_id']];
+		$route['start_max_previous_index'] = $result_by_id[$route['start_max_previous_link_id']];
+		$route['start_max_next_index'] = $result_by_id[$route['start_max_next_link_id']];
+		$route['end_min_previous_index'] = $result_by_id[$route['end_min_previous_link_id']];
+		$route['end_min_next_index'] = $result_by_id[$route['end_min_next_link_id']];
+		$route['end_max_previous_index'] = $result_by_id[$route['end_max_previous_link_id']];
+		$route['end_max_next_index'] = $result_by_id[$route['end_max_next_link_id']];
+		$routes_with_index[] = $route; 
+	}
+	return $routes_with_index;
+}
 
