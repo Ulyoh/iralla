@@ -12,7 +12,17 @@ and lng between ? and ?
 group by bl_id
 -- index bl_id
 
-
-
+--select * from toto t1 where id not in (select id from toto where id + 1 = t1.id)    MIN(id), MAX(id),
+--create table start_bls
+--select id, bl_id, lat, lng,
+--previous_link_id,
+--previous_link_id,
+--next_link_id,
+--next_link_id,
+--flows
+--from squares
+--where lat between ? and ?
+--and lng between ? and ?
+--order by id
 
 
