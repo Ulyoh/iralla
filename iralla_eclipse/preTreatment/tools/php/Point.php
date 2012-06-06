@@ -225,6 +225,43 @@ class Point {
 		
 	}
 	
+	/**
+	 * return the mySQL response of the nearest squares of the point
+	 * need to fetch the return value to get the rows sent by mySQL
+	 * 
+	 * x is longitude
+	 * y is latitude
+	 * 
+	 */
+	public function find_nearest_squares(){
+		global $grid_path_mult;
+		global $bdd;
+	
+		//select squares nearest the start or end:
+		$select_squares_near_a_pt =  file_get_contents('finding_routes/select_squares_near_a_pt.sql');
+		$req = $bdd->prepare($select_squares_near_a_pt);
+	
+		
+		//change position to fit with from or to square coordinates
+		$lat =bcmul($this->y, $grid_path_mult);
+		$lng =bcmul($this->x, $grid_path_mult);
+		
+		$values = array();
+		$values[0] = $lat;
+		$values[1] = $lat;
+		$values[2] = $lng;
+		$values[3] = $lng;
+	
+		do {
+			$values[0] --;
+			$values[1] ++;
+			$values[2] --;
+			$values[3] ++;
+			$req->execute($values);
+		} while( $req->rowCount() == 0 ) ;
+		return $req;
+	}
+	
 	private static function intersection_point_of_colinears_segments(Point $pt1, Point $pt2, Point $pt3, Point $pt4) {
 		
 		//throw exception if they are not segments:
