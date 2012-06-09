@@ -205,13 +205,13 @@ class Point {
 			exit("Point->projection_on_polyline_between() -> Argument 2 must be an integer");
 		}
 		
-		$result = array('distance' => INF);
+		$result->projection_infos = array('distance' => INF);
 		
 		for($i = 1; $i < $length; $i++){
 			$seg_result = $this->projection_on_segment(new Segment($p_array[$i - 1], $p_array[$i]));
-			if($seg_result['distance'] < $result['distance']){
+			if($seg_result->projection_infos['distance'] < $result->projection_infos['distance']){
 				$result = $seg_result;
-				$result['index'] = $i - 1;
+				$result->projection_infos['index'] = $i - 1;
 			}
 		}
 		return $result;
