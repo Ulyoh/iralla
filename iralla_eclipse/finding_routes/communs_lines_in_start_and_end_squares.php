@@ -1,5 +1,5 @@
 <?php
-function communs_lines_in_start_and_end_squares($start, $end){
+function communs_lines_in_start_and_end_squares(Point $start,Point $end){
 	$start_f_and_l_squares = $start->first_and_last_squares;
 	$end_f_and_l_squares = $end->first_and_last_squares;
 	
@@ -8,6 +8,32 @@ function communs_lines_in_start_and_end_squares($start, $end){
 	$i_start = 0;
 	$i_end = 0;
 	$first_i_end_to_match_with_start_f_and_l_square = null;
+	
+	
+	//extract all bl with bl_ids in start and end square
+	
+	
+	
+	
+	//for each bl exctracted
+	$bls_ids_to_calculate = array();
+	$bl_id_to_calculate = 0;
+	$i = $j = $k = 0;
+	while($bl_id_to_calculate = $bls_ids_to_calculate[$i++]){
+		A:while($start_f_and_l_squares[$j++]['first']['bl_id'] < $bl_id_to_calculate);
+		$first_k_for_this_bl_id = $k;
+		B:while($end_f_and_l_squares[$k++]['first']['bl_id'] < $bl_id_to_calculate);
+	
+	
+		if($end_f_and_l_squares['first']['bl_id'] == $bl_id_to_calculate){
+			goto B;
+		}		
+		if($start_f_and_l_squares['first']['bl_id'] == $bl_id_to_calculate){
+			$k = $first_k_for_this_bl_id;
+			goto A;
+		}
+	}
+	
 	
 	while($current_start_f_and_l_square != null) {
 		//bl_ids was ordered in the mySQL request
@@ -35,16 +61,9 @@ function communs_lines_in_start_and_end_squares($start, $end){
 		while(($current_end_f_and_l_square != null) &&
 		 ($current_end_f_and_l_square['first']['bl_id'] == $current_start_f_and_l_square['first']['bl_id']) ){
 			
-			//calcul the nearest point from start point
-			//add infos needed to calcul the road to $start_pt_on_bl
-			$first_square = $start_f_and_l_squares[$i_start];
-			$last_square = $start_f_and_l_squares[$i_start + 1];
-			
-			//calcul the nearest point from end point
-			//add infos needed to calcul the road to $end_pt_on_bl
-			
-			
-			$results[] = bus_line_from_to($start_pt_on_bl, $end_pt_on_bl);
+			$elts_to_calculate_road = array();
+			$elts_to_calculate_road['start_square'] = $current_start_f_and_l_square;
+			$elts_to_calculate_road['end_square'] = $current_end_f_and_l_square;
 			
 			$i_end++;
 			$current_end_f_and_l_square = $end_f_and_l_squares[$i_end];
@@ -53,4 +72,14 @@ function communs_lines_in_start_and_end_squares($start, $end){
 		$i_start++;
 		$current_start_f_and_l_square = $start_f_and_l_squares[$i_start];
 	}
+	
+	//extract the bus lines needes from the data base
+	$start->projection_on_polyline_between($p, $first_index, $last_index);
+	
+	//calculate the nearest point
+	
+	//extract the road
+	
 }
+
+
