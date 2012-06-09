@@ -23,7 +23,7 @@ class Polyline{
 	public function get_points_between($first_index, $last_index){
 		
 		if(!is_int($first_index) || (!is_int($last_index))){
-			exit("Point->projection_on_polyline_between() -> Arguments 1 and 2 must be integer");
+			exit("Point->get_points_between() -> Arguments 1 and 2 must be integer");
 		}
 		
 		if($first_index <= $last_index){
