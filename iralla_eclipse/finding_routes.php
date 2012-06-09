@@ -30,7 +30,7 @@ find_first_and_last_square_of_nearest_bls($start);
 find_first_and_last_square_of_nearest_bls($end);
 
 //look for communs buslines in $start_squares and $end_squares
-$results = communs_lines_in_start_and_end_squares($start->first_and_last_squares, $end->first_and_last_squares);
+$results = communs_lines_in_start_and_end_squares($start, $end);
 	
 if ($results != false){
 	echo json_encode($results);
@@ -38,14 +38,14 @@ if ($results != false){
 }
 
 //look if two lines from start and end cross each other:
-$results = $cross_lines_in_start_and_end_squares($start_squares, $end_squares);
+$sq_to_sq_results = $cross_lines_in_start_and_end_squares($start, $end);
 if ($results != false){
 	echo json_encode($results);
 	exit();
 }
 
 //look if a third line exists to link two lines from start to end:
-$results = $third_lines_from_start_bl_to_end_squares_bl($start_squares, $end_squares);
+$sq_to_sq_results = $third_lines_from_start_bl_to_end_squares_bl($start, $end);
 if ($results != false){
 	echo json_encode($results);
 	exit();
