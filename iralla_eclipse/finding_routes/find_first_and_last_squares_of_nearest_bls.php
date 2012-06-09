@@ -32,9 +32,9 @@ function keep_first_and_last_squares_by_bl_part($req){
 	
 	//init:
 	$square = $req->fetch();
-	//the first square:
-	$square['first_or_end'] = 'first';
-	$squares[] = $square;
+	$first_and_last_square = array();
+	$first_and_last_squares = array();
+	$first_and_last_square['first'] = square;
 	$previous_square = $square;
 	
 	//to debug
@@ -51,17 +51,17 @@ function keep_first_and_last_squares_by_bl_part($req){
 		//part of bus line inside the area
 		if($square['id'] != $previous_square['id'] + 1)
 		{	
-			$previous_square['first_or_end'] = 'end';
-			$squares[] = $previous_square;
-			$square['first_or_end'] = 'first';
-			$squares[] = $square;
+			$first_and_last_square['last'] = $previous_square;
+			$first_and_last_squares[] = $first_and_last_square;
+			$first_and_last_square = array();
+			$first_and_last_square['first'] = $square;
 		}
 		$previous_square = $square;
 	}
 	//the last one:
-	$previous_square['first_or_end'] = 'end';
-	$squares[] = $previous_square;
+	$first_and_last_square['end'] = $square;
+	$first_and_last_squares[] = $first_and_last_square;
 	
-	return $squares;
+	return $first_and_last_squares;
 }
 
