@@ -203,6 +203,10 @@ function find_route($start, $end){
 				$bl_start = $bls[$route['start_busLineId']];
 				//calculate the nearest point on the busline to the start point
 				if( isset($bl_start->nearest_pt_on_bl) === false){
+					/**
+					 * result of $start_point->projection_on_polyline_between
+					 * has changed it s now a Point, must be adapted here:
+					 */
 					$bl_start->nearest_pt_on_bl = $start_point->projection_on_polyline_between(
 							$bl_start,
 							//IT S NOT THE ID THAT MUST BE GIVEN BUT THE INDEX OF VERTEX
@@ -215,6 +219,10 @@ function find_route($start, $end){
 				//calculate the nearest point on the busline to the end point
 				$bl_end = $bls[$route[end_busLineId]];
 				if( isset($bl_end->nearest_pt_on_bl) === false){
+					/**
+					 * result of $start_point->projection_on_polyline_between
+					 * has changed it s now a Point, must be adapted here:
+					 */
 					$bl_end->nearest_pt_on_bl = $end_point->projection_on_polyline_between(
 							$bl_end,
 							min($route['end_min_previous_index'],$route['end_min_next_index']), //should have same value????
