@@ -221,8 +221,11 @@ class Point {
 			exit("Point->projection_on_polyline_between() : Argument 2 and 3 must be integer");
 		}
 		$p_array = $p->get_points_between($first_index, $last_index);
-		return $this->projection_on_array($p_array, $last_index - $first_index + 1);
+		$result = $this->projection_on_array($p_array, $last_index - $first_index + 1);
 		
+		//reinit the index value adding $first_index offset
+		$result->projection_infos['index'] += $first_index;
+		return $result;
 	}
 	
 	/**
