@@ -205,6 +205,7 @@ class Point {
 			exit("Point->projection_on_polyline_between() -> Argument 2 must be an integer");
 		}
 		
+		$result = new stdClass();
 		$result->projection_infos = array('distance' => INF);
 		
 		for($i = 1; $i < $length; $i++){
@@ -222,7 +223,7 @@ class Point {
 			exit("Point->projection_on_polyline_between() : Argument 2 and 3 must be integer");
 		}
 		$p_array = $p->get_points_between($first_index, $last_index);
-		return $this->projection_on_array($p_array, $p->get_length());
+		return $this->projection_on_array($p_array, $last_index - $first_index + 1);
 		
 	}
 	
