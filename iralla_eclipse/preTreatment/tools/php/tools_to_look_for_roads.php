@@ -220,7 +220,7 @@ function nearest_squares_2($from_lat_lng, $interval, $ecart_min_between_d_min_an
 			$selected_squares = save_square_if_nearest_main($square, $to_from_both_or_none, $selected_squares);
 		}
 		
-		if(is_squares_found($selected_squares, $to_from_both_or_none) === false){
+		if(is_squares_found($selected_squares, $to_from_both_or_none) === true){
 			$found_squares = true;
 		}
 		if($found_squares === false){
