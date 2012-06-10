@@ -79,6 +79,7 @@ function communs_lines_in_start_and_end_squares(Point $start,Point $end){
 					$busline['path'][] = $latLng;
 				}
 				//add the results to the previous ones:
+				$busline['name'] = $bl->get_name();
 				$results[] = $busline;
 			}
 			
