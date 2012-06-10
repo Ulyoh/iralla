@@ -190,6 +190,10 @@ function find_route($start, $end){
 				if(key_exists($bl['id'], $bls)){
 					exit("error busline already saved");
 				}
+				/**
+				lat and lng inverted in extract_path_from_string_to_points
+				from commit Iab8f2f56092ccd41647c2fdab64fdfa7e8f55005
+				 */
 				$bls[$bl['id']] = new Busline(extract_path_from_string_to_points($bl['path']), '');
 				$bls[$bl['id']]->flows = $bl['flows'];
 			}
