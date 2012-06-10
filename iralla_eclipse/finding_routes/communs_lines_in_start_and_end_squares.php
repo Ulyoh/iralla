@@ -67,9 +67,21 @@ function communs_lines_in_start_and_end_squares(Point $start,Point $end){
 					(int)$end_f_and_l_square['first']['prev_index_of_prev_link'], 
 					(int)$next_pt);
 			
-			//calculate the road
-			$results = array_merge($results, $bl->get_points_between_start_and_end_pts_on_bl($start_pt_on_bl, $end_pt_on_bl));
-	
+			//calculate the road(s)
+			$to_add = $bl->get_points_between_start_and_end_pts_on_bl($start_pt_on_bl, $end_pt_on_bl);
+			
+			//convert Point to latlng[]
+			foreach ($to_add as  $points_array) {
+				$busline['path'] = array();
+				foreach ($points_array as $point) {
+					$latLng['lat'] = $point->get_x();
+					$latLng['lng'] = $point->get_y();
+					$busline['path'][] = $latLng;
+				}
+				//add the results to the previous ones:
+				$results[] = $busline;
+			}
+			
 		if($end_f_and_l_square['first']['bl_id'] == $bl_id_to_calculate){
 			goto B;
 		}		

@@ -39,7 +39,7 @@ find_first_and_last_square_of_nearest_bls($end);
 $results = communs_lines_in_start_and_end_squares($start, $end);
 
 $datas = array();
-$datas['bs2Bss'] = $results;
+$datas['bs2bss'] = $results;
 if ($results != false){
 	echo json_encode($datas);
 	exit();
