@@ -158,7 +158,7 @@ class Point {
 		$y2 = $seg->get_pt2()->y;
 		
 		if(($x1 == $x2) && ($y1 == $y2)){
-			$seg->get_pt1()->projection_infos[] = array();
+			$seg->get_pt1()->projection_infos = array();
 			$seg->get_pt1()->projection_infos['distance'] = $this->distance_to($seg->get_pt1());
 			return $seg->get_pt1();
 		}
@@ -167,19 +167,19 @@ class Point {
 			$Dy = $y2 - $y1;
 			$ratio = (($this->x - $x1) * $Dx + ($this->y - $y1) * $Dy) / ($Dx * $Dx + $Dy * $Dy);
 		    if ($ratio < 0){
-		    	$seg->get_pt1()->projection_infos[] = array();
+		    	$seg->get_pt1()->projection_infos = array();
 		    	$seg->get_pt1()->projection_infos['distance'] = $this->distance_to($seg->get_pt1());
 		    	return $seg->get_pt1();
 		    }
 		    else if ($ratio > 1){
-		    	$seg->get_pt2()->projection_infos[] = array();
+		    	$seg->get_pt2()->projection_info = array();
 		    	$seg->get_pt2()->projection_infos['distance'] = $this->distance_to($seg->get_pt2());
 		    	return $seg->get_pt2();
 		    }
 		    else{
 				$pt = new Point((1 - $ratio) * x1 + $ratio * x2,
 		       				(1 - $ratio) * y1 + $ratio * y2);
-		       	$pt->projection_infos[] = array();
+		       	$pt->projection_infos = array();
 		    	$pt->projection_infos['distance'] = $this->distance_to($pt);
 		    	return $pt;
 		    }
