@@ -158,7 +158,9 @@ class Point {
 		$y2 = $seg->get_pt2()->y;
 		
 		if(($x1 == $x2) && ($y1 == $y2)){
-			return $this->distance_to($seg->get_pt1());
+			$seg->get_pt1()->projection_infos[] = array();
+			$seg->get_pt1()->projection_infos['distance'] = $this->distance_to($seg->get_pt1());
+			return $seg->get_pt1();
 		}
 		else{
 			$Dx = $x2 - $x1;
