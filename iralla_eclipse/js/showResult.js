@@ -23,7 +23,7 @@ function calculateRoad(){
 	
 	//send to the servor:
 	map.calculateRoadState = request({
-		phpFileCalled: mysite + 'finding_route_3.php',
+		phpFileCalled: mysite + 'finding_routes.php',
 		argumentsToPhpFile: 'q=' + JSON.stringify(route),
 		type: "",
 		callback: showRoad,
