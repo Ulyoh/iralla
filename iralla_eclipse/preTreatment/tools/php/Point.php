@@ -177,10 +177,6 @@ class Point {
 		    else{
 				$pt = new Point((1 - $ratio) * x1 + $ratio * x2,
 		       				(1 - $ratio) * y1 + $ratio * y2);
-		       	return  array(
-		    		'distance'=> $this->distance_to($pt),
-		    		'to'=>$pt
-		    	);
 		       	$pt->projection_infos[] = array();
 		    	$pt->projection_infos['distance'] = $this->distance_to($pt);
 		    	return $pt;
