@@ -37,9 +37,11 @@ find_first_and_last_square_of_nearest_bls($end);
 
 //look for communs buslines in $start_squares and $end_squares
 $results = communs_lines_in_start_and_end_squares($start, $end);
-	
+
+$datas = array();
+$datas['bs2Bss'] = $results;
 if ($results != false){
-	echo json_encode($results);
+	echo json_encode($datas);
 	exit();
 }
 
