@@ -38,9 +38,10 @@ find_first_and_last_square_of_nearest_bls($end);
 //look for communs buslines in $start_squares and $end_squares
 $results = communs_lines_in_start_and_end_squares($start, $end);
 
-$datas = array();
-$datas['bs2bss'] = $results;
 if ($results != false){
+	//prepare datas to be sent:
+	$datas = prepare_datas_temporary($results);
+	
 	echo json_encode($datas);
 	exit();
 }
@@ -59,6 +60,15 @@ if ($results != false){
 	exit();
 }
 
-
+function prepare_datas_temporary($results){
+	$datas = array();
+	$datas['bs2bss'] = $results;
+	foreach ($results as $result){
+		$busstations[] = null;
+	}
+	$busstations[] = null;
+	$datas['bus_stations'] = $busstations;
+	return $datas;
+}
 
 
