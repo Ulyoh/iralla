@@ -39,16 +39,21 @@ function communs_lines_in_start_and_end_squares(Point $start,Point $end){
 			$bl->flow = $bus_line_datas['flow'];
 			
 			//calculate nearest point on the bus line from the start point
-			$start->projection_on_polyline_between_two_squares($bl, $start_f_and_l_squares['first'], $start_f_and_l_squares['last']);
+			$next_pt = ($start_f_and_l_squares['last']['prev_index_of_next_link'] + 1 < $bl->get_length()) ? $start_f_and_l_squares['last']['prev_index_of_next_link'] + 1 : $start_f_and_l_squares['last']['prev_index_of_next_link']; 
+			$start_pt_on_bl = $start->projection_on_polyline_between(
+					$bl, 
+					$start_f_and_l_squares['first']['prev_index_of_prev_link'], 
+					$next_pt);
 			
 			//calculate nearest point on the bus line from the end point
-			$end->projection_on_polyline_between_two_squares($bl, $start_f_and_l_squares['first'], $start_f_and_l_squares['last']);
+			$next_pt = ($end_f_and_l_squares['last']['prev_index_of_next_link'] + 1 < $bl->get_length()) ? $end_f_and_l_squares['last']['prev_index_of_next_link'] + 1 : $end_f_and_l_squares['last']['prev_index_of_next_link']; 
+			$end_pt_on_bl = $end->projection_on_polyline_between(
+					$bl, 
+					$end_f_and_l_squares['first']['prev_index_of_prev_link'], 
+					$next_pt);
 			
 			//calculate the road
-			$results[] = caculate_road_on_one_bus_line(
-					$bl,
-					$start,
-					$end);
+			$results = array_merge($results, $bl->get_points_between_start_and_end_pts_on_bl($start_pt_on_bl, $end_pt_on_bl));
 	
 		if($end_f_and_l_squares['first']['bl_id'] == $bl_id_to_calculate){
 			goto B;
