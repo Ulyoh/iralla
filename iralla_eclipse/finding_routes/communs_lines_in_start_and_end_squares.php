@@ -6,59 +6,73 @@ function communs_lines_in_start_and_end_squares(Point $start,Point $end){
 	$end_f_and_l_squares = $end->first_and_last_squares;
 	
 	//extract bl_ids list:
-	$bl_ids_list = $start_f_and_l_squares[0]['first']['bl_id'];
-	$i = 1;
+	$i = 0;
 	$j = 0;
-	while ($start_bl_id = $start_f_and_l_squares[$i]['first']['bl_id']){
-		while ($start_f_and_l_squares[$j]['first']['bl_id'] < $start_f_and_l_squares[$i]['first']['bl_id']){
+	$bl_ids_list = '';
+	while (($start_f_and_l_squares[$i]) && ($start_bl_id = $start_f_and_l_squares[$i]['first']['bl_id'])){
+		while ($end_f_and_l_squares[$j]['first']['bl_id'] < $start_bl_id){
 			$j++;
 		}
-		if($start_f_and_l_squares[$j]['first']['bl_id'] == $start_f_and_l_squares[$i]['first']['bl_id']){
-			$bl_ids_list = ' OR id = ' . $start_f_and_l_squares[$j]['first']['bl_id'];
+		if($end_f_and_l_squares[$j]['first']['bl_id'] == $start_bl_id){
+			if ($bl_ids_list == ''){
+				$bl_ids_list = 'id = ' . $start_bl_id;
+			}
+			else{
+				$bl_ids_list .= ' OR id = ' . $start_bl_id;
+			}
 		}
 		$i++;
 	}
 	
-	//extract bus lines:
-	$query =  file_get_contents('extract_bus_lines_depend_on_where_search.sql');
+	//extract bus lines from db:
+	$query =  '
+		select id, path, flows, name
+		from bus_lines
+		where ' . $bl_ids_list .'
+		order by id';
 	$req = $bdd->query($query);
 	
-	//for each bl exctracted
 	$bl_id_to_calculate = 0;
-	$j = $k = 0;
+	$j = $k = -1;
 	
+	//for each bl exctracted
+	//calculate the nearest point from start on the bl
+	//calculate the nearest point from end on the bl
+	//extract the possibles roads from start to end
 	while($bus_line_datas = $req->fetch()){
 	$bl_id_to_calculate = $bus_line_datas['id'];
 
-		A:while($start_f_and_l_squares[$j++]['first']['bl_id'] < $bl_id_to_calculate);
+		A:while($start_f_and_l_squares[++$j]['first']['bl_id'] < $bl_id_to_calculate);
+		$start_f_and_l_square = $start_f_and_l_squares[$j];
 		$first_k_for_this_bl_id = $k;
-		B:while($end_f_and_l_squares[$k++]['first']['bl_id'] < $bl_id_to_calculate);
+		B:while($end_f_and_l_squares[++$k]['first']['bl_id'] < $bl_id_to_calculate);
+			$end_f_and_l_square = $end_f_and_l_squares[$k];
 			
 			//create bus line object:
-			$bl = new Busline($bus_line_datas['path'], $bus_line_datas['name']);
-			$bl->flow = $bus_line_datas['flow'];
+			$bl = new Busline(extract_path_from_string_to_points($bus_line_datas['path']), $bus_line_datas['name']);
+			$bl->flow = $bus_line_datas['flows'];
 			
 			//calculate nearest point on the bus line from the start point
-			$next_pt = ($start_f_and_l_squares['last']['prev_index_of_next_link'] + 1 < $bl->get_length()) ? $start_f_and_l_squares['last']['prev_index_of_next_link'] + 1 : $start_f_and_l_squares['last']['prev_index_of_next_link']; 
+			$next_pt = ($start_f_and_l_square['last']['prev_index_of_next_link'] + 1 < $bl->get_length()) ? $start_f_and_l_square['last']['prev_index_of_next_link'] + 1 : $start_f_and_l_square['last']['prev_index_of_next_link']; 
 			$start_pt_on_bl = $start->projection_on_polyline_between(
 					$bl, 
-					$start_f_and_l_squares['first']['prev_index_of_prev_link'], 
+					$start_f_and_l_square['first']['prev_index_of_prev_link'], 
 					$next_pt);
 			
 			//calculate nearest point on the bus line from the end point
-			$next_pt = ($end_f_and_l_squares['last']['prev_index_of_next_link'] + 1 < $bl->get_length()) ? $end_f_and_l_squares['last']['prev_index_of_next_link'] + 1 : $end_f_and_l_squares['last']['prev_index_of_next_link']; 
+			$next_pt = ($end_f_and_l_square['last']['prev_index_of_next_link'] + 1 < $bl->get_length()) ? $end_f_and_l_square['last']['prev_index_of_next_link'] + 1 : $end_f_and_l_square['last']['prev_index_of_next_link']; 
 			$end_pt_on_bl = $end->projection_on_polyline_between(
 					$bl, 
-					$end_f_and_l_squares['first']['prev_index_of_prev_link'], 
+					$end_f_and_l_square['first']['prev_index_of_prev_link'], 
 					$next_pt);
 			
 			//calculate the road
 			$results = array_merge($results, $bl->get_points_between_start_and_end_pts_on_bl($start_pt_on_bl, $end_pt_on_bl));
 	
-		if($end_f_and_l_squares['first']['bl_id'] == $bl_id_to_calculate){
+		if($end_f_and_l_square['first']['bl_id'] == $bl_id_to_calculate){
 			goto B;
 		}		
-		if($start_f_and_l_squares['first']['bl_id'] == $bl_id_to_calculate){
+		if($start_f_and_l_square['first']['bl_id'] == $bl_id_to_calculate){
 			$k = $first_k_for_this_bl_id;
 			goto A;
 		}

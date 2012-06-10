@@ -34,7 +34,7 @@ function keep_first_and_last_squares_by_bl_part($req){
 	$square = $req->fetch();
 	$first_and_last_square = array();
 	$first_and_last_squares = array();
-	$first_and_last_square['first'] = square;
+	$first_and_last_square['first'] = $square;
 	$previous_square = $square;
 	
 	//to debug
@@ -59,7 +59,7 @@ function keep_first_and_last_squares_by_bl_part($req){
 		$previous_square = $square;
 	}
 	//the last one:
-	$first_and_last_square['end'] = $square;
+	$first_and_last_square['end'] = $previous_square;
 	$first_and_last_squares[] = $first_and_last_square;
 	
 	return $first_and_last_squares;
