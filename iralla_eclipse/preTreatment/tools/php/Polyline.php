@@ -27,7 +27,7 @@ class Polyline{
 		}
 		
 		if($first_index <= $last_index){
-			return array_slice($this->points_array, $first_index, $last_index-$first_index);
+			return array_slice($this->points_array, $first_index, $last_index - $first_index + 1);
 		}
 		else if ($this->closed === true){
 			return array_merge(array_slice($this->points_array, $last_index), array_slice($this->points_array, 0, $first_index + 1));
