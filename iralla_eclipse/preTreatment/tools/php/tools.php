@@ -8,7 +8,7 @@
 		$path_lat_lngs = json_decode($path_as_string);
 			
 		foreach ($path_lat_lngs as $lat_lng){
-			$path[] = new Point($lat_lng->lat, $lat_lng->lng);
+			$path[] = new Point($lat_lng->lng, $lat_lng->lat);
 		}
 		return $path;
 	
