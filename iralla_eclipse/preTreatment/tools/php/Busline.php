@@ -48,8 +48,9 @@ class Busline extends Polyline{
 	 * 
 	 * @param Point $start_point
 	 * @param Point $end_point
-	 * @return multitype:Ambigous <multitype:, boolean>
+	 * @return array
 	 */
+
 	
 	public function get_points_between_start_and_end_pts_on_bl(Point $start_point, Point $end_point){
 		
