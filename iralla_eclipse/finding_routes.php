@@ -14,13 +14,14 @@ $grid_path_mult = bcmul($multipicador, $grid_path)/10;  //TODO why /10???? to ch
 $foot_speed = 0.7;
 $bus_speed = 7;
 
-//$request = $_POST['q'];
-//bl 24 to bl 25
+$request = $_POST['q'];
+//bl id 24 to bl id 25
 //$request = '	{"start":{"lat":-2.089031793406955,"lng":-79.90463485717771},"end":{"lat":-2.2722333014760494,"lng":-79.88300552368162}}';
 
-//bl 55 to bl 55
-$request = '{"start":{"lat":-2.1589679045116914,"lng":-79.91697301864622},"end":{"lat":-2.251757192239456,"lng":-79.90175952911375}}';
+//bl id 55 to bl id 55
+//$request = '{"start":{"lat":-2.1589679045116914,"lng":-79.91697301864622},"end":{"lat":-2.251757192239456,"lng":-79.90175952911375}}';
 
+$request = '{"start":{"lat":-2.1549045566235523,"lng":-79.8603462219238},"end":{"lat":-2.1610799834251004,"lng":-79.85141983032224}}';
 
 $request = json_decode($request);
 
