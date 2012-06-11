@@ -35,6 +35,9 @@ function communs_lines_in_start_and_end_squares(Point $start,Point $end){
 	$bl_id_to_calculate = 0;
 	$j = $k = -1;
 	$results = array();
+	//TODO remove next line when change interface with web page
+	$busline['path'] = array();
+	$results[] = $busline;
 	
 	//for each bl exctracted
 	//calculate the nearest point from start on the bl
@@ -80,6 +83,9 @@ function communs_lines_in_start_and_end_squares(Point $start,Point $end){
 				$busline['path'][] = $end_pt_on_bl->return_array_with_x_as_lng_y_as_lat();
 				//add the results to the previous ones:
 				$busline['name'] = $bl->get_name();
+				$results[] = $busline;
+				//TODO remove next line when change interface with web page
+				$busline['path'] = array();
 				$results[] = $busline;
 			}
 			
