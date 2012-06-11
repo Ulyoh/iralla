@@ -55,14 +55,14 @@ function communs_lines_in_start_and_end_squares(Point $start,Point $end){
 			
 			//calculate nearest point on the bus line from the start point
 			$next_pt = ($start_f_and_l_square['last']['prev_index_of_next_link'] + 1 < $bl->get_length()) ? $start_f_and_l_square['last']['prev_index_of_next_link'] + 1 : $start_f_and_l_square['last']['prev_index_of_next_link']; 
-			$start_pt_on_bl = $start->projection_on_polyline_between(
+			$start_pt_on_bl = $start->projection_on_polyline_between_on_earth(
 					$bl, 
 					(int)$start_f_and_l_square['first']['prev_index_of_prev_link'], 
 					(int)$next_pt);
 			
 			//calculate nearest point on the bus line from the end point
 			$next_pt = ($end_f_and_l_square['last']['prev_index_of_next_link'] + 1 < $bl->get_length()) ? $end_f_and_l_square['last']['prev_index_of_next_link'] + 1 : $end_f_and_l_square['last']['prev_index_of_next_link']; 
-			$end_pt_on_bl = $end->projection_on_polyline_between(
+			$end_pt_on_bl = $end->projection_on_polyline_between_on_earth(
 					$bl, 
 					(int)$end_f_and_l_square['first']['prev_index_of_prev_link'], 
 					(int)$next_pt);

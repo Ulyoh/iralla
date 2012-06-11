@@ -45,6 +45,10 @@ class Polyline{
 		return $pt->projection_on_polyline_between($this, $first_index, $last_index);
 	}
 	
+	public function point_projected_on_polyline_between_on_earth(Point $pt, int $first_index, int $last_index){
+		return $pt->projection_on_polyline_between_on_earth($this, $first_index, $last_index);
+	}
+	
 	public function __construct(array $points_array,/*bool*/ $closed = null) {
 		if ($closed == null) {
 			$closed = false;

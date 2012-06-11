@@ -128,10 +128,17 @@ class Busline extends Polyline{
 	}
 	
 	public function __construct(array $points_array, $name, bool $closed = null) {
-		if ($closed == null) {
-			$closed = false;
-		}
-        parent::__construct($points_array, $closed); 
+
+        parent::__construct($points_array);
+
+        if ($closed == null) {
+        	//determine if the polyline is closed or not:
+        	//if distance between first and last point is less than 50 m
+        	//it is considereted as closed:
+        	//$points_array[0]->distance_to(Point)
+        	$closed = false;
+        }    
+        $this->closed = $closed;
     	$this->name = $name;
 	}
 	

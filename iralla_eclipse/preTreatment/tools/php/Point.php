@@ -35,6 +35,14 @@ class Point {
 	public function distance_to(Point $other_pt){
 		return sqrt(pow($other_pt->x - $this->x, 2) + pow($other_pt->y - $this->y, 2));
 	}
+	
+	public function earth_distance_to(Point $other_pt){
+		if(($this->y == $other_pt->y) && ($this->x == $other_pt->x)){
+			return 0;
+		}
+		return acos((sin(deg_to_rad($this->y)) * sin(deg_to_rad($other_pt->y))) + (cos(deg_to_rad($this->y)) * cos(deg_to_rad($other_pt->y)) * cos(deg_to_rad($this->x - $other_pt->x)))) * 6378137;
+		
+	}
 	/**
 	 * 
 	 * Return the intersection point between two segments if exists
@@ -177,8 +185,8 @@ class Point {
 		    	return $seg->get_pt2();
 		    }
 		    else{
-				$pt = new Point((1 - $ratio) * x1 + $ratio * x2,
-		       				(1 - $ratio) * y1 + $ratio * y2);
+				$pt = new Point((1 - $ratio) * $x1 + $ratio * $x2,
+		       				(1 - $ratio) * $y1 + $ratio * $y2);
 				$seg->get_pt1()->projection_infos = array();
 		    	$pt->projection_infos['distance'] = $this->distance_to($pt);
 		    	return $pt;
@@ -186,6 +194,48 @@ class Point {
 		}
 	}
 	
+
+	
+	/**
+	 * it s an approximation, only the distance is calculate as on earth
+	 * to make the projection lat and lng are considerated as planes coordinates
+	 * @param Segment $seg
+	 * @return Point
+	 */
+	public function projection_on_segment_on_earth(Segment $seg){
+		$x1 = $seg->get_pt1()->x;
+		$y1 = $seg->get_pt1()->y;
+		$x2 = $seg->get_pt2()->x;
+		$y2 = $seg->get_pt2()->y;
+	
+		if(($x1 == $x2) && ($y1 == $y2)){
+			$seg->get_pt1()->projection_infos = array();
+			$seg->get_pt1()->projection_infos['distance'] = $this->earth_distance_to($seg->get_pt1());
+			return $seg->get_pt1();
+		}
+		else{
+			$Dx = $x2 - $x1;
+			$Dy = $y2 - $y1;
+			$ratio = (($this->x - $x1) * $Dx + ($this->y - $y1) * $Dy) / ($Dx * $Dx + $Dy * $Dy);
+			if ($ratio < 0){
+				$seg->get_pt1()->projection_infos = array();
+				$seg->get_pt1()->projection_infos['distance'] = $this->earth_distance_to($seg->get_pt1());
+				return $seg->get_pt1();
+			}
+			else if ($ratio > 1){
+				$seg->get_pt1()->projection_infos = array();
+				$seg->get_pt2()->projection_infos['distance'] = $this->earth_distance_to($seg->get_pt2());
+				return $seg->get_pt2();
+			}
+			else{
+				$pt = new Point((1 - $ratio) * $x1 + $ratio * $x2,
+						(1 - $ratio) * $y1 + $ratio * $y2);
+				$seg->get_pt1()->projection_infos = array();
+				$pt->projection_infos['distance'] = $this->earth_distance_to($pt);
+				return $pt;
+			}
+		}
+	}
 	/**
 	 * return the distance and the coordinates of the point projection
 	 * on a polyline as :
@@ -195,6 +245,11 @@ class Point {
 	public function projection_on_polyline(Polyline $p){
 		$p_array = $p->get_points();
 		return $this->projection_on_array($p_array, $p->length);
+	}
+	
+	public function projection_on_polyline_on_earth(Polyline $p){
+		$p_array = $p->get_points();
+		return $this->projection_on_array_on_earth($p_array, $p->length);
 	}
 	
 	private function projection_on_array(array $p_array, $length){
@@ -209,7 +264,26 @@ class Point {
 		for($i = 1; $i < $length; $i++){
 			$seg_result = $this->projection_on_segment(new Segment($p_array[$i - 1], $p_array[$i]));
 			if($seg_result->projection_infos['distance'] < $result->projection_infos['distance']){
-				$result = $seg_result;
+				$result = clone $seg_result;
+				$result->projection_infos['index'] = $i - 1;
+			}
+		}
+		return $result;
+	}
+	
+	private function projection_on_array_on_earth(array $p_array, $length){
+	
+		if(!is_int($length)){
+			exit("Point->projection_on_polyline_between() -> Argument 2 must be an integer");
+		}
+	
+		$result = new stdClass();
+		$result->projection_infos = array('distance' => INF);
+	
+		for($i = 1; $i < $length; $i++){
+			$seg_result = $this->projection_on_segment_on_earth(new Segment($p_array[$i - 1], $p_array[$i]));
+			if($seg_result->projection_infos['distance'] < $result->projection_infos['distance']){
+				$result = clone $seg_result;
 				$result->projection_infos['index'] = $i - 1;
 			}
 		}
@@ -228,6 +302,17 @@ class Point {
 		return $result;
 	}
 	
+	public function projection_on_polyline_between_on_earth(Polyline $p, $first_index, $last_index){
+		if(!is_int($first_index) || (!is_int($last_index))){
+			exit("Point->projection_on_polyline_between_on_earth() : Argument 2 and 3 must be integer");
+		}
+		$p_array = $p->get_points_between($first_index, $last_index);
+		$result = $this->projection_on_array_on_earth($p_array, $last_index - $first_index + 1);
+	
+		//reinit the index value adding $first_index offset
+		$result->projection_infos['index'] += $first_index;
+		return $result;
+	}
 	/**
 	 * return the mySQL response of the nearest squares of the point
 	 * need to fetch the return value to get the rows sent by mySQL
