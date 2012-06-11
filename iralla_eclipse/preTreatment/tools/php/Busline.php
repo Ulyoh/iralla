@@ -2,9 +2,14 @@
 require_once 'Polyline.php';
 class Busline extends Polyline{
 	private $name;
+	private $total_distance;
 	
 	public function get_name(){
 		return $this->name;
+	}
+	
+	public function get_total_distance(){
+		return $this->total_distance;
 	}
 	
 	public function get_points_between_start_and_end_index($start_index, $end_index){
@@ -127,6 +132,21 @@ class Busline extends Polyline{
 		return $results;
 	}
 	
+	//TODO : generate the total distance when creating the buslines database
+	private function calculate_total_distance(){
+		$previous_point = null;
+		$total_distance = 0;
+		$points_array = $this->get_points();
+		foreach ($points_array as $point) {
+			if ($previous_point == null){
+				$previous_point = $point;
+				continue;
+			}
+			$total_distance += $point->earth_distance_to($previous_point);
+		}
+		return $total_distance;
+	}
+	
 	public function __construct(array $points_array, $name, bool $closed = null) {
 
         parent::__construct($points_array);
@@ -140,6 +160,7 @@ class Busline extends Polyline{
         }    
         $this->closed = $closed;
     	$this->name = $name;
+    	$this->total_distance = $this->calculate_total_distance();
 	}
 	
 }
