@@ -357,6 +357,13 @@ class Point {
 		return $latlng;
 	}
 	
+	public function return_array_with_x_as_lng_y_as_lat(){
+		$latlng = array();
+		$latlng['lng'] = $this->get_x();
+		$latlng['lat'] = $this->get_y();
+		return $latlng;
+	}
+	
 	private static function intersection_point_of_colinears_segments(Point $pt1, Point $pt2, Point $pt3, Point $pt4) {
 		
 		//throw exception if they are not segments:
