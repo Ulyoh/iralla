@@ -77,6 +77,7 @@ function communs_lines_in_start_and_end_squares(Point $start,Point $end){
 		
 		//convert all Points to latlng[]
 		foreach ($to_add as  $points_array) {
+			$busline = array();
 			$busline['path'] = array();
 			$busline['path'][] = $start_pt_on_bl->return_array_with_x_as_lng_y_as_lat();
 			foreach ($points_array as $point) {
@@ -87,8 +88,8 @@ function communs_lines_in_start_and_end_squares(Point $start,Point $end){
 			$busline['name'] = $bl->get_name();
 			$results[] = $busline;
 			//TODO remove next line when change interface with web page
-			$busline['path'] = array();
-			$results[] = $busline;
+			$false_busline['path'] = array();
+			$results[] = $false_busline;
 		}
 		
 		if(($k < $end_f_and_l_squares_length - 1) && ($end_f_and_l_square['first']['bl_id'] == $bl_id_to_calculate)){
