@@ -37,9 +37,6 @@ function communs_lines_in_start_and_end_squares(Point $start,Point $end){
 	$bl_id_to_calculate = 0;
 	$j = $k = -1;
 	$results = array();
-	//TODO remove next line when change interface with web page
-	$busline['path'] = array();
-	$results[] = $busline;
 	
 	//for each bl exctracted
 	//calculate the nearest point from start on the bl
@@ -75,11 +72,6 @@ function communs_lines_in_start_and_end_squares(Point $start,Point $end){
 		//calculate the road(s)
 		$to_add = $bl->get_points_between_start_and_end_pts_on_bl($start_pt_on_bl, $end_pt_on_bl);
 		
-		//todebug
-		/*if(($k < 1) || ($j < 1)) {
-			$k = $j = 1;
-			goto B;
-		}*/
 		//convert all Points to latlng[]
 		foreach ($to_add as  $points_array) {
 			$busline = array();
@@ -92,15 +84,6 @@ function communs_lines_in_start_and_end_squares(Point $start,Point $end){
 			//add the results to the previous ones:
 			$busline['name'] = $bl->get_name();
 			$results[] = $busline;
-			//TODO remove next line when change interface with web page
-			$false_busline['path'] = array();
-			$results[] = $false_busline;
-			
-			//todebug
-			/*if ($k > 1){
-				break 2;
-			}*/
-			
 		}
 		
 		if(($k < $end_f_and_l_squares_length - 1) && ($end_f_and_l_squares[$k+1]['first']['bl_id'] == $bl_id_to_calculate)){
