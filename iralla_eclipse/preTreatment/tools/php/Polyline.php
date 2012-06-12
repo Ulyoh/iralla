@@ -14,7 +14,10 @@ class Polyline{
 		return $this->length;
 	}
 	
-	public function get_point_at(int $index){
+	public function get_point_at($index){
+		if(!is_int($index)){
+			exit("Point->get_point_at() -> Argument must be integer");
+		}
 		if($index < $this->length){
 			return $this->points_array[$index];
 		}
@@ -50,11 +53,17 @@ class Polyline{
 		return $pt->projection_on_polyline($this);
 	}
 	
-	public function point_projected_on_polyline_between(Point $pt, int $first_index, int $last_index){
+	public function point_projected_on_polyline_between(Point $pt, $first_index, $last_index){
+		if(!is_int($first_index) || (!is_int($last_index))){
+			exit("Point->point_projected_on_polyline_between() -> Arguments 1 and 2 must be integer");
+		}
 		return $pt->projection_on_polyline_between($this, $first_index, $last_index);
 	}
 	
-	public function point_projected_on_polyline_between_on_earth(Point $pt, int $first_index, int $last_index){
+	public function point_projected_on_polyline_between_on_earth(Point $pt, $first_index, $last_index){
+		if(!is_int($first_index) || (!is_int($last_index))){
+			exit("Point->point_projected_on_polyline_between_on_earth() -> Arguments 2 and 3 must be integer");
+		}
 		return $pt->projection_on_polyline_between_on_earth($this, $first_index, $last_index);
 	}
 	
