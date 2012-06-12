@@ -165,6 +165,24 @@ class Busline extends Polyline{
 		return $total_distance;
 	}
 	
+	public function calculate_distance_between_2_vertex(int $first_index, int $last_index){
+		if($first_index >= $last_index){
+			die("arguments not valid");
+		}
+		if($last_index >=$this->get_length()){
+			die("arguments not valid");
+		}
+		$total_distance = 0;
+		$points_array = $this->get_points();
+		$previous_point = $points_array[$first_index];
+		for($i = $first_index + 1; $i <= $last_index; $i++){
+			$point = $points_array[$i];
+			$total_distance += $point->earth_distance_to($previous_point);
+			$previous_point = $point;
+		}
+		return $total_distance;
+	}
+	
 	public function __construct(array $points_array, $name, bool $closed = null) {
 
         parent::__construct($points_array);
