@@ -370,7 +370,7 @@ class Point {
 		$square_pt = new Point(
 				$f_and_l_square['first']['pt_coords_lng'],
 				$f_and_l_square['first']['pt_coords_lat']);
-		$previous_index_of_square = $f_and_l_square['first']['prev_index_of_pt'];
+		$previous_index_of_square = (int) $f_and_l_square['first']['prev_index_of_pt'];
 		$previous_vertex_pt = $bl->get_point_at($previous_index_of_square);
 		
 		$distance_from_first_to_previous_vertex_of_square = 
@@ -379,12 +379,14 @@ class Point {
 		$square_pt->earth_distance_to($previous_vertex_pt);
 		
 		$previous_index_of_this = $this->projection_infos['index'];
+		$previous_vertex_of_this = $bl->get_point_at($previous_index_of_this);
+		
 		$this->distance_from_first_vertex = 
 		$distance_from_first_to_previous_vertex_of_square
 		+
 		$bl->calculate_distance_between_2_vertex($previous_index_of_square, $previous_index_of_this)
 		+
-		$previous_index_of_this->earth_distance_to($bl->get_point_at($this));
+		$previous_vertex_of_this->earth_distance_to($this);
 	}
 	
 	
