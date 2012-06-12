@@ -143,6 +143,7 @@ class Busline extends Polyline{
 				continue;
 			}
 			$total_distance += $point->earth_distance_to($previous_point);
+			$previous_point = $point;
 		}
 		return $total_distance;
 	}
