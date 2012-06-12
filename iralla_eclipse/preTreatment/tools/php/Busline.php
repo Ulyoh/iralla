@@ -190,6 +190,14 @@ class Busline extends Polyline{
 		return $total_distance;
 	}
 	
+	public function return_array_of_lat_lngs_pts(){
+		$array_of_lat_lngs_pts = array();
+		$array_of_lat_lngs_pts = array();
+		foreach ($points_array as $point) {
+			$array_of_lat_lngs_pts[] = $point->return_array_with_x_as_lng_y_as_lat();
+		}
+	}
+	
 	public function __construct(array $points_array, $name, bool $closed = null) {
 
         parent::__construct($points_array);
