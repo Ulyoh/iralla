@@ -14,6 +14,15 @@ class Polyline{
 		return $this->length;
 	}
 	
+	public function get_point_at(int $index){
+		if($index < $this->length){
+			return $this->points_array[$index];
+		}
+		else{
+			return null;
+		}
+	}
+	
 	/**
 	 * 
 	 * @param int $first_index
