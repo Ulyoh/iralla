@@ -170,7 +170,10 @@ class Busline extends Polyline{
 		if(!is_int($first_index) || (!is_int($last_index))){
 			exit("Point->calculate_distance_between_2_vertex() => Arguments 1 and 2 must be integer");
 		}
-		if($first_index >= $last_index){
+		if($first_index == $last_index){
+			return 0;
+		}
+		if($first_index > $last_index){
 			die("arguments not valid");
 		}
 		if($last_index >=$this->get_length()){
