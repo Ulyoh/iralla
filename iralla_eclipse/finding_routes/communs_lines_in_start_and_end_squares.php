@@ -61,6 +61,8 @@ function communs_lines_in_start_and_end_squares(Point $start,Point $end){
 				$bl, 
 				(int)$start_f_and_l_square['first']['prev_index_of_prev_link'], 
 				(int)$next_pt);
+		//add distance from the begining of the busline:
+		$start_pt_on_bl->distance_from_first_vertex_with_square_infos($bl, $start_f_and_l_square);
 		
 		//calculate nearest point on the bus line from the end point
 		$next_pt = ($end_f_and_l_square['last']['prev_index_of_next_link'] + 1 < $bl->get_length()) ? $end_f_and_l_square['last']['prev_index_of_next_link'] + 1 : $end_f_and_l_square['last']['prev_index_of_next_link']; 
@@ -68,22 +70,37 @@ function communs_lines_in_start_and_end_squares(Point $start,Point $end){
 				$bl, 
 				(int)$end_f_and_l_square['first']['prev_index_of_prev_link'], 
 				(int)$next_pt);
+		//add distance from the begining of the busline:
+		$end_pt_on_bl->distance_from_first_vertex_with_square_infos($bl, $end_f_and_l_square);
 		
-		//calculate the road(s)
-		$to_add = $bl->get_points_between_start_and_end_pts_on_bl($start_pt_on_bl, $end_pt_on_bl);
+		//calculates the time(s)
 		
-		//convert all Points to latlng[]
-		foreach ($to_add as  $points_array) {
-			$busline = array();
-			$busline['path'] = array();
-			$busline['path'][] = $start_pt_on_bl->return_array_with_x_as_lng_y_as_lat();
-			foreach ($points_array as $point) {
-				$busline['path'][] = $point->return_array_with_x_as_lng_y_as_lat();
-			}
-			$busline['path'][] = $end_pt_on_bl->return_array_with_x_as_lng_y_as_lat();
-			//add the results to the previous ones:
-			$busline['name'] = $bl->get_name();
-			$results[] = $busline;
+		
+		//save the shortest result with the distance 
+		//(max shortest time + 5 minutes ou if shortest time < 25 min, shortest time + 20%)
+		//max result : 20
+		//calculate the distance(s)
+		
+		
+		//
+		
+		//save the results:
+		$results[] = array(
+				'distance'=> $distance,
+				'busline'=>bl,)
+		$distance
+		$bl
+		$start_pt_on_bl
+		$end_pt_on_bl
+		busline name
+		
+		time from start to bl
+		$start_pt_on_bl
+		time from bl to end
+		$end_pt_on_bl
+		busline name
+		
+
 		}
 		
 		if(($k < $end_f_and_l_squares_length - 1) && ($end_f_and_l_squares[$k+1]['first']['bl_id'] == $bl_id_to_calculate)){
