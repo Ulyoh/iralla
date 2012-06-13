@@ -334,8 +334,9 @@ class Point {
 				$pt->get_y(),
 				$bus_line,
 				$pt->projection_infos['index'],
-				$distance_from_previous_index);
+				$pt->projection_infos['distance_from_previous_vertex']);
 	}
+	
 	/**
 	 * return the mySQL response of the nearest squares of the point
 	 * need to fetch the return value to get the rows sent by mySQL
