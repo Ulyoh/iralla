@@ -4,10 +4,12 @@ class Point_on_bus_line extends Point{
 	public $previous_index;
 	public $distance_from_previous_index;
 	public $bus_station;
+	public $distance_from_first_vertex ;
 	
-	public function distance_from_first_vertex_with_square_infos(Busline $bl, $f_and_l_square){
+	public function distance_from_first_vertex_with_square_infos($f_and_l_square){
 		//TODO revoir la base de donnee pour simplifer se calcul
 		//ie connaitre la distance de chaque vertex a partir du debut
+		$bl = $this->bus_line;
 		$square_pt = new Point(
 				$f_and_l_square['first']['pt_coords_lng'],
 				$f_and_l_square['first']['pt_coords_lat']);
