@@ -160,34 +160,37 @@ class Point {
 	 * 
 	 */
 	public function projection_on_segment(Segment $seg){
-		$x1 = $seg->get_pt1()->x;
-		$y1 = $seg->get_pt1()->y;
-		$x2 = $seg->get_pt2()->x;
-		$y2 = $seg->get_pt2()->y;
+		$pt1 = $seg->get_pt1();
+		$pt2 = $seg->get_pt2();
+		
+		$x1 = $pt1->x;
+		$y1 = $pt1->y;
+		$x2 = $pt2->x;
+		$y2 = $pt2->y;
 		
 		if(($x1 == $x2) && ($y1 == $y2)){
-			$seg->get_pt1()->projection_infos = array();
-			$seg->get_pt1()->projection_infos['distance'] = $this->distance_to($seg->get_pt1());
-			return $seg->get_pt1();
+			$pt1->projection_infos = array();
+			$pt1->projection_infos['distance'] = $this->distance_to($pt1);
+			return $pt1;
 		}
 		else{
 			$Dx = $x2 - $x1;
 			$Dy = $y2 - $y1;
 			$ratio = (($this->x - $x1) * $Dx + ($this->y - $y1) * $Dy) / ($Dx * $Dx + $Dy * $Dy);
 		    if ($ratio < 0){
-			$seg->get_pt1()->projection_infos = array();
-		    	$seg->get_pt1()->projection_infos['distance'] = $this->distance_to($seg->get_pt1());
-		    	return $seg->get_pt1();
+			$pt1->projection_infos = array();
+		    	$pt1->projection_infos['distance'] = $this->distance_to($pt1);
+		    	return $pt1;
 		    }
 		    else if ($ratio > 1){
-			$seg->get_pt1()->projection_infos = array();
-		    	$seg->get_pt2()->projection_infos['distance'] = $this->distance_to($seg->get_pt2());
-		    	return $seg->get_pt2();
+			$pt1->projection_infos = array();
+		    	$pt2->projection_infos['distance'] = $this->distance_to($pt2);
+		    	return $pt2;
 		    }
 		    else{
 				$pt = new Point((1 - $ratio) * $x1 + $ratio * $x2,
 		       				(1 - $ratio) * $y1 + $ratio * $y2);
-				$seg->get_pt1()->projection_infos = array();
+				$pt1->projection_infos = array();
 		    	$pt->projection_infos['distance'] = $this->distance_to($pt);
 		    	return $pt;
 		    }
@@ -203,34 +206,37 @@ class Point {
 	 * @return Point
 	 */
 	public function projection_on_segment_on_earth(Segment $seg){
-		$x1 = $seg->get_pt1()->x;
-		$y1 = $seg->get_pt1()->y;
-		$x2 = $seg->get_pt2()->x;
-		$y2 = $seg->get_pt2()->y;
+		$pt1 = $seg->get_pt1();
+		$pt2 = $seg->get_pt2();
+		
+		$x1 = $pt1->x;
+		$y1 = $pt1->y;
+		$x2 = $pt2->x;
+		$y2 = $pt2->y;
 	
 		if(($x1 == $x2) && ($y1 == $y2)){
-			$seg->get_pt1()->projection_infos = array();
-			$seg->get_pt1()->projection_infos['distance'] = $this->earth_distance_to($seg->get_pt1());
-			return $seg->get_pt1();
+			$pt1->projection_infos = array();
+			$pt1->projection_infos['distance'] = $this->earth_distance_to($pt1);
+			return $pt1;
 		}
 		else{
 			$Dx = $x2 - $x1;
 			$Dy = $y2 - $y1;
 			$ratio = (($this->x - $x1) * $Dx + ($this->y - $y1) * $Dy) / ($Dx * $Dx + $Dy * $Dy);
 			if ($ratio < 0){
-				$seg->get_pt1()->projection_infos = array();
-				$seg->get_pt1()->projection_infos['distance'] = $this->earth_distance_to($seg->get_pt1());
-				return $seg->get_pt1();
+				$pt1->projection_infos = array();
+				$pt1->projection_infos['distance'] = $this->earth_distance_to($pt1);
+				return $pt1;
 			}
 			else if ($ratio > 1){
-				$seg->get_pt1()->projection_infos = array();
-				$seg->get_pt2()->projection_infos['distance'] = $this->earth_distance_to($seg->get_pt2());
-				return $seg->get_pt2();
+				$pt1->projection_infos = array();
+				$pt2->projection_infos['distance'] = $this->earth_distance_to($pt2);
+				return $pt2;
 			}
 			else{
 				$pt = new Point((1 - $ratio) * $x1 + $ratio * $x2,
 						(1 - $ratio) * $y1 + $ratio * $y2);
-				$seg->get_pt1()->projection_infos = array();
+				$pt1->projection_infos = array();
 				$pt->projection_infos['distance'] = $this->earth_distance_to($pt);
 				return $pt;
 			}
