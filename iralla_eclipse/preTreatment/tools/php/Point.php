@@ -192,12 +192,11 @@ class Point {
 		       				(1 - $ratio) * $y1 + $ratio * $y2);
 				$pt1->projection_infos = array();
 		    	$pt->projection_infos['distance'] = $this->distance_to($pt);
+		    	$pt->projection_infos['distance_from_previous_point'] = $pt1->distance_to($pt);
 		    	return $pt;
 		    }
 		}
 	}
-	
-
 	
 	/**
 	 * it s an approximation, only the distance is calculate as on earth
@@ -238,6 +237,7 @@ class Point {
 						(1 - $ratio) * $y1 + $ratio * $y2);
 				$pt1->projection_infos = array();
 				$pt->projection_infos['distance'] = $this->earth_distance_to($pt);
+		    	$pt->projection_infos['distance_from_previous_point'] = $pt1->earth_distance_to($pt);
 				return $pt;
 			}
 		}
@@ -394,10 +394,6 @@ class Point {
 		+
 		$previous_vertex_of_this->earth_distance_to($this);
 	}
-	
-	
-	
-	
 	
 	private static function intersection_point_of_colinears_segments(Point $pt1, Point $pt2, Point $pt3, Point $pt4) {
 		
