@@ -192,7 +192,7 @@ class Point {
 		       				(1 - $ratio) * $y1 + $ratio * $y2);
 				$pt1->projection_infos = array();
 		    	$pt->projection_infos['distance'] = $this->distance_to($pt);
-		    	$pt->projection_infos['distance_from_previous_point'] = $pt1->distance_to($pt);
+		    	$pt->projection_infos['distance_from_pt1'] = $pt1->distance_to($pt);
 		    	return $pt;
 		    }
 		}
@@ -237,7 +237,7 @@ class Point {
 						(1 - $ratio) * $y1 + $ratio * $y2);
 				$pt1->projection_infos = array();
 				$pt->projection_infos['distance'] = $this->earth_distance_to($pt);
-		    	$pt->projection_infos['distance_from_previous_point'] = $pt1->earth_distance_to($pt);
+		    	$pt->projection_infos['distance_from_pt1'] = $pt1->earth_distance_to($pt);
 				return $pt;
 			}
 		}
@@ -272,6 +272,9 @@ class Point {
 			if($seg_result->projection_infos['distance'] < $result->projection_infos['distance']){
 				$result = clone $seg_result;
 				$result->projection_infos['index'] = $i - 1;
+				$result->projection_infos['distance_from_previous_vertex'] = 
+				$result->projection_infos['distance_from_pt1'];
+				unset($result->projection_infos['distance_from_pt1']);
 			}
 		}
 		return $result;
@@ -291,6 +294,9 @@ class Point {
 			if($seg_result->projection_infos['distance'] < $result->projection_infos['distance']){
 				$result = clone $seg_result;
 				$result->projection_infos['index'] = $i - 1;
+				$result->projection_infos['distance_from_previous_vertex'] = 
+				$result->projection_infos['distance_from_pt1'];
+				unset($result->projection_infos['distance_from_pt1']);
 			}
 		}
 		return $result;
@@ -318,6 +324,17 @@ class Point {
 		//reinit the index value adding $first_index offset
 		$result->projection_infos['index'] += $first_index;
 		return $result;
+	}
+	
+	public function projection_on_bus_line(Busline $bus_line, $first_index, $last_index){
+		$pt = $this->projection_on_polyline_between_on_earth($bus_line, $first_index, $last_index);
+		
+		return new Point_on_bus_line(
+				$pt->get_x(),
+				$pt->get_y(),
+				$bus_line,
+				$pt->projection_infos['index'],
+				$distance_from_previous_index);
 	}
 	/**
 	 * return the mySQL response of the nearest squares of the point
