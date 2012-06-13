@@ -133,7 +133,7 @@ class Busline extends Polyline{
 	}
 	
 	public function get_points_from_start_to_end_pts_on_bl(Point $start_point, Point $end_point){
-		$resutls = $this->get_points_between_start_and_end_pts_on_bl($start_point, $end_point);
+		$results = $this->get_points_between_start_and_end_pts_on_bl($start_point, $end_point);
 		foreach ($results as $result) {
 			array_unshift($result, $start_point);
 			$result[] = $end_point;
