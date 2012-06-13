@@ -22,7 +22,6 @@ class Point_on_bus_line extends Point{
 		$square_pt->earth_distance_to($previous_vertex_pt);
 	
 		$previous_index_of_this = $this->$previous_index;
-		$previous_vertex_of_this = $bl->get_point_at($previous_index_of_this);
 	
 		$this->distance_from_first_vertex =
 		$distance_from_first_to_previous_vertex_of_square
