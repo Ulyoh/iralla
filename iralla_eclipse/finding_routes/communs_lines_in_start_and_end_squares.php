@@ -77,32 +77,10 @@ function communs_lines_in_start_and_end_squares(Point $start,Point $end){
 				//add the road part to the road result:
 			
 		}
-		
-		($start, $end, $start_pt_on_bl, $end_pt_on_bl, $speeds_parameters);
-		
-		//save the shortest result with the distance 
-		//(max shortest time + 5 minutes ou if shortest time < 25 min, shortest time + 20%)
-		//max result : 20
-		//calculate the distance(s)
-		
-		
-		//
-		
-		//save the results:
-		$results[] = array(
-				'distance'=> $distance,
-				'busline'=>bl,)
-		$distance
-		$bl
-		$start_pt_on_bl
-		$end_pt_on_bl
-		busline name
-		
-		time from start to bl
-		$start_pt_on_bl
-		time from bl to end
-		$end_pt_on_bl
-		busline name
+
+			//HERE make a selection of the result if longer than 5% and no more than 20
+			
+
 		
 
 		}
