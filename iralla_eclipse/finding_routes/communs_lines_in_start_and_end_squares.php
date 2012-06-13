@@ -55,26 +55,30 @@ function communs_lines_in_start_and_end_squares(Point $start,Point $end){
 		$bl = new Busline(extract_path_from_string_to_points($bus_line_datas['path']), $bus_line_datas['name']);
 		$bl->flow = $bus_line_datas['flows'];
 		
-		//calculate nearest point on the bus line from the start point
-		$next_pt = ($start_f_and_l_square['last']['prev_index_of_next_link'] + 1 < $bl->get_length()) ? $start_f_and_l_square['last']['prev_index_of_next_link'] + 1 : $start_f_and_l_square['last']['prev_index_of_next_link']; 
-		$start_pt_on_bl = $start->projection_on_polyline_between_on_earth(
-				$bl, 
-				(int)$start_f_and_l_square['first']['prev_index_of_prev_link'], 
-				(int)$next_pt);
-		//add distance from the begining of the busline:
-		$start_pt_on_bl->distance_from_first_vertex_with_square_infos($bl, $start_f_and_l_square);
+		//create a road part:
+		if($road_part = Road_part::create_road_part_from_points_out_of_bus_line(
+			$start, 
+			$start_f_and_l_square, 
+			$end, 
+			$end_f_and_l_square, 
+			$bl,
+			"normal")){
+			//add the road part to the road result:
+			
+		}
 		
-		//calculate nearest point on the bus line from the end point
-		$next_pt = ($end_f_and_l_square['last']['prev_index_of_next_link'] + 1 < $bl->get_length()) ? $end_f_and_l_square['last']['prev_index_of_next_link'] + 1 : $end_f_and_l_square['last']['prev_index_of_next_link']; 
-		$end_pt_on_bl = $end->projection_on_polyline_between_on_earth(
-				$bl, 
-				(int)$end_f_and_l_square['first']['prev_index_of_prev_link'], 
-				(int)$next_pt);
-		//add distance from the begining of the busline:
-		$end_pt_on_bl->distance_from_first_vertex_with_square_infos($bl, $end_f_and_l_square);
+		if($road_part = Road_part::create_road_part_from_points_out_of_bus_line(
+				$start,
+				$start_f_and_l_square,
+				$end,
+				$end_f_and_l_square,
+				$bl,
+				"reverse")){
+				//add the road part to the road result:
+			
+		}
 		
-		//calculates the time(s)
-		
+		($start, $end, $start_pt_on_bl, $end_pt_on_bl, $speeds_parameters);
 		
 		//save the shortest result with the distance 
 		//(max shortest time + 5 minutes ou if shortest time < 25 min, shortest time + 20%)
