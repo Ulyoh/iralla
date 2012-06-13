@@ -11,6 +11,7 @@ class Road_result{
 	public $total_time;
 	public $road_parts;
 	public $road_parts_length;
+	public $chgt_points;
 	
 	public function add_one_busline($busline, $length, Point $start_point_on_bus_line, Point $end_point_on_bus_line){
 	//adding the new mouvements points:
@@ -22,15 +23,29 @@ class Road_result{
 		
 		//3 add the mouvement:
 		array_push($this->chgt_points, $busline, "walk");
-		
 	}
 	
-	public function reset_walk_distance_and_time(){
+	public function add_road_part(Road_part $road_part, bool $reset_times_and_distances = true){
+		$this->road_parts[] = $road_part;
+		$this->chgt_points[] = $road_part->start;
+		$this->chgt_points[] = $road_part->end;
+		
+		if($reset_times_and_distances == true){
+			$this->reset_distances_and_times();
+		}
+	}
+	
+	public function reset_distances_and_times(){
+		//reset distances and time to 0:
+		
+		
+		
 		$previous_point = $this->from;
 		for ($i = 0; $i < $this->road_parts->road_parts_length - 1; $i++){
 			$road_part = $this->road_parts[$i];
 			$next_point = $this->road_parts[$i+1]->end;
 			if($road_part == "walk"){
+				//set a road part walk:
 				$road_part = stdClass();
 				$road_part->type = "walk";
 				$road_part->distance = $previous_point->earth_distance_to($next_point);
@@ -38,9 +53,16 @@ class Road_result{
 				$this->road_parts[$i] = $road_part;
 				$previous_point = null;
 				$next_point = null;
+				
+				//add distances and times:
+				
 			}
 			else{
 				$previous_point = $this->road_parts[$i]->$end;
+				
+				//add distances and times:
+				
+				
 			}
 		}
 		
