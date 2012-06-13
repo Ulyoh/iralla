@@ -3,6 +3,7 @@ require_once 'Polyline.php';
 class Busline extends Polyline{
 	private $name;
 	private $total_distance;
+	private $type;
 	
 	public function get_name(){
 		return $this->name;
@@ -201,12 +202,12 @@ class Busline extends Polyline{
 	public function return_array_of_lat_lngs_pts(){
 		$array_of_lat_lngs_pts = array();
 		$array_of_lat_lngs_pts = array();
-		foreach ($points_array as $point) {
+		foreach ($this->points_array as $point) {
 			$array_of_lat_lngs_pts[] = $point->return_array_with_x_as_lng_y_as_lat();
 		}
 	}
 	
-	public function __construct(array $points_array, $name, bool $closed = null) {
+	public function __construct(array $points_array, $name, $type, bool $closed = null) {
 
         parent::__construct($points_array);
 
@@ -215,11 +216,22 @@ class Busline extends Polyline{
         	//if distance between first and last point is less than 50 m
         	//it is considereted as closed:
         	//$points_array[0]->distance_to(Point)
-        	$closed = false;
+	    
+		$first_pt = $points_array[0];
+		$last_pt = $points_array[$this->length];
+		
+		if($first_pt->earth_distance_to($last_pt)  > 50){
+		    $closed = false;
+		}
+		else{
+		    $closed = true;
+		}
+        	
         }    
         $this->closed = $closed;
     	$this->name = $name;
     	$this->total_distance = $this->calculate_total_distance();
+	$this->type = $type;
 	}
 	
 }
