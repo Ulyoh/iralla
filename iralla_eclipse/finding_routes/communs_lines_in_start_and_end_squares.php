@@ -1,4 +1,4 @@
-<?php
+<?php //GITHUB WITH NETBEANS TEST 2
 function communs_lines_in_start_and_end_squares(Point $start,Point $end){
 	global $bdd;
 	
