@@ -337,6 +337,16 @@ class Point {
 				$pt->projection_infos['distance_from_previous_vertex']);
 	}
 	
+	public function projection_on_bus_line_with_f_and_l_square(Busline $bl, $f_and_l_square){
+		$next_pt = ($f_and_l_square['last']['prev_index_of_next_link'] + 1 < $bl->get_length()) ?
+		$f_and_l_square['last']['prev_index_of_next_link'] + 1 :
+		$f_and_l_square['last']['prev_index_of_next_link'];
+		
+		return $this->projection_on_bus_line(
+		$bl,
+		(int)$f_and_l_square['first']['prev_index_of_prev_link'],
+		(int)$next_pt);
+	}
 	/**
 	 * return the mySQL response of the nearest squares of the point
 	 * need to fetch the return value to get the rows sent by mySQL
