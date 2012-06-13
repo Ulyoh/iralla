@@ -19,7 +19,7 @@ class Point_on_bus_line extends Point{
 		-
 		$square_pt->earth_distance_to($previous_vertex_pt);
 	
-		$previous_index_of_this = $this->projection_infos['index'];
+		$previous_index_of_this = $this->$previous_index;
 		$previous_vertex_of_this = $bl->get_point_at($previous_index_of_this);
 	
 		$this->distance_from_first_vertex =
@@ -27,7 +27,7 @@ class Point_on_bus_line extends Point{
 		+
 		$bl->calculate_distance_between_2_vertex($previous_index_of_square, $previous_index_of_this)
 		+
-		$previous_vertex_of_this->earth_distance_to($this);
+		$this->distance_from_previous_index;
 	}
 	
 	public function __construct(
