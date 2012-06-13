@@ -1,4 +1,4 @@
-<?php //GITHUB WITH NETBEANS TEST 2
+<?php
 function communs_lines_in_start_and_end_squares(Point $start,Point $end){
 	global $bdd;
 	
@@ -28,7 +28,7 @@ function communs_lines_in_start_and_end_squares(Point $start,Point $end){
 	
 	//extract bus lines from db:
 	$query =  '
-		select id, path, flows, name
+		select id, path, flows, name, type
 		from bus_lines
 		where ' . $bl_ids_list .'
 		order by id';
@@ -52,7 +52,7 @@ function communs_lines_in_start_and_end_squares(Point $start,Point $end){
 		$end_f_and_l_square = $end_f_and_l_squares[$k];
 		
 		//create bus line object:
-		$bl = new Busline(extract_path_from_string_to_points($bus_line_datas['path']), $bus_line_datas['name']);
+		$bl = new Busline(extract_path_from_string_to_points($bus_line_datas['path']), $bus_line_datas['name'], $bus_line_datas['type']);
 		$bl->flow = $bus_line_datas['flows'];
 		
 		//create a road part:

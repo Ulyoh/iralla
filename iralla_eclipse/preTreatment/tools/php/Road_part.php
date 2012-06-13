@@ -37,7 +37,10 @@ class Road_part{
 	public function __construct(
 			Point_on_bus_line $start_point_on_bus_line, 
 			Point_on_bus_line $end_point_on_bus_line,
-			$flow = "normal"){
+			$flow = "normal",
+			$speed){
+	    
+		$bl = $start_point_on_bus_line->bus_line;
 				
 		if(($bl->flow != $flow) && ($bl->flow != "both")){
 			return false;
@@ -47,11 +50,13 @@ class Road_part{
 		//else return an error
 		
 		//TODO if bus line not closed verify if the start and end position
-		//are coherents with the flow else return false 
+		//are coherents with the flow else return false
+		
+		//TODO verify if bus line as a type
 		
 		$this->start = $start_point_on_bus_line;
 		$this->end = $end_point_on_bus_line;
-		$this->bus_line = $start_point_on_bus_line->bus_line;
+		$this->bus_line = $bl;
 		
 		//distance:
 		$diff_distance_from_first_vertex =
@@ -66,6 +71,10 @@ class Road_part{
 		else{
 			$this->distance = $bus_line->total_distance - abs($diff_distance_from_first_vertex);
 		}
+		
+		$this->speed = $speed;
+		$this->time = $this->distance / $speed;
+		$this->bus_line_type = $bl->type;
 		
 	}
 	
