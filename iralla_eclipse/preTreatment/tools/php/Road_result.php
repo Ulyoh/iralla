@@ -34,6 +34,7 @@ class Road_result{
 				$road_part = stdClass();
 				$road_part->type = "walk";
 				$road_part->distance = $previous_point->earth_distance_to($next_point);
+				$road_part->time = $road_part->distance / $this->walk_speed;
 				$this->road_parts[$i] = $road_part;
 				$previous_point = null;
 				$next_point = null;
@@ -50,6 +51,7 @@ class Road_result{
 			$road_part = stdClass();
 			$road_part->type = "walk";
 			$road_part->distance = $previous_point->earth_distance_to($next_point);
+			$road_part->time = $road_part->distance / $this->walk_speed;
 			$this->road_parts[$i] = $road_part;
 		}
 	}
