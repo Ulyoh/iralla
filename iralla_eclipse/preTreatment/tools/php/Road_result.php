@@ -57,13 +57,18 @@ class Road_result{
 				//add distances and times:
 				
 			}
-			else{
+			else if ($road_part->type == "bus line"){
 				$previous_point = $this->road_parts[$i]->$end;
 				
 				//add distances and times:
 				
 				
 			}
+			else{
+				//error
+				
+			}
+			
 		}
 		
 		//last road part:

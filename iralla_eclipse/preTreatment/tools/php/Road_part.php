@@ -7,6 +7,7 @@ class Road_part{
 	public $speed;
 	public $time;
 	public $bus_line_type;
+	public $type;
 	
 	
 	public static function create_road_part_from_points_out_of_bus_line(
@@ -75,7 +76,7 @@ class Road_part{
 		$this->speed = $speed;
 		$this->time = $this->distance / $speed;
 		$this->bus_line_type = $bl->type;
-		
+		$this->type = "bus line";
 	}
 	
 	
